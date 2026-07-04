@@ -1,0 +1,53 @@
+{
+  "project": "bi-central",
+  "generated_at": "2026-07-03",
+  "source": "ChatGPT workspace",
+  "status": "github-ready-pack",
+  "files": [
+    {
+      "path": ".github/workflows/pages.yml",
+      "size": 695,
+      "sha256": "85db668b01118065d156f3785835de4704721b1bf265cd5697ce9a5830e45b49"
+    },
+    {
+      "path": ".gitignore",
+      "size": 79,
+      "sha256": "5548bffbb86c20212c365b8e70d6974655d58d540c4702fdf21e38c78cfcf131"
+    },
+    {
+      "path": "README.md",
+      "size": 943,
+      "sha256": "073af96255d28b64026126c1a874ea0ea7241f4c5f638cd690fe66c394c14bc4"
+    },
+    {
+      "path": "apps/feuille-route-dev/index.html",
+      "size": 20790,
+      "sha256": "1376dc50cddab3a7d2fdf34b9a16eceee6ea801a1461dd48bd62eefbcb29c940"
+    },
+    {
+      "path": "apps/gestion-projets-bi/index.html",
+      "size": 79633,
+      "sha256": "ccb1c2b495aabdcc22414414b982ad19364c461a13550f180f0b5faba0e30650"
+    },
+    {
+      "path": "apps/index.html",
+      "size": 1215,
+      "sha256": "fae88d884a5eb929b70aac61eb6b023c00844e2b10e52d7c569a79b0f235628c"
+    },
+    {
+      "path": "data/manifest/MANIFEST_BI_GESTION_PROJETS_BI_V5_DRIVE_GITHUB.json",
+      "size": 1153,
+      "sha256": "a1062a042e2f4ca50d4031699afe75baf662c9d29552ac4b010815e204e33f5b"
+    },
+    {
+      "path": "docs/README_BI_CENTRAL_POINT_DEPART_2026-07-03.md",
+      "size": 2098,
+      "sha256": "ecdcb00b9fcf8bcf1bd32a814bb88bfd6eaaf6fce33c7e1a70676e3c7802e0f8"
+    },
+    {
+      "path": "scripts/setup_git_remote.ps1",
+      "size": 364,
+      "sha256": "7241ce76921b52761fb4e3e519fa24dd5b90c0be6bfbc1a89f58f626df94393f"
+    }
+  ]
+}
