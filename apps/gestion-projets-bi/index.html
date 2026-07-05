@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>Cockpit Projets BI · V6.4D Réparation</title>
+<title>Cockpit Projets BI · V6.4E Roadmap pilotable</title>
 <style>
 :root{
   --bg:#030711;--bg2:#06112a;--panel:rgba(7,18,41,.82);--panel2:rgba(9,28,61,.72);
@@ -109,6 +109,27 @@ textarea{resize:vertical;min-height:76px} input:focus,select:focus,textarea:focu
 .prompt-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
 .view-title{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px}.view-title h2{margin:0;font-size:22px}
 
+
+.roadmap-toolbar{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 12px}
+.roadmap-board{display:grid;grid-template-columns:repeat(4,minmax(210px,1fr));gap:12px}
+.road-col{border:1px solid rgba(80,178,255,.24);background:rgba(5,15,35,.58);border-radius:18px;padding:12px;min-height:360px}
+.road-col h3{margin:0 0 10px;font-size:15px;display:flex;align-items:center;justify-content:space-between;gap:8px;color:#69eaff}
+.road-count{font-size:11px;color:var(--muted);border:1px solid rgba(255,255,255,.12);border-radius:999px;padding:3px 7px}
+.road-drop{display:grid;gap:9px;min-height:280px}
+.road-card{border:1px solid rgba(89,190,255,.25);background:linear-gradient(135deg,rgba(9,31,69,.72),rgba(5,12,31,.76));border-radius:16px;padding:11px;box-shadow:0 0 14px rgba(28,143,255,.08);cursor:grab}
+.road-card:active{cursor:grabbing}.road-card.dragging{opacity:.45;transform:scale(.98)}
+.road-card h4{margin:0 0 7px;font-size:14px}.road-card p{margin:7px 0;color:#cfe6f5;font-size:12px;line-height:1.35}
+.road-meta{display:flex;gap:5px;flex-wrap:wrap;margin:8px 0}
+.road-actions{display:flex;gap:6px;flex-wrap:wrap;margin-top:9px}.road-actions button{padding:6px 8px;border-radius:10px;font-size:11px}
+.road-prio-haute{border-color:rgba(255,100,114,.45)!important}.road-prio-moyenne{border-color:rgba(255,195,77,.45)!important}.road-prio-basse{border-color:rgba(53,243,132,.36)!important}
+.road-form{display:grid;grid-template-columns:1.2fr .7fr .7fr auto;gap:8px;margin:10px 0 14px}
+.road-form textarea{grid-column:1/-1;min-height:62px}
+.road-empty{border:1px dashed rgba(255,255,255,.14);border-radius:14px;padding:18px;text-align:center;color:var(--muted);font-size:12px}
+.road-summary{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:12px}
+.road-k{border:1px solid rgba(80,178,255,.22);background:rgba(5,15,35,.52);border-radius:15px;padding:10px}.road-k b{font-size:22px}.road-k small{display:block;color:var(--muted)}
+@media(max-width:1260px){.roadmap-board,.road-summary{grid-template-columns:repeat(2,1fr)}.road-form{grid-template-columns:1fr 1fr}}
+@media(max-width:760px){.roadmap-board,.road-summary,.road-form{grid-template-columns:1fr}}
+
 @media(max-width:1260px){.header,.layout{grid-template-columns:1fr}.kpis{grid-template-columns:repeat(2,1fr)}.info-grid{grid-template-columns:1fr 1fr}}
 @media(max-width:760px){.app{padding:12px}.header,.info-grid,.kpis,.form-grid,.note-form,.note-grid{grid-template-columns:1fr}.quick,.actionbar{justify-content:flex-start}.toplink,.btn{width:100%;justify-content:flex-start}.object-head{grid-template-columns:58px 1fr}.status-zone{grid-column:1/-1}.kpi{grid-template-columns:58px 1fr}.spark{display:none}}
 @media print{body{background:white;color:#111}.quick,.actionbar,.familybar,.sidebar,.btn,.icon-btn,.modal,.toast{display:none!important}.app{max-width:none}.layout{grid-template-columns:1fr}.panel{box-shadow:none;border:1px solid #999;background:white;color:#111}.subcard{background:white}.pill{color:#111}}
@@ -119,7 +140,7 @@ textarea{resize:vertical;min-height:76px} input:focus,select:focus,textarea:focu
   <header class="header">
     <section class="brand">
       <div class="logo">BI</div>
-      <div><h1>Cockpit Projets BI</h1><p class="subtitle">V6.4D · onglets centraux réparés · notes prompt</p></div>
+      <div><h1>Cockpit Projets BI</h1><p class="subtitle">V6.4E · roadmap pilotable · blocs traitement validation</p></div>
     </section>
     <nav class="quick">
       <a class="toplink" id="projectGptLink" target="_blank" rel="noopener">
@@ -191,9 +212,9 @@ textarea{resize:vertical;min-height:76px} input:focus,select:focus,textarea:focu
 
 <script>
 'use strict';
-const VERSION='V6.4D-reparation-onglets-notes';
+const VERSION='V6.4E-roadmap-pilotable';
 const STABLE_KEY='central_bi_project_manager_current';
-const VERSION_KEY='central_bi_project_manager_v64d';
+const VERSION_KEY='central_bi_project_manager_v64e';
 const KEY=STABLE_KEY;
 const MIRROR_KEYS=[VERSION_KEY,'central_bi_project_manager_v61','central_bi_project_manager_v6'];
 const PREVIOUS_KEYS=[VERSION_KEY,'central_bi_project_manager_v61','central_bi_project_manager_v6','central_bi_project_manager_v5','central_bi_project_manager_v4','central_bi_project_manager_v1'];
@@ -308,7 +329,7 @@ function renderCentralTabs(){
     ['fiche','🧩 Fiche projet'],
     ['dashboard','📊 Dashboard'],
     ['active','🟢 Mode actif'],
-    ['roadmap','📈 Roadmap'],
+    ['roadmap','📈 Roadmap pilotable'],
     ['deploy','🚀 Déploiement'],
     ['notes','📓 Notes / panier prompt'],
     ['data','🟢 Données & sync'],
@@ -372,13 +393,113 @@ function deleteNote(i){const p=selected();if(!p.notes||!p.notes[i])return;if(!co
 function selectAllNotes(val){const p=selected();(p.notes||[]).forEach(n=>n.selected=val);persist('panier notes');renderAll()}
 async function copyPromptBasket(){const txt=buildPromptBasket(selected());try{await navigator.clipboard.writeText(txt);toast('Prompt copié')}catch(e){toast('Copie impossible, sélectionne le texte')}}
 function downloadPromptBasket(){const blob=new Blob([buildPromptBasket(selected())],{type:'text/plain;charset=utf-8'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download='PROMPT_'+selected().name.replace(/[^a-z0-9]+/gi,'_')+'_'+today()+'.txt';a.click();URL.revokeObjectURL(url)}
+
+const ROAD_STATUSES=['À traiter','En cours','Validation','Validé'];
+const ROAD_PRIOS=['Haute','Moyenne','Basse'];
+function ensureRoadmap(p){
+  if(!Array.isArray(p.roadmapBlocks)||!p.roadmapBlocks.length){
+    p.roadmapBlocks=[
+      {id:uid(),title:'Clarifier la prochaine action',type:'Action',status:'À traiter',priority:p.priority||'Haute',text:p.nextAction||'Définir le prochain traitement utile pour ce projet.',created:nowFr()},
+      {id:uid(),title:'Contrôler les sources',type:'Contrôle',status:'En cours',priority:'Moyenne',text:'Vérifier Drive, GitHub, snapshots et liens réels du projet.',created:nowFr()},
+      {id:uid(),title:'Validation usage réel',type:'Validation',status:'Validation',priority:'Haute',text:'Tester le BI en conditions réelles avant publication ou archivage.',created:nowFr()},
+      {id:uid(),title:'Publier / archiver',type:'Déploiement',status:'Validé',priority:'Basse',text:'Conserver une trace de la version publiée et des exports JSON.',created:nowFr()}
+    ];
+  }
+}
+function renderRoadmapPilotable(){
+  const p=selected(); ensureRoadmap(p);
+  const blocks=p.roadmapBlocks||[];
+  const counts=Object.fromEntries(ROAD_STATUSES.map(s=>[s,blocks.filter(b=>b.status===s).length]));
+  return `<div class="view-title"><h2>📈 Roadmap pilotable</h2><span class="pill violet">${esc(p.name)}</span></div>
+  <div class="road-summary">
+    ${ROAD_STATUSES.map(s=>`<div class="road-k"><b>${counts[s]}</b><small>${esc(s)}</small></div>`).join('')}
+  </div>
+  <div class="roadmap-toolbar">
+    <button class="mini-btn" onclick="addRoadBlockFromForm()">＋ Ajouter bloc</button>
+    <button class="mini-btn" onclick="roadmapFromNotes()">Créer blocs depuis notes sélectionnées</button>
+    <button class="mini-btn" onclick="exportRoadmapPrompt()">Prompt roadmap</button>
+    <button class="mini-btn" onclick="resetProjectRoadmap()">Réinitialiser roadmap projet</button>
+  </div>
+  <div class="road-form">
+    <input id="roadTitle" placeholder="Titre du bloc : ex. corriger onglet notes">
+    <select id="roadType"><option>Action</option><option>Idée</option><option>Problème</option><option>Bug</option><option>Validation</option><option>Déploiement</option><option>Contrôle</option></select>
+    <select id="roadPriority">${ROAD_PRIOS.map(x=>`<option>${x}</option>`).join('')}</select>
+    <select id="roadStatus">${ROAD_STATUSES.map(x=>`<option>${x}</option>`).join('')}</select>
+    <textarea id="roadText" placeholder="Détail, critères de validation, point à traiter..."></textarea>
+  </div>
+  <section class="roadmap-board">
+    ${ROAD_STATUSES.map(status=>renderRoadColumn(status,blocks.filter(b=>b.status===status))).join('')}
+  </section>`
+}
+function renderRoadColumn(status,items){
+  return `<div class="road-col" data-status="${esc(status)}" ondragover="event.preventDefault()" ondrop="dropRoadBlock(event,'${esc(status)}')">
+    <h3>${esc(status)} <span class="road-count">${items.length}</span></h3>
+    <div class="road-drop">
+      ${items.length?items.map(renderRoadCard).join(''):`<div class="road-empty">Dépose un bloc ici</div>`}
+    </div>
+  </div>`
+}
+function renderRoadCard(b){
+  const cls='road-prio-'+String(b.priority||'Moyenne').toLowerCase();
+  return `<article class="road-card ${cls}" draggable="true" ondragstart="dragRoadBlock(event,'${esc(b.id)}')" ondragend="this.classList.remove('dragging')">
+    <h4>${esc(b.title||'Bloc sans titre')}</h4>
+    <div class="road-meta"><span class="pill">${esc(b.type||'Action')}</span><span class="pill ${b.priority==='Haute'?'red':b.priority==='Moyenne'?'orange':'green'}">${esc(b.priority||'Moyenne')}</span></div>
+    <p>${esc(b.text||'')}</p>
+    <small class="muted">${esc(b.created||'')}</small>
+    <div class="road-actions">
+      <button class="mini-btn" onclick="moveRoadBlock('${esc(b.id)}',-1)">←</button>
+      <button class="mini-btn" onclick="moveRoadBlock('${esc(b.id)}',1)">→</button>
+      <button class="mini-btn" onclick="editRoadBlock('${esc(b.id)}')">Éditer</button>
+      <button class="mini-btn" onclick="deleteRoadBlock('${esc(b.id)}')">×</button>
+    </div>
+  </article>`
+}
+let draggedRoadId='';
+function dragRoadBlock(ev,id){draggedRoadId=id;ev.currentTarget.classList.add('dragging');try{ev.dataTransfer.setData('text/plain',id)}catch(e){}}
+function dropRoadBlock(ev,status){ev.preventDefault();const id=draggedRoadId||ev.dataTransfer.getData('text/plain');if(!id)return;setRoadStatus(id,status)}
+function findRoadBlock(id){const p=selected();ensureRoadmap(p);return (p.roadmapBlocks||[]).find(b=>b.id===id)}
+function setRoadStatus(id,status){const b=findRoadBlock(id);if(!b)return;b.status=status;b.updated=nowFr();persist('roadmap statut');renderAll()}
+function moveRoadBlock(id,dir){const b=findRoadBlock(id);if(!b)return;let i=ROAD_STATUSES.indexOf(b.status);i=Math.max(0,Math.min(ROAD_STATUSES.length-1,i+dir));b.status=ROAD_STATUSES[i];b.updated=nowFr();persist('roadmap déplacement');renderAll()}
+function addRoadBlockFromForm(){
+  const p=selected();ensureRoadmap(p);
+  const title=($('roadTitle')?.value||'').trim(); if(!title){toast('Titre du bloc obligatoire');return}
+  p.roadmapBlocks.unshift({id:uid(),title,type:$('roadType').value,status:$('roadStatus').value,priority:$('roadPriority').value,text:($('roadText')?.value||'').trim(),created:nowFr()});
+  persist('roadmap bloc ajouté');toast('Bloc roadmap ajouté');renderAll();
+}
+function editRoadBlock(id){
+  const b=findRoadBlock(id);if(!b)return;
+  const title=prompt('Titre du bloc',b.title||''); if(title===null)return;
+  const text=prompt('Détail / critères',b.text||''); if(text===null)return;
+  const prio=prompt('Priorité : Haute / Moyenne / Basse',b.priority||'Moyenne'); if(prio===null)return;
+  b.title=title.trim()||b.title;b.text=text;b.priority=ROAD_PRIOS.includes(prio)?prio:b.priority;b.updated=nowFr();
+  persist('roadmap bloc édité');renderAll();
+}
+function deleteRoadBlock(id){const p=selected();ensureRoadmap(p);if(!confirm('Supprimer ce bloc roadmap ?'))return;p.roadmapBlocks=p.roadmapBlocks.filter(b=>b.id!==id);persist('roadmap bloc supprimé');renderAll()}
+function resetProjectRoadmap(){const p=selected();if(!confirm('Réinitialiser la roadmap de ce projet ?'))return;p.roadmapBlocks=[];ensureRoadmap(p);persist('roadmap reset');renderAll()}
+function roadmapFromNotes(){
+  const p=selected();ensureRoadmap(p);
+  const selectedNotes=(p.notes||[]).filter(n=>n.selected);
+  if(!selectedNotes.length){toast('Sélectionne des notes dans l’onglet Notes');return}
+  selectedNotes.forEach(n=>p.roadmapBlocks.unshift({id:uid(),title:n.title||n.type||'Note',type:n.type||'Note',status:'À traiter',priority:n.type==='Bug'||n.type==='Problème'?'Haute':'Moyenne',text:n.text||'',created:nowFr()}));
+  persist('roadmap depuis notes');toast('Blocs créés depuis notes');renderAll();
+}
+function buildRoadmapPrompt(){
+  const p=selected();ensureRoadmap(p);
+  return `Contexte : pilotage du projet "${p.name}" dans le Cockpit Projets BI.\nObjectif : analyser la roadmap, prioriser et proposer le prochain plan de traitement.\n\n`+
+    ROAD_STATUSES.map(s=>`\n## ${s}\n`+(p.roadmapBlocks||[]).filter(b=>b.status===s).map((b,i)=>`- [${b.priority}] ${b.type} · ${b.title}\n  ${b.text||''}`).join('\n')).join('\n')+
+    `\n\nRéponse attendue : priorités, risques, validations nécessaires, prochaines actions concrètes, éléments à transformer en notes ou bugs.`;
+}
+async function exportRoadmapPrompt(){
+  const txt=buildRoadmapPrompt();
+  try{await navigator.clipboard.writeText(txt);toast('Prompt roadmap copié')}catch(e){const blob=new Blob([txt],{type:'text/plain;charset=utf-8'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download='PROMPT_ROADMAP_'+selected().name.replace(/[^a-z0-9]+/gi,'_')+'_'+today()+'.txt';a.click();URL.revokeObjectURL(url);toast('Prompt téléchargé')}
+}
 function renderMainView(){
   const p=selected(), total=state.projects.length, active=state.projects.filter(p=>['En cours','Déployé','Validé','À tester'].includes(p.status)).length, avg=Math.round(state.projects.reduce((a,p)=>a+projectReadiness(p),0)/Math.max(1,total));
   let html='';
   if(activeMain==='fiche'){html=''}
   else if(activeMain==='dashboard'){html=`<div class="view-title"><h2>📊 Dashboard</h2><span class="pill">${active}/${total} actifs</span></div>${renderPilotageBoard()}<div class="subcard" style="min-height:auto"><h3>Portefeuille</h3><p class="muted">Maturité moyenne ${avg}% · Drive Sync ${getDriveConfig().enabled?'connecté':'à configurer'} · snapshots ${getSnapshots().length}.</p></div>`}
   else if(activeMain==='active'){html=`<div class="view-title"><h2>🟢 Mode actif</h2><span class="pill green">${esc(p.status)}</span></div>${renderPilotageBoard()}<div class="subcard" style="min-height:auto"><p>Dernière reprise : <b>${esc(recoveryMeta.source)}</b>. Drive Sync : <b>${esc(getDriveConfig().lastStatus)}</b>.</p><button class="mini-btn" onclick="sendDriveSync('manuel')">☁ Envoyer maintenant</button><button class="mini-btn" onclick="exportManifest()">▤ Manifest global</button></div>`}
-  else if(activeMain==='roadmap'){html=`<div class="view-title"><h2>📈 Roadmap</h2><span class="pill violet">${esc(p.phase)}</span></div>${renderPilotageBoard()}<div class="subcard" style="min-height:auto"><h3>Roadmap complète</h3><p>Maintenant : ${esc(p.nextAction||'—')}</p><p>Milestone : ${esc(p.sources?.nextMilestone||'—')}</p><p>Après : stabiliser, publier, archiver.</p></div>`}
+  else if(activeMain==='roadmap'){html=renderRoadmapPilotable()}
   else if(activeMain==='deploy'){html=`<div class="view-title"><h2>🚀 Déploiement</h2><span class="pill green">GitHub Pages</span></div>${renderPilotageBoard()}<div class="subcard" style="min-height:auto"><p>Publication manuelle conservée : remplacer <b>apps/gestion-projets-bi/index.html</b>.</p><p><a href="${PUBLIC_ROOT}gestion-projets-bi/" target="_blank">Ouvrir la version publiée</a></p></div>`}
   else if(activeMain==='notes'){html=renderNotesModule()}
   else if(activeMain==='data'){html=`<div class="view-title"><h2>🟢 Données & sync</h2><span class="pill ${getDriveConfig().enabled?'green':'orange'}">${getDriveConfig().enabled?'Connecté':'À configurer'}</span></div><div class="subcard" style="min-height:auto"><p>Clé active : <b>${KEY}</b></p><p>Snapshots locaux : <b>${getSnapshots().length}</b></p><p>Dernière sync : <b>${esc(getDriveConfig().lastSent||'—')}</b></p><button class="mini-btn" onclick="exportJson()">Export JSON</button><button class="mini-btn" onclick="exportSnapshot()">Snapshot</button><button class="mini-btn" onclick="sendDriveSync('manuel')">Drive Sync maintenant</button></div>`}
