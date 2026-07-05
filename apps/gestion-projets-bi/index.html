@@ -1,494 +1,416 @@
 <!doctype html>
 <html lang="fr">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Cockpit Projets BI · V6.3 Drive Sync</title>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Cockpit Projets BI · V6.4D Réparation</title>
 <style>
 :root{
-  --bg:#040815;
-  --panel:rgba(7,18,41,.82);
-  --panel2:rgba(9,28,61,.72);
-  --line:#1aa7ff;
-  --cyan:#28eaff;
-  --blue:#197bff;
-  --green:#35f384;
-  --violet:#b45dff;
-  --orange:#ffc34d;
-  --red:#ff6472;
-  --txt:#f5fbff;
-  --muted:#9ec5df;
-  --muted2:#6f91ad;
-  --radius:22px;
-  --shadow:0 0 30px rgba(22,143,255,.22), inset 0 0 26px rgba(37,177,255,.055);
+  --bg:#030711;--bg2:#06112a;--panel:rgba(7,18,41,.82);--panel2:rgba(9,28,61,.72);
+  --line:#1aa7ff;--cyan:#28eaff;--blue:#197bff;--green:#35f384;--violet:#b45dff;--orange:#ffc34d;--red:#ff6472;
+  --txt:#f5fbff;--muted:#9ec5df;--muted2:#6f91ad;--radius:22px;
+  --shadow:0 0 30px rgba(22,143,255,.18), inset 0 0 26px rgba(37,177,255,.045);
   --font:Inter,Segoe UI,Roboto,Arial,sans-serif;
 }
 *{box-sizing:border-box}
-html,body{margin:0;min-height:100%;font-family:var(--font);color:var(--txt);background:radial-gradient(circle at 48% 18%,#0d3265 0,#050b1c 38%,#02040d 100%);overflow-x:hidden}
+html,body{margin:0;min-height:100%;font-family:var(--font);color:var(--txt);background:radial-gradient(circle at 48% 12%,#0d3265 0,#050b1c 38%,#02040d 100%);overflow-x:hidden}
 body:before{content:"";position:fixed;inset:0;pointer-events:none;background:
-  radial-gradient(circle at 8% 8%,rgba(29,151,255,.22),transparent 22%),
-  radial-gradient(circle at 92% 13%,rgba(63,255,139,.13),transparent 22%),
-  radial-gradient(circle at 72% 84%,rgba(180,93,255,.15),transparent 26%),
-  linear-gradient(115deg,rgba(255,255,255,.04) 0 1px,transparent 1px 120px);z-index:-2}
-body:after{content:"";position:fixed;inset:-40px;pointer-events:none;background-image:radial-gradient(rgba(42,220,255,.45) 1px,transparent 1px);background-size:48px 48px;mask-image:radial-gradient(circle at 50% 30%,black,transparent 72%);opacity:.18;z-index:-1}
+  radial-gradient(circle at 8% 8%,rgba(29,151,255,.20),transparent 22%),
+  radial-gradient(circle at 92% 13%,rgba(63,255,139,.11),transparent 22%),
+  radial-gradient(circle at 72% 84%,rgba(180,93,255,.13),transparent 26%),
+  linear-gradient(115deg,rgba(255,255,255,.035) 0 1px,transparent 1px 120px);z-index:-2}
+body:after{content:"";position:fixed;inset:-40px;pointer-events:none;background-image:radial-gradient(rgba(42,220,255,.40) 1px,transparent 1px);background-size:48px 48px;mask-image:radial-gradient(circle at 50% 25%,black,transparent 72%);opacity:.14;z-index:-1}
 button,input,select,textarea{font-family:inherit}
-button{cursor:pointer;color:var(--txt);border:0}
-a{color:#69eaff;text-decoration:none}
-.app{max-width:1680px;margin:0 auto;padding:18px 18px 22px}
-.topbar{display:grid;grid-template-columns:1fr minmax(420px,720px);gap:14px;align-items:stretch;margin-bottom:14px}
-.header-right{display:grid;gap:12px}
-.quick-links{display:flex;align-items:center;justify-content:flex-end;gap:10px;flex-wrap:wrap;padding:12px 14px;border:1px solid rgba(72,175,255,.28);border-radius:24px;background:rgba(5,13,31,.68)}
-.toplink{display:flex;align-items:center;justify-content:center;gap:10px;min-width:168px;padding:10px 14px;border-radius:16px;border:1px solid rgba(89,190,255,.38);background:linear-gradient(180deg,rgba(12,39,78,.95),rgba(7,18,42,.92));box-shadow:0 0 16px rgba(28,143,255,.13);font-weight:900;font-size:13px;color:var(--txt);transition:.15s transform,.15s border,.15s box-shadow}
-.toplink:hover{transform:translateY(-1px);border-color:rgba(74,229,255,.8);box-shadow:0 0 22px rgba(40,234,255,.22)}
-.toplink.is-empty{opacity:.8;border-style:dashed}
-.topicon{width:22px;height:22px;display:inline-grid;place-items:center;flex:0 0 22px}
-.topicon svg{width:22px;height:22px;display:block}
-.toplink small{display:block;color:var(--muted2);font-size:11px;font-weight:700;line-height:1.1;margin-top:1px}
-.toplabel{display:flex;flex-direction:column;align-items:flex-start;line-height:1.05}
-.toplink.gpt{border-color:rgba(102,255,214,.42)}
-.toplink.drive{border-color:rgba(100,194,255,.45)}
-.toplink.github{border-color:rgba(255,255,255,.25)}
-.brand{display:flex;align-items:center;gap:14px;padding:15px 17px;border:1px solid rgba(55,185,255,.48);border-radius:26px;background:linear-gradient(135deg,rgba(8,25,58,.88),rgba(5,10,26,.76));box-shadow:var(--shadow)}
-.logo{width:68px;height:68px;border-radius:21px;display:grid;place-items:center;font-size:32px;font-weight:950;background:radial-gradient(circle at 35% 25%,#64f8ff,#0d80ff 48%,#071229 75%);box-shadow:0 0 26px rgba(34,180,255,.62), inset 0 0 20px rgba(255,255,255,.14);position:relative}
-.logo:after{content:"";position:absolute;inset:-7px;border-radius:25px;border:1px dashed rgba(40,234,255,.5)}
-h1{margin:0;font-size:clamp(26px,3vw,42px);line-height:1;text-transform:uppercase;letter-spacing:.025em;text-shadow:0 0 18px rgba(40,234,255,.32)}
-.subtitle{margin:6px 0 0;color:var(--cyan);font-size:15px}
-.actions{display:flex;align-items:center;justify-content:flex-end;gap:9px;flex-wrap:wrap;padding:12px;border:1px solid rgba(72,175,255,.28);border-radius:24px;background:rgba(5,13,31,.68)}
-.btn{padding:10px 12px;border-radius:14px;border:1px solid rgba(89,190,255,.38);background:linear-gradient(180deg,rgba(12,39,78,.95),rgba(7,18,42,.92));box-shadow:0 0 16px rgba(28,143,255,.13);font-weight:850;font-size:13px;transition:.15s transform,.15s border,.15s box-shadow}
-.btn:hover{transform:translateY(-1px);border-color:rgba(74,229,255,.8);box-shadow:0 0 22px rgba(40,234,255,.22)}
-.btn.green{border-color:rgba(53,243,132,.5)}.btn.violet{border-color:rgba(180,93,255,.55)}.btn.orange{border-color:rgba(255,195,77,.56)}.btn.red{border-color:rgba(255,100,114,.58)}
-.grid{display:grid;grid-template-columns:360px minmax(0,1fr) 390px;gap:14px;align-items:start}
-.panel{position:relative;overflow:hidden;border-radius:var(--radius);border:1px solid rgba(55,177,255,.38);background:linear-gradient(145deg,rgba(8,20,45,.86),rgba(4,9,26,.78));box-shadow:var(--shadow);backdrop-filter:blur(10px)}
-.panel:before{content:"";position:absolute;inset:0;background:linear-gradient(105deg,rgba(255,255,255,.055),transparent 28%,transparent 78%,rgba(42,234,255,.045));pointer-events:none}
-.panel.pad{padding:15px}.panel.green{border-color:rgba(53,243,132,.45)}.panel.violet{border-color:rgba(180,93,255,.46)}.panel.orange{border-color:rgba(255,195,77,.46)}
-.panel-head{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;margin-bottom:12px;position:relative;z-index:1}
-.panel-head .left{display:flex;align-items:center;gap:11px}.badge-num{width:42px;height:42px;border-radius:50%;display:grid;place-items:center;font-weight:950;font-size:22px;background:radial-gradient(circle at 35% 30%,#70fbff,#0b83ff 55%,#061534);box-shadow:0 0 22px rgba(25,150,255,.65)}
-.panel h2{font-size:20px;line-height:1.08;text-transform:uppercase;margin:0}.hint{color:var(--muted);font-size:12px;margin-top:3px}.mini-ico{font-size:30px;filter:drop-shadow(0 0 10px rgba(47,210,255,.45))}
-.workspace-tabs{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:10px;position:relative;z-index:1}
-.ws{padding:9px 6px;border-radius:13px;border:1px solid rgba(96,181,255,.26);background:rgba(5,15,35,.72);font-size:12px;font-weight:900;color:#dcefff}.ws.active{border-color:rgba(40,234,255,.82);box-shadow:0 0 18px rgba(40,234,255,.18)}
-.filters{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:11px;position:relative;z-index:1}.filters input{grid-column:1/-1}
-input,select,textarea{width:100%;padding:10px 11px;border-radius:13px;border:1px solid rgba(87,174,238,.32);background:rgba(3,10,25,.72);color:#effbff;outline:none}textarea{resize:vertical;min-height:76px}input:focus,select:focus,textarea:focus{border-color:rgba(40,234,255,.8);box-shadow:0 0 0 3px rgba(40,234,255,.1)}
-.list{position:relative;z-index:1;display:flex;flex-direction:column;gap:9px;max-height:calc(100vh - 260px);overflow:auto;padding-right:3px}.list::-webkit-scrollbar,.side-body::-webkit-scrollbar{width:8px}.list::-webkit-scrollbar-thumb,.side-body::-webkit-scrollbar-thumb{background:rgba(75,185,255,.35);border-radius:99px}
-.card{display:grid;grid-template-columns:48px 1fr auto;gap:10px;align-items:center;padding:11px;border-radius:18px;border:1px solid rgba(76,174,255,.27);background:linear-gradient(135deg,rgba(9,31,69,.78),rgba(5,12,31,.74));transition:.15s;box-shadow:inset 0 0 18px rgba(37,161,255,.045)}.card:hover{transform:translateX(2px);border-color:rgba(40,234,255,.65)}.card.active{border-color:rgba(40,234,255,.95);box-shadow:0 0 21px rgba(40,234,255,.20),inset 0 0 18px rgba(40,234,255,.06)}
-.card-ico{width:48px;height:48px;border-radius:15px;display:grid;place-items:center;font-size:25px;border:1px solid rgba(92,202,255,.28);background:rgba(37,142,255,.13)}.card h3{margin:0;font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.meta{display:flex;gap:5px;flex-wrap:wrap;margin-top:6px}.pill{display:inline-flex;align-items:center;gap:5px;padding:4px 8px;border-radius:999px;border:1px solid rgba(101,189,255,.32);background:rgba(10,35,72,.55);font-size:11px;color:#d7edff;white-space:nowrap}.pill.perso{border-color:rgba(180,93,255,.46);color:#ebd5ff}.pill.boulot{border-color:rgba(40,234,255,.50);color:#cff9ff}.pill.clients{border-color:rgba(53,243,132,.48);color:#d9ffe7}.pill.orange{border-color:rgba(255,195,77,.52);color:#ffe2a5}.pill.red{border-color:rgba(255,100,114,.52);color:#ffc8cd}.pill.green{border-color:rgba(53,243,132,.48);color:#d9ffe7}.pill.violet{border-color:rgba(180,93,255,.46);color:#ebd5ff}
-.mini-progress{width:50px;height:50px;border-radius:50%;display:grid;place-items:center;background:conic-gradient(var(--cyan) calc(var(--p)*1%),rgba(255,255,255,.08) 0);position:relative;font-size:12px;font-weight:950}.mini-progress:before{content:"";position:absolute;inset:6px;border-radius:50%;background:#071229}.mini-progress span{position:relative}
-.topstats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:14px}.stat{min-height:82px;padding:13px;border-radius:18px;border:1px solid rgba(75,181,255,.26);background:rgba(5,15,35,.65)}.stat b{display:block;font-size:28px;line-height:1}.stat span{color:var(--muted);font-size:12px}.stat small{display:block;margin-top:5px;color:var(--cyan)}
-.detail{position:relative;z-index:1}.object-head{display:grid;grid-template-columns:86px 1fr auto;gap:15px;align-items:center;margin-bottom:14px}.object-icon{width:86px;height:86px;border-radius:26px;display:grid;place-items:center;font-size:45px;background:radial-gradient(circle at 34% 25%,rgba(101,248,255,.36),rgba(19,124,255,.18) 50%,rgba(7,14,36,.9));border:1px solid rgba(70,205,255,.42);box-shadow:0 0 24px rgba(33,178,255,.2)}.object-title h2{font-size:clamp(26px,3vw,39px);text-transform:none;letter-spacing:0;margin-bottom:7px}.object-title p{margin:0;color:#b8d8ee;line-height:1.38;font-size:14px}.ring{width:94px;height:94px;border-radius:50%;display:grid;place-items:center;background:conic-gradient(var(--green) calc(var(--p)*1%),rgba(255,255,255,.08) 0);position:relative;font-size:24px;font-weight:950;box-shadow:0 0 22px rgba(53,243,132,.16)}.ring:before{content:"";position:absolute;inset:9px;background:#071229;border-radius:50%}.ring span{position:relative}.ring small{font-size:12px;color:var(--muted)}
-.form-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:11px}.form-grid.two{grid-template-columns:1fr 1fr}.field label{display:block;font-size:11px;letter-spacing:.055em;text-transform:uppercase;font-weight:900;color:#a8cbe4;margin:0 0 5px}
-.main-actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:12px}.bar{height:9px;border-radius:999px;background:rgba(255,255,255,.10);overflow:hidden;border:1px solid rgba(92,181,255,.18)}.bar span{display:block;height:100%;width:0;background:linear-gradient(90deg,#168cff,#28eaff,#35f384);box-shadow:0 0 14px rgba(40,234,255,.4)}
-.phase-rail{display:grid;grid-template-columns:repeat(7,1fr);gap:7px;margin-top:13px}.phase-step{padding:9px 6px;text-align:center;border-radius:14px;border:1px solid rgba(86,177,255,.24);background:rgba(4,14,32,.62);font-size:11px;font-weight:900;color:#96b9d4}.phase-step.done{border-color:rgba(53,243,132,.43);color:#d9ffe7}.phase-step.current{border-color:rgba(40,234,255,.9);color:#fff;box-shadow:0 0 15px rgba(40,234,255,.17)}
-.summary-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:14px}.tile{padding:13px;border-radius:18px;border:1px solid rgba(80,178,255,.25);background:rgba(5,15,35,.66);min-height:94px}.tile h4{margin:0 0 7px;font-size:14px}.tile p{margin:0;color:#bedcf0;font-size:12px;line-height:1.37}.tile b.big{display:block;font-size:25px;line-height:1;color:white;margin-bottom:4px}
-.side-tabs{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:11px;position:relative;z-index:1}.side-tab{padding:9px 5px;border-radius:13px;border:1px solid rgba(96,181,255,.26);background:rgba(5,15,35,.72);font-size:12px;font-weight:900}.side-tab.active{border-color:rgba(180,93,255,.88);box-shadow:0 0 18px rgba(180,93,255,.19)}.side-body{position:relative;z-index:1;max-height:calc(100vh - 220px);overflow:auto;padding-right:3px}.feed-item{padding:11px;border:1px solid rgba(78,180,255,.25);border-radius:16px;background:rgba(4,14,33,.72);margin-bottom:8px}.feed-top{display:flex;justify-content:space-between;gap:10px;margin-bottom:5px}.feed-item b{font-size:13px}.feed-item small{color:#98bdd8}.feed-item p{margin:4px 0 0;color:#d7edf9;font-size:13px;line-height:1.4;white-space:pre-wrap}.mini-form{display:grid;gap:8px;margin-bottom:10px}.row2{display:grid;grid-template-columns:1fr 1fr;gap:8px}.row3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}.icon-btn{width:33px;height:33px;border-radius:11px;border:1px solid rgba(92,181,255,.25);background:rgba(8,27,57,.78)}.link-row{display:grid;grid-template-columns:38px 1fr auto;gap:9px;align-items:center}.link-ico{width:38px;height:38px;border-radius:12px;display:grid;place-items:center;background:rgba(40,142,255,.15)}.options-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}.opt{display:flex;align-items:center;gap:8px;padding:9px;border-radius:14px;border:1px solid rgba(80,178,255,.23);background:rgba(5,13,31,.7);font-size:12px;color:#cae6fb}.opt input{width:17px;height:17px;accent-color:#28eaff}.opt.done{border-color:rgba(53,243,132,.55);color:#d9ffe7}
-.footer-rules{display:grid;grid-template-columns:repeat(6,1fr);gap:10px;margin-top:14px}.rule{min-height:58px;display:flex;align-items:center;gap:10px;padding:11px;border-radius:18px;border:1px solid rgba(83,179,255,.3);background:rgba(6,17,39,.74)}.rule .ico{font-size:24px}.rule b{font-size:13px}.rule small{display:block;color:var(--muted);font-size:11px;margin-top:2px}
-.modal{position:fixed;inset:0;display:none;align-items:center;justify-content:center;z-index:30;background:rgba(1,4,13,.77);backdrop-filter:blur(7px);padding:18px}.modal.active{display:flex}.modal-box{width:min(760px,96vw);max-height:90vh;overflow:auto;border-radius:26px;border:1px solid rgba(40,234,255,.68);background:linear-gradient(145deg,#071631,#030817);box-shadow:0 0 48px rgba(40,170,255,.34);padding:17px}.modal-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}.modal-head h3{margin:0;font-size:24px}.toast{position:fixed;right:18px;bottom:18px;padding:13px 15px;border-radius:17px;border:1px solid rgba(40,234,255,.78);background:rgba(4,18,42,.96);box-shadow:0 0 25px rgba(40,234,255,.24);z-index:40;opacity:0;transform:translateY(12px);transition:.2s}.toast.show{opacity:1;transform:translateY(0)}.empty{padding:14px;border-radius:16px;border:1px dashed rgba(88,178,255,.28);color:#9fc6df;text-align:center;background:rgba(4,13,32,.52)}
+button{cursor:pointer;color:var(--txt);border:0} a{color:inherit;text-decoration:none}
+.app{max-width:1720px;margin:0 auto;padding:28px clamp(26px,3vw,46px)}
+.header{display:grid;grid-template-columns:minmax(420px,1fr) minmax(520px,720px);gap:16px;margin-bottom:14px}
+.brand,.quick,.actionbar,.family,.panel,.kpi{border:1px solid rgba(55,177,255,.32);background:linear-gradient(145deg,rgba(8,20,45,.82),rgba(4,9,26,.78));box-shadow:var(--shadow);border-radius:26px;position:relative;overflow:hidden}
+.brand:before,.quick:before,.actionbar:before,.family:before,.panel:before,.kpi:before{content:"";position:absolute;inset:0;background:linear-gradient(105deg,rgba(255,255,255,.052),transparent 28%,transparent 78%,rgba(42,234,255,.035));pointer-events:none}
+.brand{display:flex;align-items:center;gap:18px;padding:18px 20px}
+.logo{width:78px;height:78px;border-radius:24px;display:grid;place-items:center;font-size:37px;font-weight:950;background:radial-gradient(circle at 35% 25%,#64f8ff,#0d80ff 48%,#071229 75%);box-shadow:0 0 28px rgba(34,180,255,.60),inset 0 0 22px rgba(255,255,255,.12);position:relative;flex:0 0 78px}
+.logo:after{content:"";position:absolute;inset:-7px;border-radius:29px;border:1px dashed rgba(40,234,255,.5)}
+h1{margin:0;font-size:clamp(32px,4vw,52px);line-height:.96;text-transform:uppercase;letter-spacing:.018em;text-shadow:0 0 20px rgba(40,234,255,.30)}
+.subtitle{margin:8px 0 0;color:var(--cyan);font-size:16px}.muted{color:var(--muted)}
+.quick{display:flex;align-items:center;justify-content:flex-end;gap:12px;padding:14px}
+.toplink{min-width:178px;display:flex;align-items:center;gap:12px;padding:13px 16px;border-radius:17px;border:1px solid rgba(89,190,255,.36);background:linear-gradient(180deg,rgba(12,39,78,.94),rgba(7,18,42,.91));box-shadow:0 0 16px rgba(28,143,255,.11);font-weight:950}
+.toplink:hover{transform:translateY(-1px);border-color:rgba(74,229,255,.82);box-shadow:0 0 22px rgba(40,234,255,.20)}
+.toplink small{display:block;color:var(--muted2);font-size:11px;font-weight:800}.topicon{width:28px;height:28px;display:grid;place-items:center;font-size:24px}.topicon svg{width:28px;height:28px}
+.actionbar{display:flex;align-items:center;justify-content:center;gap:12px;flex-wrap:wrap;padding:12px;margin-bottom:14px}
+.btn,.mini-btn,.tab{position:relative;z-index:1;display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:10px 14px;border-radius:14px;border:1px solid rgba(89,190,255,.35);background:linear-gradient(180deg,rgba(12,39,78,.92),rgba(7,18,42,.91));box-shadow:0 0 14px rgba(28,143,255,.10);font-weight:900;font-size:13px;color:#f5fbff}
+.btn:hover,.mini-btn:hover,.tab:hover{border-color:rgba(74,229,255,.8);box-shadow:0 0 20px rgba(40,234,255,.18)}
+.btn.green{border-color:rgba(53,243,132,.50)}.btn.violet{border-color:rgba(180,93,255,.55)}.btn.orange{border-color:rgba(255,195,77,.55)}.btn.red{border-color:rgba(255,100,114,.58)}
+.familybar{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:14px}
+.family{padding:14px 16px}.family h3{display:flex;align-items:center;gap:11px;margin:0 0 12px;font-size:19px}.family .ico{font-size:25px;filter:drop-shadow(0 0 10px rgba(40,234,255,.45))}
+.tabs{display:flex;gap:7px;flex-wrap:wrap}.tab{padding:9px 11px;font-size:12px}.tab.active{background:linear-gradient(180deg,rgba(38,116,255,.75),rgba(57,20,126,.70));border-color:rgba(180,93,255,.80);box-shadow:0 0 18px rgba(180,93,255,.22)}
+.layout{display:grid;grid-template-columns:340px minmax(0,1fr) 320px;gap:16px;align-items:start}
+.panel{padding:16px}.panel-title{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px}.panel-title h2{margin:0;font-size:17px;text-transform:none}
+.project-tools{display:flex;gap:8px}.icon-btn{width:36px;height:36px;border-radius:12px;border:1px solid rgba(95,184,255,.25);background:rgba(3,12,28,.7);display:grid;place-items:center}
+.filters{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px}.filters input{grid-column:1/-1}
+input,select,textarea{width:100%;padding:10px 11px;border-radius:13px;border:1px solid rgba(87,174,238,.30);background:rgba(3,10,25,.70);color:#effbff;outline:none}
+textarea{resize:vertical;min-height:76px} input:focus,select:focus,textarea:focus{border-color:rgba(40,234,255,.8);box-shadow:0 0 0 3px rgba(40,234,255,.10)}
+.list{display:flex;flex-direction:column;gap:8px;max-height:560px;overflow:auto;padding-right:3px}
+.card{display:grid;grid-template-columns:48px 1fr auto;gap:10px;align-items:center;padding:10px;border-radius:17px;border:1px solid rgba(76,174,255,.22);background:linear-gradient(135deg,rgba(9,31,69,.70),rgba(5,12,31,.70));transition:.15s}
+.card:hover{transform:translateX(2px);border-color:rgba(40,234,255,.55)}.card.active{border-color:rgba(40,234,255,.95);box-shadow:0 0 21px rgba(40,234,255,.17),inset 0 0 18px rgba(40,234,255,.05)}
+.card-ico{width:48px;height:48px;border-radius:15px;display:grid;place-items:center;font-size:25px;border:1px solid rgba(92,202,255,.28);background:rgba(37,142,255,.13)}
+.card h3{margin:0;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.meta{display:flex;gap:5px;flex-wrap:wrap;margin-top:6px}
+.pill{display:inline-flex;align-items:center;gap:5px;padding:4px 8px;border-radius:999px;border:1px solid rgba(101,189,255,.30);background:rgba(10,35,72,.50);font-size:11px;color:#d7edff;white-space:nowrap;font-weight:800}
+.pill.green{border-color:rgba(53,243,132,.48);color:#d9ffe7}.pill.orange{border-color:rgba(255,195,77,.52);color:#ffe2a5}.pill.red{border-color:rgba(255,100,114,.52);color:#ffc8cd}.pill.violet{border-color:rgba(180,93,255,.46);color:#ebd5ff}
+.dot{width:8px;height:8px;border-radius:50%;display:inline-block;background:var(--muted);box-shadow:0 0 10px currentColor}.dot.green{background:var(--green)}.dot.orange{background:var(--orange)}.dot.red{background:var(--red)}.dot.blue{background:var(--cyan)}.dot.violet{background:var(--violet)}
+.detail{border-color:rgba(180,93,255,.48);box-shadow:0 0 28px rgba(180,93,255,.14),inset 0 0 26px rgba(37,177,255,.04)}
+.object-head{display:grid;grid-template-columns:58px 1fr auto;gap:14px;align-items:center;margin-bottom:14px}
+.object-icon{width:58px;height:58px;border-radius:18px;display:grid;place-items:center;font-size:32px;background:rgba(37,142,255,.14);border:1px solid rgba(70,205,255,.40);box-shadow:0 0 22px rgba(33,178,255,.18)}
+.object-title h2{font-size:27px;margin:0 0 6px}.object-title p{margin:0;color:#b8d8ee;font-size:13px}
+.status-zone{display:flex;align-items:center;gap:9px}.status-badge{padding:10px 14px;border-radius:14px;background:rgba(53,243,132,.12);border:1px solid rgba(53,243,132,.35);font-weight:950;color:#d8ffe6}
+.info-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.subcard{padding:14px;border-radius:18px;border:1px solid rgba(80,178,255,.24);background:rgba(5,15,35,.62);min-height:178px}
+.subcard h3{display:flex;align-items:center;gap:9px;margin:0 0 12px;font-size:16px;color:#69eaff}
+.row{display:grid;grid-template-columns:120px 1fr;gap:8px;margin:8px 0;color:#cfe6f5;font-size:13px}.row b{color:#fff}
+.progress{height:10px;background:rgba(255,255,255,.11);border-radius:99px;overflow:hidden;border:1px solid rgba(92,181,255,.15);display:inline-block;width:120px;vertical-align:middle}.progress span{display:block;height:100%;background:linear-gradient(90deg,#168cff,#28eaff,#35f384);width:0;box-shadow:0 0 14px rgba(40,234,255,.35)}
+.timeline{display:grid;gap:10px}.tline{display:grid;grid-template-columns:70px 1fr 20px;gap:8px;align-items:center;font-size:13px}.tline .q{color:#c8a6ff}.check{color:var(--green);font-weight:950}
+.note-box{border-top:1px solid rgba(255,255,255,.08);padding-top:10px;color:#cfe6f5;font-size:13px;line-height:1.4}
+.linklist{display:grid;gap:9px}.linkrow{display:grid;grid-template-columns:24px 1fr 24px;align-items:center;gap:8px;padding-bottom:8px;border-bottom:1px solid rgba(255,255,255,.07);font-size:13px;color:#d8edfb}.linkrow a{color:#d8edfb}
+.sidebar{display:flex;flex-direction:column;gap:12px}.acc{padding:16px;border-radius:20px;border:1px solid rgba(80,178,255,.24);background:rgba(5,15,35,.62)}.acc-head{display:grid;grid-template-columns:34px 1fr auto;gap:10px;align-items:center}.acc h3{margin:0;font-size:16px}.acc small{display:block;color:#a8cbe4;margin-top:5px}.acc .state{color:var(--green);font-weight:900}.chev{color:#d8edfb;font-size:20px}.signal{justify-self:end}
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:14px}.kpi{padding:18px;min-height:106px;display:grid;grid-template-columns:76px 1fr 120px;gap:14px;align-items:center}.kpi-ico{font-size:44px}.kpi h3{margin:0;color:var(--cyan);font-size:15px}.kpi b{font-size:30px}.kpi small{color:var(--muted);display:block}.spark{height:42px;width:100%;opacity:.95}
+.spark svg{width:100%;height:100%}
+.modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.72);z-index:20;place-items:center;padding:20px}.modal.show{display:grid}.modal-card{width:min(720px,94vw);max-height:90vh;overflow:auto;background:linear-gradient(145deg,#07152f,#030814);border:1px solid rgba(40,234,255,.45);border-radius:26px;box-shadow:0 0 50px rgba(40,234,255,.22);padding:18px}.modal-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}
+.form-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.field label{display:block;font-size:11px;letter-spacing:.055em;text-transform:uppercase;font-weight:900;color:#a8cbe4;margin:0 0 5px}
+.toast{position:fixed;right:20px;bottom:20px;z-index:30;padding:12px 14px;border-radius:16px;background:#06152e;border:1px solid rgba(40,234,255,.45);box-shadow:0 0 28px rgba(40,234,255,.18);opacity:0;transform:translateY(10px);transition:.2s}.toast.show{opacity:1;transform:translateY(0)}
+.hide{display:none!important}
 
-.tabs{display:flex;gap:8px;flex-wrap:wrap;margin:14px 0 10px;position:relative;z-index:1}.tab{padding:10px 12px;border-radius:999px;border:1px solid rgba(86,181,255,.31);background:rgba(5,15,35,.72);font-size:12px;font-weight:950;color:#ccecff}.tab.active{border-color:rgba(40,234,255,.9);background:linear-gradient(180deg,rgba(22,135,255,.40),rgba(5,15,35,.88));box-shadow:0 0 18px rgba(40,234,255,.18);color:#fff}.view{display:none;position:relative;z-index:1}.view.active{display:block}.phase-row{display:grid;grid-template-columns:repeat(7,1fr);gap:9px;align-items:start}.phase-box{min-height:155px;border:1px solid rgba(78,181,255,.25);border-radius:17px;background:rgba(4,14,32,.66);padding:10px}.phase-box h4{margin:0 0 8px;text-transform:uppercase;font-size:11px;letter-spacing:.045em;color:#bfefff}.road-chip{padding:8px 9px;margin:6px 0;border-radius:12px;background:linear-gradient(145deg,rgba(13,73,139,.72),rgba(11,23,54,.84));border:1px solid rgba(59,191,255,.30);font-size:11px;line-height:1.25;box-shadow:0 0 12px rgba(28,143,255,.10);cursor:pointer}.road-chip b{display:block;margin-bottom:3px;color:#fff}.road-chip span,.road-chip small{color:#a9cde6}.read-list{display:grid;gap:9px}.read-item{padding:11px;border-radius:16px;border:1px solid rgba(78,180,255,.25);background:rgba(4,14,33,.72)}.read-item .top{display:flex;justify-content:space-between;gap:10px;margin-bottom:4px}.read-item b{font-size:13px}.read-item small{color:#98bdd8}.read-item p{margin:4px 0 0;color:#d7edf9;font-size:13px;line-height:1.4;white-space:pre-wrap}.link-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.brand-matrix{display:grid;grid-template-columns:repeat(4,1fr);gap:9px}.brand-tile{min-height:84px;padding:10px;border-radius:16px;border:1px solid rgba(87,183,255,.26);background:rgba(5,15,35,.68);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:5px}.brand-tile .ico{font-size:27px}.brand-tile b{font-size:12px}.brand-tile small{font-size:11px;color:#9fc8e1}.deploy-rail{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-top:8px}.deploy-step{position:relative;min-height:132px;padding:13px;border:1px solid rgba(78,181,255,.28);border-radius:18px;background:rgba(4,13,32,.72)}.deploy-step:not(:last-child):after{content:'→';position:absolute;right:-15px;top:45%;font-size:22px;color:#28e0ff;text-shadow:0 0 12px #28e0ff}.deploy-step .ico{font-size:27px}.deploy-step h4{margin:6px 0;font-size:14px}.deploy-step p{margin:0;color:#bcdaf0;font-size:12px;line-height:1.35}.central-tabs{min-height:350px}.compact-help{margin-top:10px;color:#94bdd7;font-size:12px;line-height:1.35}.synth-card{padding:13px;border-radius:18px;border:1px solid rgba(84,184,255,.24);background:rgba(5,15,35,.68)}.synth-card h4{margin:0 0 8px;font-size:15px}.synth-card p{margin:0;color:#cfe6f5;font-size:13px;line-height:1.4;white-space:pre-wrap}.roadmap-project{display:grid;grid-template-columns:repeat(7,1fr);gap:10px}.roadmap-step{position:relative;padding:12px;border-radius:18px;border:1px solid rgba(84,184,255,.24);background:rgba(5,15,35,.68);min-height:146px}.roadmap-step.done{border-color:rgba(53,243,132,.45)}.roadmap-step.current{border-color:rgba(40,234,255,.85);box-shadow:0 0 22px rgba(40,234,255,.15)}.roadmap-step.next{border-color:rgba(255,195,77,.42)}.roadmap-step .st{display:inline-flex;padding:4px 8px;border-radius:999px;border:1px solid rgba(101,189,255,.32);font-size:11px;font-weight:900;margin-bottom:8px}.roadmap-step.done .st{border-color:rgba(53,243,132,.45);color:#d9ffe7}.roadmap-step.current .st{border-color:rgba(40,234,255,.8);color:#cff9ff}.roadmap-step.next .st{border-color:rgba(255,195,77,.5);color:#ffe2a5}.roadmap-step h4{margin:0 0 6px;font-size:14px}.roadmap-step p{margin:0;color:#bdd9ee;font-size:12px;line-height:1.35}.roadmap-step .micro{margin-top:8px;font-size:11px;color:#9ac3de}.summary-list{display:grid;gap:8px}.summary-list .item{padding:10px;border-radius:14px;border:1px solid rgba(79,183,255,.22);background:rgba(4,13,32,.58)}.summary-list .item b{display:block;font-size:13px;margin-bottom:4px}.summary-list .item small{color:#9cc5de;font-size:12px;line-height:1.35;display:block}
-@media(max-width:1280px){.grid{grid-template-columns:330px 1fr}.right-col{grid-column:1/-1}.side-body{max-height:none}.footer-rules{grid-template-columns:repeat(3,1fr)}}
-@media(max-width:860px){.app{padding:12px}.topbar,.grid,.topstats,.summary-grid,.form-grid,.form-grid.two,.footer-rules,.phase-rail,.phase-row,.deploy-rail,.link-grid,.brand-matrix,.header-right{grid-template-columns:1fr}.quick-links,.actions{justify-content:flex-start}.toplink{min-width:0;width:100%;justify-content:flex-start}.object-head{grid-template-columns:68px 1fr}.object-icon{width:68px;height:68px;font-size:35px}.ring{grid-column:1/-1;width:84px;height:84px}.list{max-height:none}.side-body{max-height:none}.row2,.row3{grid-template-columns:1fr}.filters{grid-template-columns:1fr}}
+.pilotage-board{display:grid;grid-template-columns:1.05fr .95fr 1fr;gap:12px;margin:0 0 14px}
+.pilot-card{padding:14px;border-radius:18px;border:1px solid rgba(80,178,255,.24);background:rgba(5,15,35,.60);min-height:145px}
+.pilot-card h3{margin:0 0 10px;color:#69eaff;font-size:15px;display:flex;gap:8px;align-items:center}
+.roadmap-line{display:grid;grid-template-columns:82px 1fr auto;gap:9px;align-items:center;margin:8px 0;font-size:12px}
+.road-dot{width:12px;height:12px;border-radius:50%;border:2px solid var(--cyan);box-shadow:0 0 10px rgba(40,234,255,.35)}
+.road-dot.done{background:var(--green);border-color:var(--green)}.road-dot.todo{border-color:var(--muted2)}
+.deploy-list{display:grid;gap:8px}.deploy-item{display:flex;justify-content:space-between;gap:8px;padding:8px;border-radius:12px;background:rgba(255,255,255,.035);border:1px solid rgba(255,255,255,.06);font-size:12px}
+.cahier{border-color:rgba(180,93,255,.38);background:linear-gradient(145deg,rgba(18,13,43,.60),rgba(5,15,35,.58))}
+.cahier textarea{min-height:110px;margin-top:8px}
+.side-small{font-size:12px;color:var(--muted);line-height:1.35}
+.accordion-body{display:none;margin-top:10px;border-top:1px solid rgba(255,255,255,.08);padding-top:10px}
+.acc.open .accordion-body{display:block}
+.compact-right .acc{padding:13px 14px}
+.compact-right .acc h3{font-size:15px}
+.quick svg{display:block}
 
-.source-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-top:12px}.source-card{padding:12px;border-radius:17px;border:1px solid rgba(80,178,255,.26);background:rgba(5,15,35,.68);min-height:110px}.source-card h4{margin:0 0 8px;font-size:14px}.source-card p{margin:0;color:#cfe6f5;font-size:12px;line-height:1.4;word-break:break-word}.source-card .src-actions{display:flex;gap:7px;flex-wrap:wrap;margin-top:10px}.mini-btn{display:inline-flex;align-items:center;gap:5px;padding:7px 9px;border-radius:11px;border:1px solid rgba(96,190,255,.32);background:rgba(7,22,50,.74);font-size:11px;font-weight:900}.status-dot{display:inline-flex;align-items:center;gap:6px;padding:5px 9px;border-radius:999px;border:1px solid rgba(96,190,255,.32);font-size:11px;font-weight:950}.status-dot:before{content:"";width:8px;height:8px;border-radius:50%;background:var(--muted);box-shadow:0 0 10px currentColor}.status-dot.ok{border-color:rgba(53,243,132,.5);color:#d9ffe7}.status-dot.ok:before{background:var(--green)}.status-dot.warn{border-color:rgba(255,195,77,.55);color:#ffe4a7}.status-dot.warn:before{background:var(--orange)}.status-dot.bad{border-color:rgba(255,100,114,.55);color:#ffc8cd}.status-dot.bad:before{background:var(--red)}.sync-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:9px}.sync-tile{padding:11px;border-radius:16px;border:1px solid rgba(83,179,255,.26);background:rgba(5,15,35,.64)}.sync-tile b{display:block;font-size:13px;margin-bottom:6px}.sync-tile small{color:#a8cce4;line-height:1.35;display:block}.copyline{display:grid;grid-template-columns:1fr auto;gap:8px;margin-top:8px}.copyline input{font-size:12px}.manifest-box{white-space:pre-wrap;background:rgba(2,8,20,.86);border:1px solid rgba(40,234,255,.28);border-radius:16px;padding:12px;max-height:360px;overflow:auto;font-size:12px;color:#dff8ff}.source-kpi{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:12px}.source-kpi .tile{min-height:82px}.github-path{font-family:ui-monospace,SFMono-Regular,Consolas,monospace;color:#baf8ff}
 
+.central-tabs{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 14px;padding:10px;border-radius:20px;border:1px solid rgba(72,175,255,.24);background:rgba(3,12,28,.52)}
+.central-tab{padding:10px 13px;border-radius:13px;border:1px solid rgba(89,190,255,.28);background:rgba(7,18,42,.78);font-weight:900;font-size:13px;color:#eaf8ff}
+.central-tab.active{border-color:rgba(40,234,255,.82);background:linear-gradient(180deg,rgba(20,90,165,.8),rgba(42,17,94,.72));box-shadow:0 0 18px rgba(40,234,255,.18)}
+.note-grid{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(310px,.85fr);gap:14px}
+.note-form{display:grid;grid-template-columns:180px 1fr;gap:10px;margin-bottom:14px}
+.note-form textarea{grid-column:1/-1;min-height:92px}
+.note-list{display:grid;gap:9px;max-height:460px;overflow:auto;padding-right:4px}
+.note-item{border:1px solid rgba(89,190,255,.22);background:rgba(5,15,35,.62);border-radius:16px;padding:12px;display:grid;grid-template-columns:28px 1fr auto;gap:9px;align-items:start}
+.note-item.selected{border-color:rgba(53,243,132,.60);box-shadow:0 0 16px rgba(53,243,132,.12)}
+.note-type{display:inline-flex;align-items:center;gap:5px;border-radius:999px;padding:4px 8px;font-size:11px;font-weight:950;border:1px solid rgba(255,255,255,.14)}
+.note-type.idée{border-color:rgba(53,243,132,.45);color:#d9ffe7}.note-type.commentaire{border-color:rgba(40,234,255,.45);color:#d8fbff}.note-type.problème{border-color:rgba(255,195,77,.55);color:#ffe2a5}.note-type.bug{border-color:rgba(255,100,114,.55);color:#ffc8cd}.note-type.décision{border-color:rgba(180,93,255,.50);color:#ebd5ff}.note-type.action{border-color:rgba(25,123,255,.55);color:#d7e8ff}
+.prompt-box{min-height:310px;white-space:pre-wrap;font-size:13px;line-height:1.45;color:#dff7ff;background:rgba(0,0,0,.24);border:1px solid rgba(255,255,255,.10);border-radius:16px;padding:12px}
+.prompt-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.view-title{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px}.view-title h2{margin:0;font-size:22px}
 
-.active-command{display:grid;grid-template-columns:1.2fr .8fr;gap:12px;margin-bottom:12px}.command-card{padding:15px;border-radius:20px;border:1px solid rgba(40,234,255,.34);background:linear-gradient(145deg,rgba(8,27,62,.76),rgba(4,11,28,.82));box-shadow:0 0 18px rgba(40,234,255,.09)}.command-card h3{margin:0 0 7px;font-size:19px}.command-card p{margin:0;color:#c9e4f4;font-size:13px;line-height:1.45}.command-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}.health-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin:12px 0}.health{padding:12px;border-radius:18px;border:1px solid rgba(83,181,255,.25);background:rgba(5,15,35,.68);min-height:96px}.health b{display:block;font-size:24px;margin-bottom:6px}.health small{display:block;color:#a8cbe1;line-height:1.35}.health.ok{border-color:rgba(53,243,132,.45)}.health.warn{border-color:rgba(255,195,77,.46)}.health.bad{border-color:rgba(255,100,114,.46)}.active-board{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.active-card{padding:12px;border-radius:18px;border:1px solid rgba(84,184,255,.24);background:rgba(5,15,35,.68);min-height:152px}.active-card h4{margin:0 0 8px;font-size:14px;display:flex;gap:7px;align-items:center}.active-card p{margin:0;color:#cfe6f5;font-size:12px;line-height:1.38}.active-card .score{float:right;padding:4px 8px;border-radius:999px;border:1px solid rgba(40,234,255,.4);font-weight:950;font-size:11px}.active-card .score.ok{border-color:rgba(53,243,132,.55);color:#d7ffe6}.active-card .score.warn{border-color:rgba(255,195,77,.55);color:#ffe6ad}.active-card .score.bad{border-color:rgba(255,100,114,.55);color:#ffd2d6}.checklist{display:grid;gap:8px;margin-top:10px}.check{display:flex;gap:8px;align-items:flex-start;font-size:12px;color:#cfe6f5}.check .dot{width:17px;height:17px;border-radius:50%;border:1px solid rgba(130,205,255,.35);display:grid;place-items:center;flex:0 0 17px;font-size:10px}.check.done .dot{background:rgba(53,243,132,.18);border-color:rgba(53,243,132,.55);color:#dcffe8}.check.warn .dot{background:rgba(255,195,77,.12);border-color:rgba(255,195,77,.45);color:#ffe5a8}.check.bad .dot{background:rgba(255,100,114,.12);border-color:rgba(255,100,114,.45);color:#ffd0d5}.url-chip{display:inline-flex;max-width:100%;gap:6px;align-items:center;padding:6px 9px;border-radius:999px;border:1px solid rgba(40,234,255,.28);background:rgba(5,15,35,.78);font-family:ui-monospace,SFMono-Regular,Consolas,monospace;font-size:11px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-@media(max-width:860px){.active-command,.health-grid,.active-board{grid-template-columns:1fr}}
-
-@media print{body{background:white;color:#111}.actions,.workspace-tabs,.filters,.side-tabs,.btn,.icon-btn,.modal,.toast,.footer-rules{display:none!important}.app{max-width:none;padding:0}.grid{display:block}.panel{margin:10px 0;background:white;color:#111;box-shadow:none;border:1px solid #999}.panel:before,body:before,body:after{display:none}.side-body,.list{max-height:none}.pill{color:#111}.tile p,.object-title p,.feed-item p{color:#333}}
+@media(max-width:1260px){.header,.layout{grid-template-columns:1fr}.kpis{grid-template-columns:repeat(2,1fr)}.info-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:760px){.app{padding:12px}.header,.info-grid,.kpis,.form-grid,.note-form,.note-grid{grid-template-columns:1fr}.quick,.actionbar{justify-content:flex-start}.toplink,.btn{width:100%;justify-content:flex-start}.object-head{grid-template-columns:58px 1fr}.status-zone{grid-column:1/-1}.kpi{grid-template-columns:58px 1fr}.spark{display:none}}
+@media print{body{background:white;color:#111}.quick,.actionbar,.familybar,.sidebar,.btn,.icon-btn,.modal,.toast{display:none!important}.app{max-width:none}.layout{grid-template-columns:1fr}.panel{box-shadow:none;border:1px solid #999;background:white;color:#111}.subcard{background:white}.pill{color:#111}}
 </style>
 </head>
 <body>
 <div class="app">
-  <header class="topbar">
-    <div class="brand">
+  <header class="header">
+    <section class="brand">
       <div class="logo">BI</div>
-      <div>
-        <h1>Cockpit Projets BI</h1>
-        <p class="subtitle">V6.2.1 · hotfix liens GPT / Drive / GitHub · reprise auto anti-vide</p>
-      </div>
-    </div>
-    <div class="header-right">
-      <div class="quick-links">
-        <a class="toplink gpt" id="projectGptLink" href="#" target="_blank" rel="noopener" title="Discussion GPT du projet (double-clic pour modifier)">
-          <span class="topicon" aria-hidden="true">
-            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <circle cx="12" cy="12" r="10" stroke="#7CFFDA" stroke-width="1.8" opacity=".85"/>
-              <path d="M12 4.8l4.8 2.8v5.6L12 16l-4.8-2.8V7.6L12 4.8z" stroke="#7CFFDA" stroke-width="1.6"/>
-              <path d="M9.4 10.4h5.2M9.4 12.8h5.2" stroke="#7CFFDA" stroke-width="1.6" stroke-linecap="round"/>
-            </svg>
-          </span>
-          <span class="toplabel"><span>Discussion GPT</span><small>projet courant</small></span>
-        </a>
-        <a class="toplink drive" id="projectDriveLink" href="#" target="_blank" rel="noopener" title="Google Drive du projet (double-clic pour modifier)">
-          <span class="topicon" aria-hidden="true">
-            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-              <path d="M7.2 3.5h9.6l2.8 4.8H9.9L7.2 3.5z" fill="#34A853"/>
-              <path d="M4.2 18.4l4.8-8.4h10.6l-4.8 8.4H4.2z" fill="#4285F4"/>
-              <path d="M4.2 18.4L9.9 8.3 7.2 3.5 1.4 13.6l2.8 4.8z" fill="#FBBC05"/>
-            </svg>
-          </span>
-          <span class="toplabel"><span>Google Drive</span><small>dossier central</small></span>
-        </a>
-        <a class="toplink github" id="projectGithubLink" href="#" target="_blank" rel="noopener" title="GitHub du projet (double-clic pour modifier)">
-          <span class="topicon" aria-hidden="true">
-            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-              <path fill="#ffffff" d="M12 .8a11.2 11.2 0 0 0-3.54 21.82c.56.1.76-.24.76-.53v-1.88c-3.1.68-3.76-1.3-3.76-1.3-.5-1.3-1.24-1.64-1.24-1.64-1.02-.7.08-.68.08-.68 1.12.08 1.72 1.16 1.72 1.16 1 .72 2.62.52 3.26.4.1-.72.4-1.22.72-1.5-2.48-.28-5.08-1.24-5.08-5.52 0-1.22.44-2.22 1.16-3-.12-.28-.5-1.42.12-2.96 0 0 .94-.3 3.08 1.14a10.66 10.66 0 0 1 5.6 0c2.14-1.44 3.08-1.14 3.08-1.14.62 1.54.24 2.68.12 2.96.72.78 1.16 1.78 1.16 3 0 4.3-2.6 5.24-5.1 5.52.42.36.78 1.04.78 2.1v3.12c0 .3.2.64.78.52A11.2 11.2 0 0 0 12 .8Z"/>
-            </svg>
-          </span>
-          <span class="toplabel"><span>GitHub</span><small>repo public</small></span>
-        </a>
-      </div>
-      <div class="actions">
-        <button class="btn green" id="newBtn">＋ Projet</button>
-        <button class="btn" id="exportBtn">⬇ Export JSON</button>
-        <button class="btn violet" id="manifestBtn">▤ Manifest</button>
-        <button class="btn orange" id="snapshotBtn">💾 Snapshot</button>
-        <button class="btn green" id="driveSyncBtn">☁ Drive Sync</button>
-        <label class="btn violet" for="importFile">⬆ Import</label><input id="importFile" type="file" accept="application/json,.json" style="display:none" />
-        <button class="btn" onclick="window.print()">🖨 PDF</button>
-        <button class="btn red" id="resetBtn">↺ Reset</button>
-      </div>
-    </div>
+      <div><h1>Cockpit Projets BI</h1><p class="subtitle">V6.4D · onglets centraux réparés · notes prompt</p></div>
+    </section>
+    <nav class="quick">
+      <a class="toplink" id="projectGptLink" target="_blank" rel="noopener">
+        <span class="topicon"><svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="#7CFFDA" stroke-width="1.8"/><path d="M12 4.8l4.8 2.8v5.6L12 16l-4.8-2.8V7.6L12 4.8z" stroke="#7CFFDA" stroke-width="1.55"/><path d="M9.4 10.4h5.2M9.4 12.8h5.2" stroke="#7CFFDA" stroke-width="1.55" stroke-linecap="round"/></svg></span>
+        <span>Discussion GPT<small>projet courant</small></span>
+      </a>
+      <a class="toplink" id="projectDriveLink" target="_blank" rel="noopener">
+        <span class="topicon"><svg viewBox="0 0 24 24"><path d="M7.2 3.5h9.6l2.8 4.8H9.9L7.2 3.5z" fill="#34A853"/><path d="M4.2 18.4l4.8-8.4h10.6l-4.8 8.4H4.2z" fill="#4285F4"/><path d="M4.2 18.4L9.9 8.3 7.2 3.5 1.4 13.6l2.8 4.8z" fill="#FBBC05"/></svg></span>
+        <span>Google Drive<small>dossier central</small></span>
+      </a>
+      <a class="toplink" id="projectGithubLink" target="_blank" rel="noopener">
+        <span class="topicon"><svg viewBox="0 0 24 24"><path fill="#fff" d="M12 .8a11.2 11.2 0 0 0-3.54 21.82c.56.1.76-.24.76-.53v-1.88c-3.1.68-3.76-1.3-3.76-1.3-.5-1.3-1.24-1.64-1.24-1.64-1.02-.7.08-.68.08-.68 1.12.08 1.72 1.16 1.72 1.16 1 .72 2.62.52 3.26.4.1-.72.4-1.22.72-1.5-2.48-.28-5.08-1.24-5.08-5.52 0-1.22.44-2.22 1.16-3-.12-.28-.5-1.42.12-2.96 0 0 .94-.3 3.08 1.14a10.66 10.66 0 0 1 5.6 0c2.14-1.44 3.08-1.14 3.08-1.14.62 1.54.24 2.68.12 2.96.72.78 1.16 1.78 1.16 3 0 4.3-2.6 5.24-5.1 5.52.42.36.78 1.04.78 2.1v3.12c0 .3.2.64.78.52A11.2 11.2 0 0 0 12 .8Z"/></svg></span>
+        <span>GitHub<small>repo public</small></span>
+      </a>
+    </nav>
   </header>
 
-  <div class="topstats" id="topStats"></div>
+  <section class="actionbar">
+    <button class="btn green" id="newBtn">＋ Projet</button>
+    <button class="btn" id="exportBtn">⌘ Export JSON</button>
+    <label class="btn violet" for="importFile">⬆ Import</label><input id="importFile" type="file" accept="application/json,.json" style="display:none"/>
+    <button class="btn orange" id="snapshotBtn">📷 Snapshot</button>
+    <button class="btn green" id="driveSyncBtn">☁ Drive Sync</button>
+    <button class="btn violet" id="manifestBtn">▤ Manifest</button>
+    <button class="btn" onclick="window.print()">🧾 PDF</button>
+    <button class="btn red" id="resetBtn">↻ Reset</button>
+  </section>
 
-  <main class="grid">
-    <aside class="panel pad">
-      <div class="panel-head">
-        <div class="left"><div class="badge-num">1</div><div><h2>Portefeuille</h2><div class="hint">liste simple des projets</div></div></div>
-        <div class="mini-ico">📁</div>
-      </div>
-      <div class="workspace-tabs" id="workspaceTabs"></div>
-      <div class="filters">
-        <input id="search" placeholder="Rechercher projet, client, tag…" />
-        <select id="phaseFilter"></select>
-        <select id="statusFilter"></select>
-      </div>
+  <main class="layout">
+    <aside class="panel">
+      <div class="panel-title"><h2>Liste des projets</h2><div class="project-tools"><button class="icon-btn" title="Filtre">⚗</button><button class="icon-btn" title="Recherche">⌕</button></div></div>
+      <div class="filters"><input id="search" placeholder="Rechercher projet, client, tag..."><select id="phaseFilter"></select><select id="statusFilter"></select></div>
       <div class="list" id="projectList"></div>
+      <button class="btn" style="width:100%;margin-top:10px" id="newBtn2">＋ Nouveau projet</button>
     </aside>
 
-    <section class="main-col">
-      <div class="panel pad">
-        <div class="panel-head">
-          <div class="left"><div class="badge-num">2</div><div><h2>Fiche centrale</h2><div class="hint">la fiche projet sélectionnée avec synthèse et feuille de route</div></div></div>
-          <div class="mini-ico">🎯</div>
-        </div>
-        <div class="detail" id="detail"></div>
-      </div>
-      <div class="tabs" id="mainTabs">
-        <button class="tab active" data-main="dashboard">Synthèse fiche</button>
-        <button class="tab" data-main="active">Mode actif</button>
-        <button class="tab" data-main="roadmap">Roadmap fiche</button>
-        <button class="tab" data-main="versions">Versions</button>
-        <button class="tab" data-main="notes">Notes</button>
-        <button class="tab" data-main="iad">IA & Drive</button>
-        <button class="tab" data-main="sources">Sources réelles</button>
-        <button class="tab" data-main="deployment">Déploiement</button>
-      </div>
-      <div class="panel pad central-tabs">
-        <div class="view active" id="view-dashboard">
-          <div class="panel-head">
-            <div class="left"><div class="badge-num">3</div><div><h2>Synthèse de la fiche</h2><div class="hint">vision rapide du projet sélectionné : état, prochaine action, risques, versions et liens</div></div></div>
-            <div class="mini-ico">🛤️</div>
-          </div>
-          <div id="phaseRail"></div>
-          <div class="summary-grid" id="miniDashboard"></div>
-          <div style="height:10px"></div>
-          <div class="summary-grid" id="synthesisView"></div>
-        </div>
-        <div class="view" id="view-active">
-          <div class="panel-head">
-            <div class="left"><div class="badge-num">4</div><div><h2>Mode actif</h2><div class="hint">centre de commande : santé du portefeuille, publication, sauvegardes, prochaines actions</div></div></div>
-            <div class="mini-ico">⚡</div>
-          </div>
-          <div id="activeView"></div>
-        </div>
-        <div class="view" id="view-roadmap">
-          <div class="panel-head">
-            <div class="left"><div class="badge-num">4</div><div><h2>Roadmap du projet</h2><div class="hint">parcours du projet sélectionné, étape actuelle, suite logique et objectif de livraison</div></div></div>
-            <div class="mini-ico">🧭</div>
-          </div>
-          <div class="summary-grid" id="roadmapSummary"></div>
-          <div style="height:10px"></div>
-          <div id="roadmapFull"></div>
-        </div>
-        <div class="view" id="view-versions">
-          <div class="panel-head">
-            <div class="left"><div class="badge-num">5</div><div><h2>Versions du projet</h2><div class="hint">lecture rapide du journal de développement</div></div></div>
-            <div class="mini-ico">🧬</div>
-          </div>
-          <div class="read-list" id="versionsView"></div>
-          <div class="compact-help">Ajout et suppression des versions dans le cahier projet à droite.</div>
-        </div>
-        <div class="view" id="view-notes">
-          <div class="panel-head">
-            <div class="left"><div class="badge-num">6</div><div><h2>Notes & décisions</h2><div class="hint">arbitrages, idées, règles à préserver</div></div></div>
-            <div class="mini-ico">📝</div>
-          </div>
-          <div class="read-list" id="notesView"></div>
-          <div class="compact-help">Saisie des notes dans le cahier projet à droite.</div>
-        </div>
-        <div class="view" id="view-iad">
-          <div class="panel-head">
-            <div class="left"><div class="badge-num">7</div><div><h2>IA & Drive</h2><div class="hint">liens documentaires, IA, fichiers et stockage</div></div></div>
-            <div class="mini-ico">🔗</div>
-          </div>
-          <div class="link-grid" id="iadView"></div>
-        </div>
-
-        <div class="view" id="view-sources">
-          <div class="panel-head">
-            <div class="left"><div class="badge-num">8</div><div><h2>Sources réelles Drive & GitHub</h2><div class="hint">fiche technique du projet : HTML maître, snapshots, manifest, GitHub, archives et prochaines étapes</div></div></div>
-            <div class="mini-ico">☁️</div>
-          </div>
-          <div id="sourcesView"></div>
-        </div>
-        <div class="view" id="view-deployment">
-          <div class="panel-head">
-            <div class="left"><div class="badge-num">8</div><div><h2>Déploiement</h2><div class="hint">process simple de livraison BI</div></div></div>
-            <div class="mini-ico">🚀</div>
-          </div>
-          <div id="deploymentView"></div>
-        </div>
-      </div>
+    <section class="panel detail">
+      <div class="central-tabs" id="centralTabs"></div>
+      <div id="projectDetail"></div>
+      <div id="mainView" style="margin-top:14px"></div>
     </section>
 
-    <aside class="right-col panel pad violet">
-      <div class="panel-head">
-        <div class="left"><div class="badge-num">4</div><div><h2>Cahier projet</h2><div class="hint">notes · versions · liens · options</div></div></div>
-        <div class="mini-ico">🧩</div>
-      </div>
-      <div class="side-tabs" id="sideTabs">
-        <button class="side-tab active" data-side="notes">Notes</button>
-        <button class="side-tab" data-side="versions">Versions</button>
-        <button class="side-tab" data-side="links">Liens</button>
-        <button class="side-tab" data-side="options">Options</button>
-        <button class="side-tab" data-side="sync">Sync</button>
-      </div>
-      <div class="side-body" id="sideBody"></div>
-    </aside>
+    <aside class="sidebar compact-right" id="rightSidebar"></aside>
   </main>
 
-  <footer class="footer-rules">
-    <div class="rule"><div class="ico">👤</div><div><b>Perso</b><small>prototypes, idées, apprentissage</small></div></div>
-    <div class="rule"><div class="ico">🏢</div><div><b>Boulot</b><small>Le Merlet, poste salarié, interne</small></div></div>
-    <div class="rule"><div class="ico">🤝</div><div><b>Clients</b><small>micro-entreprise, livrables</small></div></div>
-    <div class="rule"><div class="ico">↻</div><div><b>Auto-sauvegarde</b><small>localStorage + snapshots</small></div></div>
-    <div class="rule"><div class="ico">▤</div><div><b>JSON</b><small>export / import propre</small></div></div>
-    <div class="rule"><div class="ico">🤖</div><div><b>IA & Drive</b><small>liens documentaires</small></div></div>
-  </footer>
+  <section class="kpis" id="kpis"></section>
 </div>
 
 <div class="modal" id="projectModal">
-  <div class="modal-box">
-    <div class="modal-head"><h3>Nouveau projet BI</h3><button class="icon-btn" id="closeModal">✕</button></div>
-    <div class="mini-form">
-      <div class="row3">
-        <div class="field"><label>Nom</label><input id="mName" placeholder="Ex: BI Commerce Bio" /></div>
-        <div class="field"><label>Espace</label><select id="mSpace"></select></div>
-        <div class="field"><label>Icône</label><input id="mIcon" value="🧩" /></div>
-      </div>
-      <div class="row3">
-        <div class="field"><label>Type</label><select id="mType"></select></div>
-        <div class="field"><label>Phase</label><select id="mPhase"></select></div>
-        <div class="field"><label>Statut</label><select id="mStatus"></select></div>
-      </div>
-      <div class="row3">
-        <div class="field"><label>Client / usage</label><input id="mClient" placeholder="Ex: Le Merlet, client local, perso…" /></div>
-        <div class="field"><label>Avancement</label><input id="mProgress" type="number" min="0" max="100" value="5" /></div>
-        <div class="field"><label>Échéance</label><input id="mDue" type="date" /></div>
-      </div>
-      <div class="field"><label>Prochaine action</label><input id="mNext" placeholder="Ce qu’il faut faire maintenant" /></div>
-      <div class="field"><label>Objectif</label><textarea id="mGoal" placeholder="Pourquoi ce BI existe, pour qui, avec quel résultat attendu…"></textarea></div>
-      <button class="btn green" id="createBtn">Créer le projet</button>
+  <div class="modal-card">
+    <div class="modal-head"><h2>Nouveau projet</h2><button class="icon-btn" id="closeModal">✕</button></div>
+    <div class="form-grid">
+      <div class="field"><label>Nom</label><input id="mName" placeholder="Nom du BI"></div>
+      <div class="field"><label>Icône</label><input id="mIcon" value="🧩"></div>
+      <div class="field"><label>Espace</label><select id="mSpace"></select></div>
+      <div class="field"><label>Type</label><select id="mType"></select></div>
+      <div class="field"><label>Phase</label><select id="mPhase"></select></div>
+      <div class="field"><label>Statut</label><select id="mStatus"></select></div>
+      <div class="field"><label>Avancement</label><input id="mProgress" type="number" min="0" max="100" value="5"></div>
+      <div class="field"><label>Échéance</label><input id="mDue" type="date"></div>
+      <div class="field" style="grid-column:1/-1"><label>Client / réseau</label><input id="mClient"></div>
+      <div class="field" style="grid-column:1/-1"><label>Prochaine action</label><input id="mNext"></div>
+      <div class="field" style="grid-column:1/-1"><label>Objectif</label><textarea id="mGoal"></textarea></div>
     </div>
+    <button class="btn green" id="createBtn" style="margin-top:12px">Créer le projet</button>
   </div>
 </div>
 <div class="toast" id="toast"></div>
 
 <script>
 'use strict';
-const VERSION='V6.3-drive-sync';
+const VERSION='V6.4D-reparation-onglets-notes';
 const STABLE_KEY='central_bi_project_manager_current';
-const VERSION_KEY='central_bi_project_manager_v61';
+const VERSION_KEY='central_bi_project_manager_v64d';
 const KEY=STABLE_KEY;
-const MIRROR_KEYS=[VERSION_KEY,'central_bi_project_manager_v6'];
-const PREVIOUS_KEYS=[VERSION_KEY,'central_bi_project_manager_v6','central_bi_project_manager_v5','central_bi_project_manager_v4','central_bi_project_manager_v1'];
+const MIRROR_KEYS=[VERSION_KEY,'central_bi_project_manager_v61','central_bi_project_manager_v6'];
+const PREVIOUS_KEYS=[VERSION_KEY,'central_bi_project_manager_v61','central_bi_project_manager_v6','central_bi_project_manager_v5','central_bi_project_manager_v4','central_bi_project_manager_v1'];
 const SNAP_KEY='central_bi_project_manager_snapshots';
 const PREVIOUS_SNAP_KEYS=['central_bi_project_manager_v6_snapshots','central_bi_project_manager_v5_snapshots','central_bi_project_manager_v4_snapshots','central_bi_project_manager_v1_snapshots'];
 const RECOVERY_INDEX_KEY='bi_central_recovery_index';
-let recoveryMeta={source:'seed',reason:'données de démonstration',date:new Date().toISOString(),version:VERSION};
+const QUICK_LINKS_KEY='bi_central_top_links';
+const DRIVE_SYNC_KEY='bi_central_drive_sync_config';
+const DEFAULT_DRIVE_SYNC={endpoint:'',enabled:false,lastSent:'',lastStatus:'Non configuré',lastAction:'',queued:false};
 const PUBLIC_ROOT='https://koink30.github.io/bi-central/';
 const GITHUB_REPO='https://github.com/Koink30';
 const GPT_PROJECT_FALLBACK='https://chatgpt.com/g/g-p-6a4792bb9ac48191a6eee34ab4ba8c53-bi-projet-bi-central/project';
 const DRIVE_ROOT='https://drive.google.com/drive/u/0/my-drive';
-const QUICK_LINKS_KEY='bi_central_top_links';
-const DRIVE_SYNC_KEY='bi_central_drive_sync_config';
-const DEFAULT_DRIVE_SYNC={endpoint:'',enabled:false,lastSent:'',lastStatus:'Non configuré',lastAction:'',queued:false};
 const SPACES=['Tous','Perso','Boulot','Clients'];
 const PHASES=['Idée','Cadrage','Maquette','Développement','Test','Déploiement','Maintenance'];
 const STATUSES=['À lancer','En cours','Bloqué','À tester','Validé','Déployé','Pause'];
 const TYPES=['BI métier','Socle BI','IA & automatisation','Drive & stockage','Données / Excel','Commercial','Documentation'];
 const PRIORITIES=['Haute','Moyenne','Basse'];
-const OPTION_DEFS=[
- ['html','HTML autonome','</>'],['autosave','Sauvegarde auto','↻'],['json','Import/export JSON','▤'],['drive','Lien Drive','☁️'],['ia','Projet IA associé','🤖'],['mobile','Usage tablette/mobile','📱'],['simple','Interface simple','👤'],['security','Sécurité / RGPD','🛡️'],['training','Support / formation','🎓'],['pdf','PDF / impression','🖨️'],['versioning','Journal versions','🧬']
-];
-const BRANDS=[['ChatGPT','Projet GPT / assistant','💬'],['Gemini','assistant Google','✨'],['Grok','veille / synthèse','◉'],['DeepSeek','analyse / code','🐋'],['Copilot','Microsoft','🌈'],['Drive','dossiers projets','△'],['Dropbox','synchro','◆'],['OneDrive','Microsoft 365','☁️']];
 const $=id=>document.getElementById(id);
 const esc=s=>String(s??'').replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));
 const today=()=>new Date().toISOString().slice(0,10);
 const now=()=>new Date().toISOString();
 const nowFr=()=>new Date().toLocaleString('fr-FR',{dateStyle:'short',timeStyle:'short'});
 const uid=()=>Math.random().toString(36).slice(2,9)+Date.now().toString(36).slice(-4);
-let state=load();
-if(!state||!Array.isArray(state.projects)||state.projects.length===0){
-  recoveryMeta={source:'anti-vide',reason:'aucune donnée valide trouvée : seed de sécurité rechargé sans supprimer les anciennes clés',date:now(),version:VERSION,projects:seed().projects.length};
-  state=normalize(seed());
-}
-let activeSpace='Tous';
-let activeSide='notes';
-let activeMain='dashboard';
-function baseOptions(extra={}){return Object.assign({html:true,autosave:true,json:true,drive:false,ia:false,mobile:false,simple:true,security:false,training:false,pdf:false,versioning:true},extra)}
+let recoveryMeta={source:'seed',reason:'données de démonstration',date:now(),version:VERSION};
+let activeSpace='Tous', activeMain='fiche', activeSide='notes';
 
+function baseOptions(extra={}){return Object.assign({html:true,autosave:true,json:true,drive:false,ia:false,mobile:false,simple:true,security:false,training:false,pdf:false,versioning:true},extra)}
 function baseSources(extra={}){return Object.assign({driveHtml:'',driveFolder:'',snapshotJson:'',manifestDoc:'',sheetSuivi:'',githubRepo:'',githubPath:'',githubBranch:'main',githubStatus:'En cours',pagesUrl:'',archiveLink:'',lastCompletedStep:'Point de départ Drive',lastStepDate:today(),nextMilestone:'Renseigner sources et snapshots',owner:'Drive',sourceStatus:'À renseigner'},extra)}
 function seed(){return {selectedId:'central',updated:now(),projects:[
- {id:'central',name:'BI Gestion Projets BI',icon:'🧭',space:'Perso',type:'Socle BI',client:'Interne micro-entreprise',phase:'Déploiement',status:'Déployé',progress:72,priority:'Haute',due:'2026-07-10',goal:'Cockpit léger pour suivre les BI en cours : avancement, prochaines actions, notes, versions, liens IA/Drive et options de livraison.',nextAction:'Simplifier la fiche centrale, stabiliser les catégories Perso / Boulot / Clients, puis tester en usage réel.',stack:'HTML autonome, localStorage, snapshots JSON, notes, versions, liens',tags:['central','pilotage','versions'],options:baseOptions({drive:true,ia:true,mobile:true,security:true,pdf:true,training:true}),sources:baseSources({driveHtml:'https://drive.google.com/file/d/1ZjGJ2E3X8R_A5_bnkRkm-VyTyrQXSPme/view?usp=drivesdk',driveFolder:'https://drive.google.com/drive/folders/1Rvws0RG_iRYI0_oTelZyfPzw94KAqTEX',snapshotJson:'',manifestDoc:'https://docs.google.com/document/d/1dFR-gMkuCmyHbaAgI6xSLUYZ8b2HpRRlkOJm9CzT6X0/edit?usp=drivesdk',sheetSuivi:'https://docs.google.com/spreadsheets/d/1g3I4d-rdl4oShtBbjBnYHjn8vYB_RIZnN4zhRcMWpFo/edit?usp=drivesdk',githubRepo:GITHUB_REPO,githubPath:'apps/gestion-projets-bi/',githubBranch:'main',githubStatus:'Synchronisé',pagesUrl:PUBLIC_ROOT+'gestion-projets-bi/',archiveLink:'https://drive.google.com/drive/folders/1VB_-UECvtE5anLXfQ5zSH7lWDZMNvVdm',lastCompletedStep:'V6 publiée sur GitHub Pages',lastStepDate:'2026-07-05',nextMilestone:'Utiliser le mode actif et exporter le premier snapshot réel',owner:'Google Drive',sourceStatus:'Source Drive active'}),blockers:['Éviter que le cockpit devienne lui-même trop chargé'],links:[],versions:[{name:'V2',type:'Design',date:'2026-07-03',text:'Version simplifiée : suppression du noyau Central BI au centre, vraie fiche objet sélectionné, espaces Perso/Boulot/Clients.'}],notes:[{title:'Orientation V2',date:'03/07/2026 13:55',text:'Le BI central est lui-même un BI : le cadre central doit donc afficher le projet sélectionné et non une carte générale.'}]},
- {id:'roadmap-dev',name:'BI Feuille de Route Dev',icon:'📈',space:'Perso',type:'Socle BI',client:'Interne micro-entreprise',phase:'Développement',status:'En cours',progress:52,priority:'Haute',due:'2026-07-22',goal:'Feuille de route développeur pour piloter les étapes clés, KPI, assistants IA, connexions et alertes du socle BI Central.',nextAction:'Brancher ce BI au dossier Drive, exporter le snapshot JSON et préparer le futur chemin GitHub.',stack:'HTML autonome, localStorage, JSON, KPI, roadmap, assistants IA',tags:['roadmap','dev','pilotage','drive'],options:baseOptions({drive:true,ia:true,mobile:true,security:true,pdf:true,training:true}),sources:baseSources({driveHtml:'https://drive.google.com/file/d/1lelVMB7N8H-D9N_xNSXzjGNXwqNg4Hla/view?usp=drivesdk',driveFolder:'https://drive.google.com/drive/folders/1Rvws0RG_iRYI0_oTelZyfPzw94KAqTEX',snapshotJson:'',manifestDoc:'https://docs.google.com/document/d/1dFR-gMkuCmyHbaAgI6xSLUYZ8b2HpRRlkOJm9CzT6X0/edit?usp=drivesdk',sheetSuivi:'https://docs.google.com/spreadsheets/d/1g3I4d-rdl4oShtBbjBnYHjn8vYB_RIZnN4zhRcMWpFo/edit?usp=drivesdk',githubRepo:'',githubPath:'apps/feuille-route-dev/',githubBranch:'main',githubStatus:'Synchronisé',pagesUrl:PUBLIC_ROOT+'feuille-route-dev/',archiveLink:'https://drive.google.com/drive/folders/1VB_-UECvtE5anLXfQ5zSH7lWDZMNvVdm',lastCompletedStep:'V1 publiée sur GitHub Pages',lastStepDate:'2026-07-03',nextMilestone:'Exporter un snapshot JSON et relier au Cockpit Projets BI',owner:'Google Drive',sourceStatus:'Source Drive active'}),blockers:['Données de snapshot pas encore exportées depuis le navigateur'],links:[{type:'Drive',title:'HTML maître Drive',url:'https://drive.google.com/file/d/1lelVMB7N8H-D9N_xNSXzjGNXwqNg4Hla/view?usp=drivesdk'}],versions:[{name:'V1',type:'Point départ',date:'2026-07-03',text:'Version déposée dans Drive comme socle de feuille de route développement.'}],notes:[{title:'Intégration Drive',date:'03/07/2026 16:00',text:'Ce BI doit devenir le tableau de bord des étapes clés : Drive actif, GitHub en cours, snapshots à alimenter.'}]},
- {id:'merlet',name:'BI Le Merlet · Séjours',icon:'🏕️',space:'Boulot',type:'BI métier',client:'Association Le Merlet',phase:'Maintenance',status:'Validé',progress:88,priority:'Haute',due:'2026-07-20',goal:'Suivre fréquentation séjours, risques d’annulation, listes d’attente, restauration, pics d’activité et pilotage été.',nextAction:'Documenter la version stable et verrouiller les règles à ne pas casser.',stack:'HTML autonome, JSON, statistiques séjours, PayZen, restauration',tags:['boulot','séjours','pilotage'],options:baseOptions({drive:true,ia:true,mobile:true,security:true,pdf:true,training:true}),blockers:['Ne pas casser les vues validées','Conserver filtres, synthèses et panneaux'],links:[{type:'Drive',title:'Dossier Le Merlet',url:''},{type:'ChatGPT',title:'Projet GPT associé',url:''}],versions:[{name:'V47',type:'Validé',date:'2026-07-02',text:'Base stable après abandon animation trop lourde.'}],notes:[{title:'Règle projet',date:'03/07/2026 09:00',text:'Préserver navigation, filtres, panneaux et vues validées avant tout ajout.'}]},
- {id:'payzen',name:'BI PayZen · Rapprochement',icon:'💳',space:'Boulot',type:'BI métier',client:'Le Merlet / banque',phase:'Test',status:'À tester',progress:72,priority:'Haute',due:'2026-07-15',goal:'Rapprochement bancaire PayZen, ventilation par site/type/quinzaine, commissions et impressions mensuelles.',nextAction:'Recontrôler décimales, listing impression et cas particuliers anciens.',stack:'HTML, imports CSV/Excel, rapprochement transaction, impression',tags:['finance','payzen','banque'],options:baseOptions({drive:true,pdf:true,security:true}),blockers:['Lecture décimales avec virgule','Impression 2 pages à sécuriser'],links:[],versions:[{name:'Impression',type:'Correction',date:'2026-06-30',text:'Correction listing tronqué et feuilles blanches.'}],notes:[{title:'Cas particuliers',date:'30/06/2026 11:00',text:'Prévoir paiements autres/adhésions non présents dans le centralisateur.'}]},
- {id:'bubble',name:'Bubble Studio · Objets & notes',icon:'🫧',space:'Perso',type:'Socle BI',client:'Interne / modèle générique',phase:'Développement',status:'En cours',progress:64,priority:'Moyenne',due:'2026-08-05',goal:'Socle de gestion par objets, sous-objets, réseaux liés, rapports et exports.',nextAction:'Conserver la fluidité et préparer un modèle duplicable.',stack:'HTML, localStorage, JSON, graphes, fiches objets',tags:['socle','objets','notes'],options:baseOptions({ia:true,mobile:true,pdf:true}),blockers:['Risque de lourdeur graphique','Complexité pour utilisateur non expert'],links:[],versions:[{name:'V7+',type:'Ajout',date:'2026-06-28',text:'Vue temporelle, panneaux, import/export, optimisation latence.'}],notes:[{title:'Principe',date:'28/06/2026 16:00',text:'Le rapport objet doit inclure les sous-objets et descendants.'}]},
- {id:'commercebio',name:'BI Commerce Bio',icon:'🥬',space:'Clients',type:'BI métier',client:'Commerce local Cévennes',phase:'Maquette',status:'En cours',progress:46,priority:'Moyenne',due:'2026-08-20',goal:'Gestion simple pour commandes, produits, prix, étiquettes et suivi stock.',nextAction:'Améliorer les petites étiquettes imprimables avec date MAJ, HT/TVA/TTC et prix kilo/unité.',stack:'HTML, import listes PDF/CSV, stocks, commandes, étiquettes',tags:['client','commerce','étiquettes'],options:baseOptions({pdf:true,training:true}),blockers:['Import PDF à fiabiliser','Impression étiquettes très lisible'],links:[],versions:[{name:'Étiquettes',type:'Ajout',date:'2026-06-29',text:'Module édition étiquettes à réduire et rendre plus imprimable.'}],notes:[]},
- {id:'plume',name:"BI Plum' Massage",icon:'🌸',space:'Clients',type:'BI métier',client:'Praticienne massage Cévennes',phase:'Maquette',status:'Validé',progress:58,priority:'Moyenne',due:'2026-08-12',goal:'Agenda, clients, prestations, frise horaire et ambiance visuelle artistique.',nextAction:'Renseigner les prestations réelles et simplifier la prise de rendez-vous.',stack:'HTML, agenda, clients, prestations, thèmes visuels',tags:['client','agenda','bien-être'],options:baseOptions({mobile:true,training:true}),blockers:['Ne pas surcharger l’interface','Rester doux visuellement'],links:[],versions:[{name:'Thème',type:'Design',date:'2026-06-30',text:'Thèmes artistiques, couleurs vives mais non flashy.'}],notes:[]},
- {id:'locpremium',name:'BI Locations Premium',icon:'🏡',space:'Clients',type:'BI métier',client:'Gestion logements / prestations',phase:'Développement',status:'En cours',progress:52,priority:'Haute',due:'2026-08-01',goal:'Réservations, clients, ménage, prestations et évènementiel dans une interface simple.',nextAction:'Rendre la frise totalement dynamique : mois, semaines, déplacement et extension des réservations.',stack:'HTML, planning dynamique, réservations, clients, prestations',tags:['client','planning','réservations'],options:baseOptions({mobile:true,training:true,pdf:true}),blockers:['Frises calendrier à fiabiliser','Prix auto corrigible manuellement'],links:[],versions:[{name:'Planning',type:'Correction',date:'2026-06-30',text:'Découpage semaine/mois et sélection des éléments sur frise.'}],notes:[{title:'Prix réservation',date:'30/06/2026 13:00',text:'Prix recalculé automatiquement mais toujours modifiable : remise amis, gratuité, cas particuliers.'}]},
- {id:'navia',name:'Navigateur IA · Lexique dynamique',icon:'🤖',space:'Perso',type:'IA & automatisation',client:'Interne / apprentissage IA',phase:'Cadrage',status:'En cours',progress:35,priority:'Haute',due:'2026-07-25',goal:'Naviguer entre IA, marques, fonctionnalités et apprendre les usages avec un lexique dynamique.',nextAction:'Construire le ruban par marques avec sous-listes et fiches internes.',stack:'HTML, bulles IA, fiches internes, lexique, icônes',tags:['ia','lexique','apprendre'],options:baseOptions({ia:true,drive:true,training:true,pdf:true}),blockers:['Contrôler logos et noms','Liens internes et non externes'],links:[],versions:[{name:'Accueil validé',type:'Design',date:'2026-07-03',text:'Gros icônes et zone centrale validés. Navigation par marques à revoir.'}],notes:[{title:'Objectif',date:'03/07/2026 10:30',text:'Éduquer : icônes, fonctionnalités, risques, catégories, exemples d’usage.'}]}
+{id:'central',name:'Cockpit Projets BI',icon:'🧭',space:'Perso',type:'Socle BI',client:'Interne micro-entreprise',phase:'Déploiement',status:'Déployé',progress:72,priority:'Haute',due:'2026-07-10',goal:'Plateforme centrale de pilotage et d’orchestration des projets BI.',nextAction:'Valider la refonte visuelle V6.4A puis continuer le module données & sync.',stack:'HTML autonome, localStorage, snapshots JSON, Drive Sync, GitHub Pages',tags:['central','pilotage','versions'],options:baseOptions({drive:true,ia:true,mobile:true,security:true,pdf:true,training:true}),sources:baseSources({driveHtml:'https://drive.google.com/file/d/1ZjGJ2E3X8R_A5_bnkRkm-VyTyrQXSPme/view?usp=drivesdk',driveFolder:'https://drive.google.com/drive/folders/1Rvws0RG_iRYI0_oTelZyfPzw94KAqTEX',manifestDoc:'https://docs.google.com/document/d/1dFR-gMkuCmyHbaAgI6xSLUYZ8b2HpRRlkOJm9CzT6X0/edit?usp=drivesdk',sheetSuivi:'https://docs.google.com/spreadsheets/d/1g3I4d-rdl4oShtBbjBnYHjn8vYB_RIZnN4zhRcMWpFo/edit?usp=drivesdk',githubRepo:GITHUB_REPO,githubPath:'apps/gestion-projets-bi/',githubBranch:'main',githubStatus:'Synchronisé',pagesUrl:PUBLIC_ROOT+'gestion-projets-bi/',archiveLink:'https://drive.google.com/drive/folders/1VB_-UECvtE5anLXfQ5zSH7lWDZMNvVdm',lastCompletedStep:'V6.4A refonte visuelle générée',lastStepDate:today(),nextMilestone:'Tester lecture et ergonomie',owner:'Google Drive',sourceStatus:'Source active'}),blockers:['Ne pas perdre les modules existants','Alléger sans casser la logique Drive Sync'],links:[{type:'Drive',title:'Dossier central Drive',url:DRIVE_ROOT},{type:'GitHub',title:'Repo GitHub',url:GITHUB_REPO},{type:'GPT',title:'Discussion GPT projet',url:GPT_PROJECT_FALLBACK},{type:'Pages',title:'GitHub Pages Cockpit',url:PUBLIC_ROOT+'gestion-projets-bi/'}],versions:[{name:'V6.4A',type:'Refonte',date:today(),text:'Nouvelle organisation visuelle : header allégé, actions séparées, familles de navigation, fiche projet respirante.'}],notes:[{title:'Refonte visuelle',date:nowFr(),text:'Objectif : garder tous les modules mais rendre le cockpit plus lisible, respirant et exploitable.'}]},
+{id:'roadmap-dev',name:'Feuille de Route Dev',icon:'📈',space:'Perso',type:'Socle BI',client:'Interne micro-entreprise',phase:'Développement',status:'En cours',progress:52,priority:'Haute',due:'2026-07-22',goal:'Feuille de route développeur pour piloter les étapes clés.',nextAction:'Relier snapshot JSON et fiche sources.',stack:'HTML autonome, JSON, KPI, roadmap',tags:['roadmap','dev','pilotage'],options:baseOptions({drive:true,ia:true,mobile:true,security:true,pdf:true,training:true}),sources:baseSources({driveHtml:'https://drive.google.com/file/d/1lelVMB7N8H-D9N_xNSXzjGNXwqNg4Hla/view?usp=drivesdk',driveFolder:'https://drive.google.com/drive/folders/1Rvws0RG_iRYI0_oTelZyfPzw94KAqTEX',githubPath:'apps/feuille-route-dev/',githubStatus:'Synchronisé',pagesUrl:PUBLIC_ROOT+'feuille-route-dev/'}),blockers:['Snapshot à exporter'],links:[{type:'Drive',title:'HTML maître Drive',url:'https://drive.google.com/file/d/1lelVMB7N8H-D9N_xNSXzjGNXwqNg4Hla/view?usp=drivesdk'}],versions:[{name:'V1',type:'Point départ',date:'2026-07-03',text:'Version déposée dans Drive comme socle de feuille de route développement.'}],notes:[]},
+{id:'drivesync',name:'Drive Sync',icon:'△',space:'Perso',type:'Drive & stockage',client:'BI Central',phase:'Test',status:'À tester',progress:70,priority:'Haute',due:'',goal:'Sauvegarde automatique des snapshots JSON vers Google Drive via Apps Script.',nextAction:'Afficher un statut de dernier envoi plus clair.',stack:'Apps Script, fetch no-cors, Drive JSON',tags:['drive','sync','json'],options:baseOptions({drive:true,security:true}),blockers:['CORS : retour non lisible directement'],links:[],versions:[],notes:[]},
+{id:'recovery',name:'Recovery Check',icon:'🛡️',space:'Perso',type:'Documentation',client:'BI Central',phase:'Maintenance',status:'Validé',progress:80,priority:'Haute',due:'',goal:'Scanner localStorage pour éviter de publier à l’aveugle.',nextAction:'Garder comme page de contrôle permanente.',stack:'HTML autonome, localStorage diagnostic',tags:['recovery','controle'],options:baseOptions({security:true}),blockers:[],links:[{type:'Pages',title:'Recovery check',url:PUBLIC_ROOT+'gestion-projets-bi/recovery-check.html'}],versions:[],notes:[]},
+{id:'client-alpha',name:'Client Alpha',icon:'🏢',space:'Clients',type:'BI métier',client:'Client test',phase:'Cadrage',status:'En cours',progress:30,priority:'Moyenne',due:'',goal:'Projet client modèle.',nextAction:'Définir dossier Drive.',stack:'HTML, JSON',tags:['client'],options:baseOptions({training:true}),blockers:[],links:[],versions:[],notes:[]},
+{id:'client-beta',name:'Client Beta',icon:'🏬',space:'Clients',type:'BI métier',client:'Client test',phase:'Pause',status:'Pause',progress:18,priority:'Basse',due:'',goal:'Projet client en pause.',nextAction:'Reprendre cadrage.',stack:'HTML',tags:['client'],options:baseOptions(),blockers:['En attente'],links:[],versions:[],notes:[]},
+{id:'perso-auto',name:'Perso – Automatisation',icon:'👤',space:'Perso',type:'IA & automatisation',client:'Personnel',phase:'Développement',status:'En cours',progress:44,priority:'Moyenne',due:'',goal:'Regrouper idées d’automatisation.',nextAction:'Lister workflows utiles.',stack:'GPT, Drive, HTML',tags:['perso','ia'],options:baseOptions({ia:true,drive:true}),blockers:[],links:[],versions:[],notes:[]},
+{id:'perso-idees',name:'Perso – Idées',icon:'💡',space:'Perso',type:'Documentation',client:'Personnel',phase:'Idée',status:'À lancer',progress:8,priority:'Basse',due:'',goal:'Bac à idées.',nextAction:'Trier idées.',stack:'Notes',tags:['idees'],options:baseOptions(),blockers:[],links:[],versions:[],notes:[]}
 ]}}
-function inferSpace(p){const s=[p.space,p.client,p.name,(p.tags||[]).join(' ')].join(' ').toLowerCase();if(/commerce|massage|location|premium|client|plum/.test(s))return 'Clients';if(/merlet|payzen|bafa|séjour|association|banque/.test(s))return 'Boulot';return 'Perso'}
-function migrateOld(data){return {selectedId:data.selectedId||'central',updated:now(),projects:(data.projects||[]).map(p=>({id:p.id||uid(),name:p.name||'Projet',icon:p.icon||'🧩',space:inferSpace(p),type:p.type||p.category||'BI métier',client:p.client||'',phase:p.phase||'Idée',status:p.status||'À lancer',progress:+p.progress||0,priority:p.priority||'Moyenne',due:p.due||'',goal:p.goal||p.desc||'',nextAction:p.nextAction||'',stack:p.stack||'',tags:p.tags||[],options:p.options||baseOptions(),blockers:p.blockers||p.risks||[],links:p.links||[],versions:p.versions||[],notes:p.notes||[],sources:Object.assign(baseSources(),p.sources||{})}))}}
+
+function normalize(data){data=Object.assign({selectedId:'',updated:now(),projects:[]},data||{});data.projects=(data.projects||[]).map(p=>Object.assign({id:uid(),name:'Projet',icon:'🧩',space:'Perso',type:'BI métier',client:'',phase:'Idée',status:'À lancer',progress:0,priority:'Moyenne',due:'',goal:'',nextAction:'',stack:'',tags:[],options:baseOptions(),blockers:[],links:[],versions:[],notes:[],sources:baseSources()},p,{options:Object.assign(baseOptions(),p.options||{}),sources:Object.assign(baseSources(),p.sources||{})}));if(!data.selectedId&&data.projects[0])data.selectedId=data.projects[0].id;data.updated=data.updated||now();return data}
+function migrateOld(data){return normalize(data?.projects?data:{selectedId:data?.selectedId,updated:data?.updated||now(),projects:data?.projects||[]})}
 function payloadFromStorage(raw){const parsed=JSON.parse(raw);return parsed.state||parsed.payload||parsed}
 function candidateFromKey(k){const raw=localStorage.getItem(k);if(!raw)return null;const data=payloadFromStorage(raw);const normalized=normalize(data.projects?data:migrateOld(data));if(!normalized.projects?.length)return null;const t=Date.parse(normalized.updated||data.exported_at||data.date||0)||0;return {key:k,data:normalized,time:t,count:normalized.projects.length}}
-function chooseBestCandidate(){const keys=[KEY,...PREVIOUS_KEYS].filter((v,i,a)=>v&&a.indexOf(v)===i);const candidates=[];for(const k of keys){try{const c=candidateFromKey(k);if(c)candidates.push(c)}catch(e){}}
- if(!candidates.length)return null;
- candidates.sort((a,b)=>(b.time-a.time)||(b.count-a.count));
- return candidates[0];}
-function load(){try{const best=chooseBestCandidate();if(best){recoveryMeta={source:best.key,reason:best.key===KEY?'clé stable active':'migration automatique depuis '+best.key,date:now(),version:VERSION,projects:best.count};return best.data}}catch(e){recoveryMeta={source:'erreur',reason:'reprise impossible, seed chargé',date:now(),version:VERSION}}
- recoveryMeta={source:'seed',reason:'aucune sauvegarde trouvée, démonstration chargée',date:now(),version:VERSION,projects:seed().projects.length};return normalize(seed())}
-function normalize(data){data=Object.assign({selectedId:'',updated:now(),projects:[]},data||{});data.projects=(data.projects||[]).map(p=>Object.assign({space:'Perso',type:'BI métier',client:'',phase:'Idée',status:'À lancer',progress:0,priority:'Moyenne',due:'',goal:'',nextAction:'',stack:'',tags:[],options:baseOptions(),blockers:[],links:[],versions:[],notes:[],sources:baseSources()},p,{options:Object.assign(baseOptions(),p.options||{}),sources:Object.assign(baseSources(),p.sources||{})}));if(!data.selectedId&&data.projects[0])data.selectedId=data.projects[0].id;data.updated=data.updated||now();return data}
-function persist(action='sauvegarde'){state.updated=now();state.storageVersion=VERSION;const serialized=JSON.stringify(state);localStorage.setItem(KEY,serialized);MIRROR_KEYS.forEach(k=>{try{localStorage.setItem(k,serialized)}catch(e){}});updateRecoveryIndex(action);saveSnapshot(action);scheduleDriveSync(action)}
-function updateRecoveryIndex(action){try{const idx=JSON.parse(localStorage.getItem(RECOVERY_INDEX_KEY)||'[]');idx.unshift({date:now(),action,version:VERSION,key:KEY,projects:state.projects.length,selectedId:state.selectedId,url:location.href});localStorage.setItem(RECOVERY_INDEX_KEY,JSON.stringify(idx.slice(0,60)))}catch(e){}}
-function saveSnapshot(action){try{const snaps=getSnapshots();const payload={app:'Cockpit Projets BI',version:VERSION,exported_at:now(),action,selectedId:state.selectedId,projects:state.projects};snaps.unshift({date:now(),action,payload});localStorage.setItem(SNAP_KEY,JSON.stringify(snaps.slice(0,30)))}catch(e){}}
-function getSnapshots(){const all=[];[SNAP_KEY,...PREVIOUS_SNAP_KEYS].filter((v,i,a)=>v&&a.indexOf(v)===i).forEach(k=>{try{const arr=JSON.parse(localStorage.getItem(k)||'[]');if(Array.isArray(arr))arr.forEach(x=>all.push(Object.assign({sourceKey:k},x)))}catch(e){}});const seen=new Set();return all.filter(x=>{const sig=(x.date||'')+'|'+(x.action||'')+'|'+(x.payload?.version||'');if(seen.has(sig))return false;seen.add(sig);return true}).sort((a,b)=>String(b.date||'').localeCompare(String(a.date||''))).slice(0,40)}
-function getRecoveryIndex(){try{return JSON.parse(localStorage.getItem(RECOVERY_INDEX_KEY)||'[]')}catch(e){return []}}
-function recoveryHealth(){const snaps=getSnapshots(),idx=getRecoveryIndex();return {source:recoveryMeta.source,reason:recoveryMeta.reason,version:VERSION,key:KEY,mirrors:MIRROR_KEYS.length,snapshots:snaps.length,lastSnapshot:snaps[0]?.date||'',index:idx.length,lastAction:idx[0]?.action||''}}
-function loadQuickLinks(){try{const saved=JSON.parse(localStorage.getItem(QUICK_LINKS_KEY)||'{}');return {gpt:saved.gpt||GPT_PROJECT_FALLBACK,drive:saved.drive||DRIVE_ROOT,github:saved.github||GITHUB_REPO}}catch(e){return {gpt:GPT_PROJECT_FALLBACK,drive:DRIVE_ROOT,github:GITHUB_REPO}}}
+function chooseBestCandidate(){const keys=[KEY,...PREVIOUS_KEYS].filter((v,i,a)=>v&&a.indexOf(v)===i),c=[];for(const k of keys){try{const x=candidateFromKey(k);if(x)c.push(x)}catch(e){}}return c.sort((a,b)=>(b.time-a.time)||(b.count-a.count))[0]||null}
+function load(){try{const best=chooseBestCandidate();if(best){recoveryMeta={source:best.key,reason:best.key===KEY?'clé stable active':'migration automatique depuis '+best.key,date:now(),version:VERSION,projects:best.count};return best.data}}catch(e){recoveryMeta={source:'erreur',reason:'reprise impossible, seed chargé',date:now(),version:VERSION}}recoveryMeta={source:'seed',reason:'aucune sauvegarde trouvée, démonstration chargée',date:now(),version:VERSION,projects:seed().projects.length};return normalize(seed())}
+let state=load();
+if(!state||!Array.isArray(state.projects)||state.projects.length===0){recoveryMeta={source:'anti-vide',reason:'aucune donnée valide trouvée : seed de sécurité rechargé',date:now(),version:VERSION,projects:seed().projects.length};state=normalize(seed())}
+
+function getDriveConfig(){try{return Object.assign({},DEFAULT_DRIVE_SYNC,JSON.parse(localStorage.getItem(DRIVE_SYNC_KEY)||'{}'))}catch(e){return Object.assign({},DEFAULT_DRIVE_SYNC)}}
+function setDriveConfig(cfg){localStorage.setItem(DRIVE_SYNC_KEY,JSON.stringify(Object.assign(getDriveConfig(),cfg)))}
+function loadQuickLinks(){try{return Object.assign({gpt:GPT_PROJECT_FALLBACK,drive:DRIVE_ROOT,github:GITHUB_REPO},JSON.parse(localStorage.getItem(QUICK_LINKS_KEY)||'{}'))}catch(e){return {gpt:GPT_PROJECT_FALLBACK,drive:DRIVE_ROOT,github:GITHUB_REPO}}}
 let quickLinks=loadQuickLinks();
-function saveQuickLinks(){try{localStorage.setItem(QUICK_LINKS_KEY,JSON.stringify(quickLinks))}catch(e){}}
-function editQuickLink(type,label,fallback='https://'){const current=quickLinks[type]||'';const value=prompt('Renseigner ou modifier le lien : '+label,current||fallback);if(value===null)return;quickLinks[type]=value.trim();saveQuickLinks();renderQuickLinks();toast('Lien '+label+' mis à jour')}
-function bindQuickLink(id,type,label,fallback='https://'){const el=$(id);if(!el)return;const url=quickLinks[type]||'';el.href=url||'#';el.classList.toggle('is-empty',!url);el.ondblclick=(e)=>{e.preventDefault();editQuickLink(type,label,fallback)};el.onclick=(e)=>{const current=quickLinks[type]||'';if(!current){e.preventDefault();editQuickLink(type,label,fallback);return false}};el.title=label+(url?'':' · cliquer pour renseigner')+' · double-clic pour modifier'}
-function renderQuickLinks(){bindQuickLink('projectGptLink','gpt','Discussion GPT du projet','https://chatgpt.com/');bindQuickLink('projectDriveLink','drive','Google Drive du projet',DRIVE_ROOT);bindQuickLink('projectGithubLink','github','GitHub du projet',GITHUB_REPO)}
-function loadDriveSync(){try{return Object.assign({},DEFAULT_DRIVE_SYNC,JSON.parse(localStorage.getItem(DRIVE_SYNC_KEY)||'{}'))}catch(e){return Object.assign({},DEFAULT_DRIVE_SYNC)}}
-let driveSync=loadDriveSync();
-function saveDriveSyncConfig(){try{localStorage.setItem(DRIVE_SYNC_KEY,JSON.stringify(driveSync))}catch(e){}}
-function driveSyncLabel(){if(!driveSync.endpoint)return 'Non configuré';return driveSync.enabled?'Actif':'Configuré / pause'}
-function configureDriveSync(){const current=driveSync.endpoint||'';const url=prompt('Colle ici l’URL Web App Apps Script /exec pour enregistrer les snapshots dans Drive :',current);if(url===null)return;driveSync.endpoint=url.trim();driveSync.enabled=!!driveSync.endpoint;driveSync.lastStatus=driveSync.enabled?'Configuré':'Non configuré';saveDriveSyncConfig();renderAll();toast(driveSync.enabled?'Drive Sync configuré':'Drive Sync désactivé')}
-function toggleDriveSync(){if(!driveSync.endpoint){configureDriveSync();return}driveSync.enabled=!driveSync.enabled;driveSync.lastStatus=driveSync.enabled?'Actif':'En pause';saveDriveSyncConfig();renderAll();toast('Drive Sync '+(driveSync.enabled?'activé':'mis en pause'))}
-function driveSyncPayload(action='autosave'){return {app:'Cockpit Projets BI',version:VERSION,exported_at:now(),action,origin:location.origin,path:location.pathname,recovery:recoveryHealth(),state}}
-function sendDriveSnapshot(action='autosave'){if(!driveSync.endpoint||!driveSync.enabled){toast('Drive Sync non configuré');return false}const payload=driveSyncPayload(action);driveSync.lastAction=action;driveSync.lastStatus='Envoi en cours';driveSync.queued=false;saveDriveSyncConfig();renderAll();try{fetch(driveSync.endpoint,{method:'POST',mode:'no-cors',body:JSON.stringify(payload)}).then(()=>{driveSync.lastSent=now();driveSync.lastStatus='Envoyé vers Drive';saveDriveSyncConfig();renderAll();toast('Snapshot envoyé vers Drive')}).catch(()=>{driveSync.lastStatus='Erreur envoi Drive';saveDriveSyncConfig();renderAll();toast('Erreur Drive Sync')});return true}catch(e){driveSync.lastStatus='Erreur navigateur';saveDriveSyncConfig();renderAll();toast('Erreur Drive Sync');return false}}
-function scheduleDriveSync(action='autosave'){if(!driveSync.endpoint||!driveSync.enabled)return;clearTimeout(window.__driveSyncTimer);driveSync.queued=true;driveSync.lastAction=action;driveSync.lastStatus='File d’attente';saveDriveSyncConfig();window.__driveSyncTimer=setTimeout(()=>sendDriveSnapshot(action),1800)}
+function saveQuickLinks(){localStorage.setItem(QUICK_LINKS_KEY,JSON.stringify(quickLinks))}
+function bindQuickLink(id,type,label,fallback){const el=$(id);if(!el)return;const url=quickLinks[type]||fallback||'';el.href=url||'#';el.onclick=e=>{if(!url){e.preventDefault();editQuickLink(type,label,fallback)}};el.ondblclick=e=>{e.preventDefault();editQuickLink(type,label,fallback)}}
+function editQuickLink(type,label,fallback){const value=prompt('Lien '+label,quickLinks[type]||fallback||'');if(value===null)return;quickLinks[type]=value.trim();saveQuickLinks();renderQuickLinks();toast('Lien mis à jour')}
+function renderQuickLinks(){bindQuickLink('projectGptLink','gpt','GPT',GPT_PROJECT_FALLBACK);bindQuickLink('projectDriveLink','drive','Drive',DRIVE_ROOT);bindQuickLink('projectGithubLink','github','GitHub',GITHUB_REPO)}
 function selected(){return state.projects.find(p=>p.id===state.selectedId)||state.projects[0]}
-function spaceClass(s){return String(s).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'')}
-function statusClass(s){return s==='Bloqué'?'red':s==='Validé'||s==='Déployé'?'green':s==='À tester'?'orange':s==='En cours'?'violet':''}
-function priorityClass(p){return p==='Haute'?'orange':p==='Basse'?'green':'violet'}
-function filtered(){const q=$('search').value.trim().toLowerCase();const ph=$('phaseFilter').value,st=$('statusFilter').value;return state.projects.filter(p=>(activeSpace==='Tous'||p.space===activeSpace)&&(!ph||p.phase===ph)&&(!st||p.status===st)&&(!q||[p.name,p.client,p.type,p.space,p.goal,p.nextAction,(p.tags||[]).join(' ')].join(' ').toLowerCase().includes(q)))}
-function renderTopStats(){const total=state.projects.length;const avg=Math.round(state.projects.reduce((a,p)=>a+(+p.progress||0),0)/Math.max(total,1));const bySpace=s=>state.projects.filter(p=>p.space===s).length;const blocked=state.projects.filter(p=>p.status==='Bloqué'||(p.blockers||[]).length).length;$('topStats').innerHTML=`<div class="stat"><b>${total}</b><span>projets suivis</span><small>moyenne ${avg}%</small></div><div class="stat"><b>${bySpace('Perso')}</b><span>Perso</span><small>prototypes / idées</small></div><div class="stat"><b>${bySpace('Boulot')}</b><span>Boulot</span><small>Le Merlet / interne</small></div><div class="stat"><b>${bySpace('Clients')}</b><span>Clients</span><small>${blocked} points à traiter</small></div>`}
-function renderWorkspaceTabs(){const counts=Object.fromEntries(SPACES.map(s=>[s,s==='Tous'?state.projects.length:state.projects.filter(p=>p.space===s).length]));$('workspaceTabs').innerHTML=SPACES.map(s=>`<button class="ws ${s===activeSpace?'active':''}" data-space="${esc(s)}">${esc(s)} · ${counts[s]}</button>`).join('');$('workspaceTabs').querySelectorAll('[data-space]').forEach(b=>b.onclick=()=>{activeSpace=b.dataset.space;renderAll()})}
-function renderList(){const arr=filtered();$('projectList').innerHTML=arr.length?arr.map(p=>`<div class="card ${p.id===state.selectedId?'active':''}" data-id="${esc(p.id)}"><div class="card-ico">${esc(p.icon)}</div><div><h3>${esc(p.name)}</h3><div class="meta"><span class="pill ${spaceClass(p.space)}">${esc(p.space)}</span><span class="pill ${statusClass(p.status)}">${esc(p.status)}</span><span class="pill">${esc(p.phase)}</span></div></div><div class="mini-progress" style="--p:${+p.progress||0}"><span>${+p.progress||0}%</span></div></div>`).join(''):'<div class="empty">Aucun projet pour ces filtres.</div>';$('projectList').querySelectorAll('[data-id]').forEach(c=>c.onclick=()=>{state.selectedId=c.dataset.id;persist('sélection projet');renderAll()})}
-function renderDetail(){const p=selected();if(!p){$('detail').innerHTML='<div class="empty">Aucun projet.</div>';return}$('detail').innerHTML=`
- <div class="object-head"><div class="object-icon">${esc(p.icon)}</div><div class="object-title"><h2>${esc(p.name)}</h2><p>${esc(p.goal||'Objectif à préciser.')}</p><div class="meta"><span class="pill ${spaceClass(p.space)}">${esc(p.space)}</span><span class="pill">${esc(p.type)}</span><span class="pill ${statusClass(p.status)}">${esc(p.status)}</span><span class="pill ${priorityClass(p.priority)}">Priorité ${esc(p.priority)}</span></div></div><div class="ring" style="--p:${+p.progress||0}"><span>${+p.progress||0}<small>%</small></span></div></div>
- <div class="form-grid"><div class="field"><label>Espace</label><select id="dSpace">${SPACES.filter(x=>x!=='Tous').map(x=>`<option ${x===p.space?'selected':''}>${x}</option>`).join('')}</select></div><div class="field"><label>Type</label><select id="dType">${TYPES.map(x=>`<option ${x===p.type?'selected':''}>${x}</option>`).join('')}</select></div><div class="field"><label>Phase</label><select id="dPhase">${PHASES.map(x=>`<option ${x===p.phase?'selected':''}>${x}</option>`).join('')}</select></div><div class="field"><label>Statut</label><select id="dStatus">${STATUSES.map(x=>`<option ${x===p.status?'selected':''}>${x}</option>`).join('')}</select></div></div>
- <div class="form-grid"><div class="field"><label>Client / usage</label><input id="dClient" value="${esc(p.client)}"></div><div class="field"><label>Avancement %</label><input id="dProgress" type="number" min="0" max="100" value="${+p.progress||0}"></div><div class="field"><label>Priorité</label><select id="dPriority">${PRIORITIES.map(x=>`<option ${x===p.priority?'selected':''}>${x}</option>`).join('')}</select></div><div class="field"><label>Échéance</label><input id="dDue" type="date" value="${esc(p.due)}"></div></div>
- <div class="form-grid two"><div class="field"><label>Prochaine action</label><input id="dNext" value="${esc(p.nextAction)}"></div><div class="field"><label>Stack / outils</label><input id="dStack" value="${esc(p.stack)}"></div></div>
- <div class="field" style="margin-top:10px"><label>Objectif / contexte</label><textarea id="dGoal">${esc(p.goal)}</textarea></div>
- <div class="source-card" style="margin-top:11px"><h4>☁️ Sources réelles Drive / GitHub</h4><div class="form-grid two"><div class="field"><label>Lien HTML maître Drive</label><input id="dDriveHtml" value="${esc(p.sources?.driveHtml||'')}"></div><div class="field"><label>Dossier Drive projet</label><input id="dDriveFolder" value="${esc(p.sources?.driveFolder||'')}"></div></div><div class="form-grid two"><div class="field"><label>Snapshot JSON</label><input id="dSnapshotJson" value="${esc(p.sources?.snapshotJson||'')}"></div><div class="field"><label>Statut GitHub</label><select id="dGithubStatus"><option ${p.sources?.githubStatus==='Non relié'?'selected':''}>Non relié</option><option ${p.sources?.githubStatus==='En cours'?'selected':''}>En cours</option><option ${p.sources?.githubStatus==='Synchronisé'?'selected':''}>Synchronisé</option><option ${p.sources?.githubStatus==='À corriger'?'selected':''}>À corriger</option></select></div></div><div class="form-grid two"><div class="field"><label>Dépôt GitHub</label><input id="dGithubRepo" value="${esc(p.sources?.githubRepo||'')}"></div><div class="field"><label>Chemin GitHub</label><input id="dGithubPath" value="${esc(p.sources?.githubPath||'')}"></div></div><div class="form-grid two"><div class="field"><label>Dernière étape réalisée</label><input id="dLastStep" value="${esc(p.sources?.lastCompletedStep||'')}"></div><div class="field"><label>Prochaine étape réelle</label><input id="dNextMilestone" value="${esc(p.sources?.nextMilestone||'')}"></div></div></div>
- <div class="main-actions"><button class="btn green" id="saveDetail">Enregistrer fiche</button><button class="btn" id="duplicateProject">Dupliquer</button><button class="btn red" id="deleteProject">Supprimer</button></div>`;
- $('saveDetail').onclick=saveDetail;$('duplicateProject').onclick=duplicateProject;$('deleteProject').onclick=deleteProject}
-function renderPhaseRail(){const p=selected();const idx=PHASES.indexOf(p?.phase);$('phaseRail').innerHTML=`<div class="phase-rail">${PHASES.map((ph,i)=>`<div class="phase-step ${i<idx?'done':i===idx?'current':''}">${esc(ph)}</div>`).join('')}</div>`}
-function renderMiniDashboard(){const p=selected();if(!p)return;const opts=OPTION_DEFS.filter(([k])=>p.options&&p.options[k]).length;const lastVer=(p.versions||[])[0];const lastNote=(p.notes||[])[0];const nextPhase=PHASES[Math.min(PHASES.length-1,PHASES.indexOf(p.phase)+1)]||'—';const dueText=p.due?new Date(p.due).toLocaleDateString('fr-FR'):'non définie';$('miniDashboard').innerHTML=`<div class="tile"><b class="big">${+p.progress||0}%</b><h4>Avancement</h4><p>Phase actuelle : ${esc(p.phase)} · statut ${esc(p.status)}</p></div><div class="tile"><b class="big">${opts}/${OPTION_DEFS.length}</b><h4>Options prêtes</h4><p>Sauvegarde, IA, Drive, PDF, sécurité, support…</p></div><div class="tile"><b class="big">${(p.blockers||[]).length}</b><h4>Points à traiter</h4><p>${esc((p.blockers||[])[0]||'Aucun blocage déclaré.')}</p></div><div class="tile"><b class="big">${esc(nextPhase)}</b><h4>Étape suivante</h4><p>Échéance ${esc(dueText)} · prochaine action : ${esc(p.nextAction||'à préciser')}</p></div>`;renderSynthesisView()}
-function renderSynthesisView(){const p=selected();const el=$('synthesisView');if(!el||!p)return;const lastVer=(p.versions||[])[0];const lastNote=(p.notes||[])[0];const ready=OPTION_DEFS.filter(([k])=>p.options&&p.options[k]);const links=(p.links||[]).slice(0,3).map(l=>`${linkIcon(l.type)} ${l.title}`).join(' · ')||'Aucun lien prioritaire';el.innerHTML=`<div class="synth-card"><h4>Résumé exécutif</h4><p>${esc(p.goal||'Objectif à préciser.')}</p></div><div class="synth-card"><h4>Action maintenant</h4><p>${esc(p.nextAction||'Définir la prochaine action.')}</p></div><div class="synth-card"><h4>Contexte</h4><p>Catégorie : ${esc(p.space)}
-Client / usage : ${esc(p.client||'non renseigné')}
-Type : ${esc(p.type)}
-Échéance : ${esc(p.due?new Date(p.due).toLocaleDateString('fr-FR'):'non définie')}</p></div><div class="synth-card"><h4>Roadmap courte</h4><p>Nous sommes en phase « ${esc(p.phase)} ». L’objectif est de sécuriser cette étape puis d’enchaîner vers « ${esc(PHASES[Math.min(PHASES.length-1,PHASES.indexOf(p.phase)+1)]||p.phase)} ».</p></div><div class="synth-card"><h4>Dernière version</h4><p>${esc(lastVer?`${lastVer.name} · ${lastVer.type} · ${lastVer.date}`:'Journal des versions vide.')}</p></div><div class="synth-card"><h4>Dernière note</h4><p>${esc(lastNote?`${lastNote.title} — ${lastNote.text}`:'Aucune note saisie.')}</p></div><div class="synth-card"><h4>Liens utiles</h4><p>${esc(links)}</p></div><div class="synth-card"><h4>Socle prêt</h4><p>${ready.length} option(s) activée(s) : ${esc(ready.slice(0,6).map(x=>x[1]).join(', ')||'aucune')}</p></div>`}
-function saveDetail(){const p=selected();Object.assign(p,{space:$('dSpace').value,type:$('dType').value,phase:$('dPhase').value,status:$('dStatus').value,client:$('dClient').value.trim(),progress:Math.max(0,Math.min(100,+$('dProgress').value||0)),priority:$('dPriority').value,due:$('dDue').value,nextAction:$('dNext').value.trim(),stack:$('dStack').value.trim(),goal:$('dGoal').value.trim()});p.sources=Object.assign(baseSources(),p.sources||{},{driveHtml:$('dDriveHtml').value.trim(),driveFolder:$('dDriveFolder').value.trim(),snapshotJson:$('dSnapshotJson').value.trim(),githubStatus:$('dGithubStatus').value,githubRepo:$('dGithubRepo').value.trim(),githubPath:$('dGithubPath').value.trim(),lastCompletedStep:$('dLastStep').value.trim(),lastStepDate:today(),nextMilestone:$('dNextMilestone').value.trim()});persist('fiche modifiée');toast('Fiche enregistrée + snapshot');renderAll()}
-function duplicateProject(){const p=selected();const copy=JSON.parse(JSON.stringify(p));copy.id=uid();copy.name=p.name+' · copie';copy.progress=5;copy.phase='Cadrage';copy.status='À lancer';copy.versions=[{name:'Copie',type:'Création',date:today(),text:'Projet dupliqué depuis '+p.name}];copy.notes=[];state.projects.unshift(copy);state.selectedId=copy.id;persist('duplication projet');toast('Projet dupliqué');renderAll()}
-function deleteProject(){const p=selected();if(state.projects.length<2){toast('Impossible de supprimer le dernier projet');return}if(!confirm('Supprimer ce projet du cockpit ?'))return;state.projects=state.projects.filter(x=>x.id!==p.id);state.selectedId=state.projects[0].id;persist('suppression projet');toast('Projet supprimé');renderAll()}
-function renderSideTabs(){$('sideTabs').querySelectorAll('.side-tab').forEach(b=>{b.classList.toggle('active',b.dataset.side===activeSide);b.onclick=()=>{activeSide=b.dataset.side;renderSide()}})}
-function renderSide(){renderSideTabs();const p=selected();if(!p){$('sideBody').innerHTML='';return}if(activeSide==='notes')renderNotes(p);if(activeSide==='versions')renderVersions(p);if(activeSide==='links')renderLinks(p);if(activeSide==='options')renderOptions(p);if(activeSide==='sync')renderSync(p)}
-function renderNotes(p){$('sideBody').innerHTML=`<div class="mini-form"><input id="noteTitle" placeholder="Titre de note"><textarea id="noteText" placeholder="Décision, idée, demande client, règle à garder…"></textarea><button class="btn green" id="addNote">Ajouter note</button></div>${(p.notes||[]).map((n,i)=>`<div class="feed-item"><div class="feed-top"><b>${esc(n.title)}</b><span><small>${esc(n.date)}</small> <button class="icon-btn" data-note="${i}">×</button></span></div><p>${esc(n.text)}</p></div>`).join('')||'<div class="empty">Aucune note.</div>'}`;$('addNote').onclick=()=>{const title=$('noteTitle').value.trim(),text=$('noteText').value.trim();if(!title&&!text){toast('Note vide');return}p.notes.unshift({title:title||'Note',date:nowFr(),text:text||'—'});persist('note ajoutée');toast('Note ajoutée');renderAll()};$('sideBody').querySelectorAll('[data-note]').forEach(b=>b.onclick=()=>{p.notes.splice(+b.dataset.note,1);persist('note supprimée');renderAll()})}
-function renderVersions(p){$('sideBody').innerHTML=`<div class="mini-form"><div class="row2"><input id="verName" placeholder="Version ex: V2.1"><select id="verType"><option>Ajout</option><option>Correction</option><option>Design</option><option>Test</option><option>Déploiement</option><option>Validé</option></select></div><textarea id="verText" placeholder="Ce qui change, reste à tester, décision technique…"></textarea><button class="btn green" id="addVer">Ajouter version</button></div>${(p.versions||[]).map((v,i)=>`<div class="feed-item"><div class="feed-top"><b>${esc(v.name)} · ${esc(v.type)}</b><span><small>${esc(v.date)}</small> <button class="icon-btn" data-ver="${i}">×</button></span></div><p>${esc(v.text)}</p></div>`).join('')||'<div class="empty">Aucune version.</div>'}`;$('addVer').onclick=()=>{const name=$('verName').value.trim(),text=$('verText').value.trim();if(!name&&!text){toast('Version vide');return}p.versions.unshift({name:name||'Version',type:$('verType').value,date:today(),text:text||'—'});persist('version ajoutée');toast('Version ajoutée');renderAll()};$('sideBody').querySelectorAll('[data-ver]').forEach(b=>b.onclick=()=>{p.versions.splice(+b.dataset.ver,1);persist('version supprimée');renderAll()})}
-function linkIcon(t){return t==='Drive'?'☁️':t==='ChatGPT'?'💬':t==='HTML'?'⌘':t==='PDF'?'📄':t==='GitHub'?'⌥':'🔗'}
-function renderLinks(p){$('sideBody').innerHTML=`<div class="mini-form"><div class="row2"><input id="linkTitle" placeholder="Titre du lien"><select id="linkType"><option>Drive</option><option>ChatGPT</option><option>HTML</option><option>PDF</option><option>GitHub</option><option>Autre</option></select></div><input id="linkUrl" placeholder="URL ou chemin interne"><button class="btn green" id="addLink">Ajouter lien</button></div>${(p.links||[]).map((l,i)=>`<div class="feed-item link-row"><div class="link-ico">${linkIcon(l.type)}</div><div><b>${esc(l.title)}</b><small>${esc(l.type)} · ${esc(l.url||'lien à renseigner')}</small></div><div>${l.url?`<a href="${esc(l.url)}" target="_blank">ouvrir</a>`:''}<button class="icon-btn" data-link="${i}">×</button></div></div>`).join('')||'<div class="empty">Aucun lien.</div>'}`;$('addLink').onclick=()=>{const title=$('linkTitle').value.trim(),url=$('linkUrl').value.trim();if(!title&&!url){toast('Lien vide');return}p.links.unshift({title:title||$('linkType').value,type:$('linkType').value,url});persist('lien ajouté');toast('Lien ajouté');renderAll()};$('sideBody').querySelectorAll('[data-link]').forEach(b=>b.onclick=()=>{p.links.splice(+b.dataset.link,1);persist('lien supprimé');renderAll()})}
-function renderOptions(p){const snaps=getSnapshots();$('sideBody').innerHTML=`<div class="options-grid">${OPTION_DEFS.map(([k,label,ico])=>`<label class="opt ${p.options[k]?'done':''}"><input type="checkbox" data-opt="${k}" ${p.options[k]?'checked':''}> <span>${ico}</span><b>${esc(label)}</b></label>`).join('')}</div><div style="height:10px"></div><div class="mini-form"><div class="row2"><input id="blockerText" placeholder="Point à traiter / risque"><button class="btn orange" id="addBlocker">Ajouter</button></div></div>${(p.blockers||[]).map((b,i)=>`<div class="feed-item"><div class="feed-top"><b>⚠️ ${esc(b)}</b><button class="icon-btn" data-blocker="${i}">×</button></div></div>`).join('')||'<div class="empty">Aucun point bloquant.</div>'}<div style="height:10px"></div><div class="tile"><h4>Snapshots automatiques</h4><p>${snaps.length} sauvegarde(s) complètes stockées dans ce navigateur. Chaque modification crée un snapshot JSON local.</p></div>`;$('sideBody').querySelectorAll('[data-opt]').forEach(ch=>ch.onchange=()=>{p.options[ch.dataset.opt]=ch.checked;persist('option modifiée');renderAll()});$('addBlocker').onclick=()=>{const v=$('blockerText').value.trim();if(!v)return;p.blockers.unshift(v);persist('point à traiter ajouté');toast('Point ajouté');renderAll()};$('sideBody').querySelectorAll('[data-blocker]').forEach(b=>b.onclick=()=>{p.blockers.splice(+b.dataset.blocker,1);persist('point à traiter supprimé');renderAll()})}
+function spaceClass(s){return String(s||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'')}
+function statusColor(s){return s==='Déployé'||s==='Validé'?'green':s==='Bloqué'?'red':s==='À tester'||s==='En cours'?'orange':s==='Pause'?'violet':'blue'}
+function persist(action='sauvegarde'){state.updated=now();state.storageVersion=VERSION;const serialized=JSON.stringify(state);localStorage.setItem(KEY,serialized);MIRROR_KEYS.forEach(k=>{try{localStorage.setItem(k,serialized)}catch(e){}});updateRecoveryIndex(action);saveSnapshot(action);if(getDriveConfig().enabled)sendDriveSync('auto:'+action,true)}
+function updateRecoveryIndex(action){try{const idx=JSON.parse(localStorage.getItem(RECOVERY_INDEX_KEY)||'[]');idx.unshift({date:now(),action,version:VERSION,key:KEY,projects:state.projects.length,selectedId:state.selectedId,url:location.href});localStorage.setItem(RECOVERY_INDEX_KEY,JSON.stringify(idx.slice(0,80)))}catch(e){}}
+function getSnapshots(){const all=[];[SNAP_KEY,...PREVIOUS_SNAP_KEYS].filter((v,i,a)=>v&&a.indexOf(v)===i).forEach(k=>{try{const arr=JSON.parse(localStorage.getItem(k)||'[]');if(Array.isArray(arr))arr.forEach(x=>all.push(Object.assign({sourceKey:k},x)))}catch(e){}});const seen=new Set();return all.filter(x=>{const sig=(x.date||'')+'|'+(x.action||'')+'|'+(x.payload?.version||'');if(seen.has(sig))return false;seen.add(sig);return true}).sort((a,b)=>String(b.date||'').localeCompare(String(a.date||''))).slice(0,50)}
+function saveSnapshot(action){try{const snaps=getSnapshots();const payload={app:'Cockpit Projets BI',version:VERSION,exported_at:now(),action,selectedId:state.selectedId,projects:state.projects};snaps.unshift({date:now(),action,payload});localStorage.setItem(SNAP_KEY,JSON.stringify(snaps.slice(0,40)))}catch(e){}}
+function downloadObject(obj,name){const blob=new Blob([JSON.stringify(obj,null,2)],{type:'application/json'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download=name;document.body.appendChild(a);a.click();a.remove();URL.revokeObjectURL(url)}
+function exportJson(){downloadObject({app:'Cockpit Projets BI',version:VERSION,exported_at:now(),state},'cockpit_projets_bi_'+today()+'.json');toast('Export JSON téléchargé')}
+function exportSnapshot(){const snap=getSnapshots()[0]||{payload:{app:'Cockpit Projets BI',version:VERSION,exported_at:now(),selectedId:state.selectedId,projects:state.projects}};downloadObject(snap.payload,'snapshot_projets_bi_'+today()+'.json');toast('Snapshot téléchargé')}
+function exportManifest(){downloadObject({app:'Cockpit Projets BI',version:VERSION,exported_at:now(),storage:KEY,recovery:recoveryMeta,driveSync:getDriveConfig(),projects:state.projects.map(p=>({id:p.id,name:p.name,space:p.space,status:p.status,phase:p.phase,progress:p.progress,sources:p.sources}))},'manifest_bi_central_'+today()+'.json');toast('Manifest téléchargé')}
+function importJson(file){const r=new FileReader();r.onload=()=>{try{const data=JSON.parse(r.result);const imported=normalize(data.state||data.payload||data);if(!imported.projects?.length)throw new Error('format');state=imported;if(!state.selectedId)state.selectedId=state.projects[0].id;persist('import json');toast('Import réussi');renderAll()}catch(e){toast('Import impossible : JSON non compatible')}};r.readAsText(file)}
+function resetDemo(){if(!confirm('Réinitialiser la démo ? Pense à Drive Sync / export avant.'))return;state=normalize(seed());activeSpace='Tous';persist('reset démo');toast('Démo réinitialisée');renderAll()}
+function configureDriveSync(){const cur=getDriveConfig();const url=prompt('URL Apps Script /exec pour Drive Sync',cur.endpoint||'https://script.google.com/macros/s/.../exec');if(url===null)return;const endpoint=url.trim();const enabled=!!endpoint;setDriveConfig({endpoint,enabled,lastStatus:enabled?'Configuré':'Non configuré'});toast(enabled?'Drive Sync configuré':'Drive Sync désactivé');renderAll()}
+function buildSyncPayload(action='manual'){return {app:'Cockpit Projets BI',version:VERSION,action,exported_at:now(),filename:'SNAPSHOT_Cockpit_Projets_BI_'+VERSION+'_'+new Date().toISOString().replace(/[:.]/g,'-')+'.json',state,meta:{url:location.href,storageKey:KEY,projects:state.projects.length}}}
+async function sendDriveSync(action='manual',silent=false){const cfg=getDriveConfig();if(!cfg.endpoint){if(!silent)configureDriveSync();return}const payload=buildSyncPayload(action);try{await fetch(cfg.endpoint,{method:'POST',mode:'no-cors',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(payload)});setDriveConfig({lastSent:now(),lastStatus:'Envoyé',lastAction:action,enabled:true});if(!silent)toast('Snapshot envoyé vers Drive');renderAll()}catch(e){setDriveConfig({lastStatus:'Erreur envoi',lastAction:action});if(!silent)toast('Erreur Drive Sync')}}
 
-
-function projectReadiness(p){const s=Object.assign(baseSources(),p.sources||{});let score=0,checks=[];const add=(ok,w,label)=>{score+=ok?w:0;checks.push({ok,w,label})};add(!!s.githubRepo,16,'Dépôt GitHub renseigné');add(!!s.githubPath,12,'Chemin app défini');add(!!s.pagesUrl,16,'URL GitHub Pages définie');add(!!s.driveHtml,12,'HTML maître Drive renseigné');add(!!s.snapshotJson,10,'Snapshot JSON lié');add((p.versions||[]).length>0,10,'Journal versions alimenté');add((p.notes||[]).length>0,8,'Notes / décisions présentes');add((p.links||[]).length>0,8,'Liens utiles présents');add(!((p.blockers||[]).length),8,'Aucun blocage déclaré');return {score:Math.min(100,score),checks}}
-function scoreClass(v){return v>=76?'ok':v>=45?'warn':'bad'}
-function projectPublicUrl(p){const s=Object.assign(baseSources(),p.sources||{});return s.pagesUrl||''}
-function copyText(text,label='copié'){navigator.clipboard?.writeText(text).then(()=>toast(label)).catch(()=>toast('Copie impossible'))}
-function exportPortfolioCsv(){const rows=[['Nom','Espace','Type','Phase','Statut','Progression','Priorité','Pages','GitHub','Drive','Prochaine action']].concat(state.projects.map(p=>{const s=Object.assign(baseSources(),p.sources||{});return [p.name,p.space,p.type,p.phase,p.status,+p.progress||0,p.priority,s.pagesUrl||'',s.githubRepo||'',s.driveHtml||'',p.nextAction||'']}));const csv=rows.map(r=>r.map(v=>'"'+String(v??'').replaceAll('"','""')+'"').join(';')).join('\n');const blob=new Blob([csv],{type:'text/csv;charset=utf-8'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download='suivi_portefeuille_bi_'+today()+'.csv';document.body.appendChild(a);a.click();a.remove();URL.revokeObjectURL(url);toast('CSV portefeuille téléchargé')}
-function renderActiveView(){const el=$('activeView');if(!el)return;const total=state.projects.length;const deploy=state.projects.filter(p=>p.status==='Déployé'||p.phase==='Déploiement').length;const gh=state.projects.filter(p=>Object.assign(baseSources(),p.sources||{}).githubRepo).length;const pages=state.projects.filter(p=>Object.assign(baseSources(),p.sources||{}).pagesUrl).length;const snaps=state.projects.filter(p=>Object.assign(baseSources(),p.sources||{}).snapshotJson).length;const blockers=state.projects.reduce((a,p)=>a+(p.blockers||[]).length,0);const avg=Math.round(state.projects.reduce((a,p)=>a+projectReadiness(p).score,0)/Math.max(1,total));const top=state.projects.slice().sort((a,b)=>projectReadiness(b).score-projectReadiness(a).score).slice(0,6);const next=state.projects.filter(p=>p.nextAction).slice(0,5);el.innerHTML=`<div class="active-command"><div class="command-card"><h3>⚡ Commande active du portefeuille</h3><p>Ce mode sert à piloter les BI publiés : visibilité GitHub Pages, liens Drive/GitHub, sauvegardes JSON, blocages et prochaines actions. Il transforme le cockpit en base de travail opérationnelle.</p><div class="command-actions"><button class="mini-btn" id="copyPublicRoot">Copier URL accueil</button><button class="mini-btn" id="exportCsv">Exporter suivi CSV</button><button class="mini-btn" id="downloadManifestActive">Manifest global</button></div></div><div class="command-card"><h3>🌐 Accueil public</h3><p><span class="url-chip">${esc(PUBLIC_ROOT)}</span></p><p style="margin-top:10px">Repo : <span class="url-chip">${esc(GITHUB_REPO)}</span></p></div><div class="command-card"><h3>↻ Reprise auto anti-vide</h3><p>Source : <span class="url-chip">${esc(recoveryHealth().source)}</span></p><p style="margin-top:8px">${esc(recoveryHealth().reason)} · snapshots : ${recoveryHealth().snapshots} · clé stable : <span class="url-chip">${esc(recoveryHealth().key)}</span></p><div class="command-actions"><button class="mini-btn" id="forceRecoveryMirror">Forcer miroir</button><button class="mini-btn" id="downloadRecoveryJson">Backup JSON</button></div></div><div class="command-card"><h3>☁ Drive Sync V1</h3><p>Statut : <span class="url-chip">${esc(driveSyncLabel())}</span></p><p style="margin-top:8px">Dernier envoi : ${esc(driveSync.lastSent||'—')} · action : ${esc(driveSync.lastAction||'—')}<br>État : ${esc(driveSync.lastStatus||'—')}</p><div class="command-actions"><button class="mini-btn" id="configureDriveSync">Configurer endpoint</button><button class="mini-btn" id="toggleDriveSync">${driveSync.enabled?'Pause':'Activer'}</button><button class="mini-btn" id="sendDriveNow">Envoyer maintenant</button></div></div></div><div class="health-grid"><div class="health ${scoreClass(avg)}"><b>${avg}%</b><small>Santé active moyenne</small></div><div class="health ok"><b>${pages}/${total}</b><small>URLs GitHub Pages renseignées</small></div><div class="health ${gh===total?'ok':'warn'}"><b>${gh}/${total}</b><small>Projets reliés GitHub</small></div><div class="health ${snaps?'ok':'warn'}"><b>${snaps}/${total}</b><small>Snapshots JSON liés</small></div><div class="health ${blockers?'bad':'ok'}"><b>${blockers}</b><small>Points bloquants</small></div></div><div class="active-board">${top.map(p=>{const r=projectReadiness(p),url=projectPublicUrl(p),cls=scoreClass(r.score);return `<div class="active-card"><span class="score ${cls}">${r.score}%</span><h4>${esc(p.icon)} ${esc(p.name)}</h4><p>${esc(p.phase)} · ${esc(p.status)} · ${+p.progress||0}%</p>${url?`<p style="margin-top:8px"><a href="${esc(url)}" target="_blank">ouvrir GitHub Pages</a></p>`:''}<div class="checklist">${r.checks.slice(0,5).map(c=>`<div class="check ${c.ok?'done':'warn'}"><span class="dot">${c.ok?'✓':'!'}</span><span>${esc(c.label)}</span></div>`).join('')}</div></div>`}).join('')}</div><div style="height:12px"></div><div class="summary-grid"><div class="synth-card"><h4>Prochaines actions</h4><div class="summary-list">${next.length?next.map(p=>`<div class="item"><b>${esc(p.icon)} ${esc(p.name)}</b><small>${esc(p.nextAction)}</small></div>`).join(''):'<div class="item"><b>À définir</b><small>Aucune prochaine action renseignée.</small></div>'}</div></div><div class="synth-card"><h4>Règle publique provisoire</h4><p>Le dépôt est public pour GitHub Pages. Ne pas pousser de mails, clients sensibles, données financières, tokens, clés API ou liens privés critiques.</p></div><div class="synth-card"><h4>Cycle actif recommandé</h4><p>Modifier → tester localement → exporter JSON → mettre à jour manifest → commit GitHub → contrôler Pages → noter la version dans ce cockpit.</p></div><div class="synth-card"><h4>État de déploiement</h4><p>${deploy}/${total} projet(s) en phase déploiement ou déjà déployés. Objectif : lier progressivement Drive, snapshot et GitHub Pages pour chaque BI.</p></div></div>`;setTimeout(()=>{$('copyPublicRoot')&&($('copyPublicRoot').onclick=()=>copyText(PUBLIC_ROOT,'URL accueil copiée'));$('exportCsv')&&($('exportCsv').onclick=exportPortfolioCsv);$('downloadManifestActive')&&($('downloadManifestActive').onclick=exportFullManifest);$('forceRecoveryMirror')&&($('forceRecoveryMirror').onclick=()=>{persist('miroir reprise auto forcé');toast('Miroir de reprise mis à jour');renderAll()});$('downloadRecoveryJson')&&($('downloadRecoveryJson').onclick=()=>exportJson());$('configureDriveSync')&&($('configureDriveSync').onclick=configureDriveSync);$('toggleDriveSync')&&($('toggleDriveSync').onclick=toggleDriveSync);$('sendDriveNow')&&($('sendDriveNow').onclick=()=>sendDriveSnapshot('sauvegarde manuelle'))},0)}
-
-function renderMainTabs(){
- const root=$('mainTabs'); if(!root)return;
- root.querySelectorAll('.tab').forEach(b=>{b.classList.toggle('active',b.dataset.main===activeMain);b.onclick=()=>{activeMain=b.dataset.main;renderAll()}});
- document.querySelectorAll('.view').forEach(v=>v.classList.toggle('active',v.id==='view-'+activeMain));
+function initSelect(id,vals,all=false){const el=$(id);if(!el)return;el.innerHTML=(all?['Tous',...vals]:vals).map(v=>`<option>${esc(v)}</option>`).join('')}
+function renderList(){const q=($('search')?.value||'').toLowerCase(), phase=$('phaseFilter')?.value||'Tous', status=$('statusFilter')?.value||'Tous';let list=state.projects.filter(p=>(activeSpace==='Tous'||p.space===activeSpace)&&(phase==='Tous'||p.phase===phase)&&(status==='Tous'||p.status===status)&&[p.name,p.client,p.type,p.goal,(p.tags||[]).join(' ')].join(' ').toLowerCase().includes(q));$('projectList').innerHTML=list.map(p=>`<div class="card ${p.id===state.selectedId?'active':''}" data-id="${p.id}"><div class="card-ico">${esc(p.icon)}</div><div><h3>${esc(p.name)}</h3><div class="meta"><span class="pill"><span class="dot ${statusColor(p.status)}"></span>${esc(p.status)}</span><span class="pill ${spaceClass(p.space)}">${esc(p.space)}</span></div></div><div style="opacity:.65">☆</div></div>`).join('')||'<p class="muted">Aucun projet.</p>';document.querySelectorAll('.card[data-id]').forEach(c=>c.onclick=()=>{state.selectedId=c.dataset.id;persist('sélection projet');renderAll()})}
+function renderDetail(){const p=selected();if(!p)return;if(activeMain!=='fiche'){$('projectDetail').innerHTML='';return}const s=Object.assign(baseSources(),p.sources||{}), cfg=getDriveConfig(), snaps=getSnapshots();$('projectDetail').innerHTML=`<div class="object-head"><div class="object-icon">${esc(p.icon)}</div><div class="object-title"><h2>${esc(p.name)}</h2><p>${esc(p.goal||'Projet BI')}</p></div><div class="status-zone"><span class="status-badge"><span class="dot green"></span> ${esc(p.status)}</span><button class="icon-btn" title="Options">⋮</button></div></div><div class="info-grid"><div class="subcard"><h3>① Identité du projet</h3><div class="row"><span>Référence</span><b>${esc(p.id)}</b></div><div class="row"><span>Catégorie</span><b>${esc(p.type)}</b></div><div class="row"><span>Responsable</span><b>${esc(p.client||'Interne')}</b></div><div class="row"><span>Espace</span><b>${esc(p.space)}</b></div><div class="row"><span>Dernière maj.</span><b>${esc(state.updated?.slice(0,16).replace('T',' ')||'—')}</b></div></div><div class="subcard"><h3>② État / Priorité / Avancement</h3><div class="row"><span>État</span><b><span class="pill ${statusColor(p.status)}">${esc(p.status)}</span></b></div><div class="row"><span>Priorité</span><b><span class="pill violet">${esc(p.priority)}</span></b></div><div class="row"><span>Avancement</span><b>${+p.progress||0}% <span class="progress"><span style="width:${+p.progress||0}%"></span></span></b></div><div class="row"><span>Santé</span><b><span class="pill green">${(+p.progress||0)>60?'Bonne':'À suivre'}</span></b></div></div><div class="subcard"><h3>③ Roadmap courte</h3><div class="timeline"><div class="tline"><span class="q">Maint.</span><span>${esc(p.nextAction||'Prochaine action à définir')}</span><span class="check">✓</span></div><div class="tline"><span class="q">Sprint</span><span>${esc(p.phase)}</span><span>○</span></div><div class="tline"><span class="q">Cible</span><span>${esc(p.due||'échéance libre')}</span><span>○</span></div><div class="tline"><span class="q">Après</span><span>${esc(s.nextMilestone||'stabiliser puis publier')}</span><span>○</span></div></div></div><div class="subcard"><h3>④ Notes / Versions</h3><div class="tabs"><button class="tab active" onclick="activeSide='notes';renderAll()">Notes</button><button class="tab" onclick="activeSide='versions';renderAll()">Versions</button></div><div class="note-box">${activeSide==='versions'?renderVersionsMini(p):renderNotesMini(p)}<button class="mini-btn" style="margin-top:10px" onclick="addNote()">＋ Nouvelle note</button></div></div><div class="subcard"><h3>⑤ Liens réels</h3><div class="linklist">${renderLinks(p,s)}</div></div><div class="subcard"><h3>⑥ Données / Sync</h3><div class="row"><span>JSON</span><b><span class="pill green">À jour</span></b></div><div class="row"><span>Snapshots</span><b><span class="pill">${snaps.length}</span></b></div><div class="row"><span>Dernier snapshot</span><b>${esc(snaps[0]?.date?.slice(0,16).replace('T',' ')||'—')}</b></div><div class="row"><span>Drive Sync</span><b><span class="pill ${cfg.enabled?'green':'orange'}">${esc(cfg.enabled?'OK':'À configurer')}</span></b></div><div class="row"><span>Dernière sync</span><b>${esc(cfg.lastSent?cfg.lastSent.slice(0,16).replace('T',' '):'—')}</b></div></div></div>`}
+function renderNotesMini(p){return (p.notes||[]).slice(0,2).map(n=>`<p><b>${esc(n.title)}</b><br>${esc(n.text)}<br><small>${esc(n.date)}</small></p>`).join('')||'<p class="muted">Aucune note.</p>'}
+function renderVersionsMini(p){return (p.versions||[]).slice(0,3).map(v=>`<p><b>${esc(v.name)}</b> · ${esc(v.type||'version')}<br>${esc(v.text)}<br><small>${esc(v.date)}</small></p>`).join('')||'<p class="muted">Aucune version.</p>'}
+function renderLinks(p,s){const links=[...(p.links||[])]; if(s.driveFolder)links.unshift({type:'Drive',title:'Google Drive (Dossier projet)',url:s.driveFolder}); if(s.githubRepo)links.push({type:'GitHub',title:'GitHub Repository',url:s.githubRepo}); if(s.pagesUrl)links.push({type:'Pages',title:'GitHub Pages (Cockpit)',url:s.pagesUrl}); links.push({type:'GPT',title:'Discussion GPT (Projet)',url:quickLinks.gpt||GPT_PROJECT_FALLBACK}); return links.slice(0,6).map(l=>`<div class="linkrow"><span>${l.type==='Drive'?'△':l.type==='GitHub'?'◉':l.type==='GPT'?'🤖':'🌐'}</span><a href="${esc(l.url||'#')}" target="_blank">${esc(l.title)}</a><span>↗</span></div>`).join('')}
+function projectReadiness(p){let score=0;const s=p.sources||{}; if(p.progress)score+=20;if(s.pagesUrl)score+=20;if(s.driveFolder||s.driveHtml)score+=20;if(s.githubRepo)score+=15;if(getDriveConfig().enabled)score+=15;if((p.notes||[]).length)score+=10;return Math.min(100,score)}
+function renderPilotageBoard(){
+  const p=selected(), cfg=getDriveConfig(), snaps=getSnapshots();
+  const health = getDriveConfig().enabled ? 'Drive connecté' : 'Drive à configurer';
+  return `<section class="pilotage-board">
+    <div class="pilot-card"><h3>🟢 Mode actif</h3>
+      <div class="deploy-list">
+        <div class="deploy-item"><span>Projet sélectionné</span><b>${esc(p.name)}</b></div>
+        <div class="deploy-item"><span>Avancement</span><b>${+p.progress||0}%</b></div>
+        <div class="deploy-item"><span>Drive Sync</span><b>${esc(health)}</b></div>
+      </div>
+      <button class="mini-btn" style="margin-top:10px" onclick="sendDriveSync('manuel')">☁ Envoyer maintenant</button>
+    </div>
+    <div class="pilot-card"><h3>📈 Roadmap active</h3>
+      <div class="roadmap-line"><span>Maintenant</span><span>${esc(p.nextAction||'Action à définir')}</span><span class="road-dot done"></span></div>
+      <div class="roadmap-line"><span>Sprint</span><span>${esc(p.phase)}</span><span class="road-dot"></span></div>
+      <div class="roadmap-line"><span>Cible</span><span>${esc(p.sources?.nextMilestone||p.due||'à cadrer')}</span><span class="road-dot todo"></span></div>
+      <div class="roadmap-line"><span>Après</span><span>Stabiliser / publier / archiver</span><span class="road-dot todo"></span></div>
+    </div>
+    <div class="pilot-card"><h3>🚀 Déploiement</h3>
+      <div class="deploy-list">
+        <div class="deploy-item"><span>GitHub Pages</span><b>En ligne</b></div>
+        <div class="deploy-item"><span>Snapshots</span><b>${snaps.length}</b></div>
+        <div class="deploy-item"><span>Dernière sync</span><b>${esc(cfg.lastSent?cfg.lastSent.slice(0,16).replace('T',' '):'—')}</b></div>
+      </div>
+      <button class="mini-btn" style="margin-top:10px" onclick="window.open('${PUBLIC_ROOT}gestion-projets-bi/','_blank')">↗ Ouvrir publié</button>
+    </div>
+  </section>`
 }
-function roadmapMeta(phaseIndex,currentIndex,p){if(phaseIndex<currentIndex)return {cls:'done',label:'Étape franchie',text:'Cette phase est considérée comme passée pour ce projet.'};if(phaseIndex===currentIndex)return {cls:'current',label:'Étape en cours',text:p.nextAction||'Travail en cours sur cette étape.'};if(phaseIndex===currentIndex+1)return {cls:'next',label:'Étape suivante',text:'À préparer juste après la phase en cours.'};return {cls:'',label:'Plus tard',text:'Étape ultérieure à préparer dans la suite du projet.'}}
-function phaseObjective(ph){return ({'Idée':'clarifier le besoin et l’intérêt du BI','Cadrage':'définir périmètre, données, utilisateur et contraintes','Maquette':'poser la structure visuelle et les modules clés','Développement':'construire les vues, formulaires, sauvegardes et interactions','Test':'corriger, valider les usages et sécuriser les données','Déploiement':'livrer, transmettre et mettre en production','Maintenance':'assurer le suivi, les correctifs et les évolutions'})[ph]||'faire avancer le projet'}
-function renderRoadmapFull(){
- const p=selected(), el=$('roadmapFull'), summary=$('roadmapSummary'); if(!el||!p)return;
- const idx=Math.max(0,PHASES.indexOf(p.phase));
- const next=PHASES[Math.min(PHASES.length-1,idx+1)]||p.phase;
- const blockers=(p.blockers||[]).length?(p.blockers||[]).map(b=>`<div class="item"><b>⚠️ Point à traiter</b><small>${esc(b)}</small></div>`).join(''):'<div class="item"><b>✅ Risques</b><small>Aucun blocage déclaré pour le moment.</small></div>';
- if(summary){summary.innerHTML=`<div class="tile"><b class="big">${esc(p.phase)}</b><h4>Étape actuelle</h4><p>${esc(p.status)} · ${+p.progress||0}%</p></div><div class="tile"><b class="big">${esc(next)}</b><h4>Étape suivante</h4><p>${esc(p.nextAction||'à préciser')}</p></div><div class="tile"><b class="big">${(p.versions||[]).length}</b><h4>Journal dev</h4><p>${esc((p.versions||[])[0]?.name||'aucune version')}</p></div><div class="tile"><b class="big">${(p.links||[]).length}</b><h4>Liens projet</h4><p>${esc(p.client||'aucun contexte client')}</p></div>`}
- el.innerHTML=`<div class="roadmap-project">${PHASES.map((ph,i)=>{const m=roadmapMeta(i,idx,p);return `<div class="roadmap-step ${m.cls}"><div class="st">${m.label}</div><h4>${esc(ph)}</h4><p>${esc(phaseObjective(ph))}</p><div class="micro">${esc(m.text)}</div></div>`}).join('')}</div><div style="height:12px"></div><div class="summary-grid"><div class="synth-card"><h4>Lecture de la feuille de route</h4><p>Cette roadmap est propre à la fiche sélectionnée. Elle sert de synthèse rapide pour savoir où on en est, ce qu’il faut faire maintenant et ce qu’il faudra préparer juste après.</p></div><div class="synth-card"><h4>Livrable visé</h4><p>${esc(p.stack||'Stack à préciser.')}</p></div><div class="synth-card"><h4>Points de vigilance</h4><div class="summary-list">${blockers}</div></div></div>`;
+function renderCentralTabs(){
+  const tabs=[
+    ['fiche','🧩 Fiche projet'],
+    ['dashboard','📊 Dashboard'],
+    ['active','🟢 Mode actif'],
+    ['roadmap','📈 Roadmap'],
+    ['deploy','🚀 Déploiement'],
+    ['notes','📓 Notes / panier prompt'],
+    ['data','🟢 Données & sync'],
+    ['sources','🔗 Sources']
+  ];
+  $('centralTabs').innerHTML=tabs.map(t=>`<button class="central-tab ${activeMain===t[0]?'active':''}" data-central="${t[0]}">${t[1]}</button>`).join('');
+  document.querySelectorAll('[data-central]').forEach(b=>b.onclick=()=>{activeMain=b.dataset.central;renderAll()});
 }
-function renderVersionsView(){
- const p=selected(), el=$('versionsView'); if(!el||!p)return;
- el.innerHTML=(p.versions||[]).map(v=>`<div class="read-item"><div class="top"><b>${esc(v.name)} · ${esc(v.type)}</b><small>${esc(v.date)}</small></div><p>${esc(v.text)}</p></div>`).join('')||'<div class="empty">Aucune version renseignée.</div>';
+function renderNotesModule(){
+  const p=selected(); p.notes=p.notes||[];
+  return `<div class="view-title"><h2>📓 Notes / panier prompt</h2><span class="pill green">${p.notes.filter(n=>n.selected).length} note(s) panier</span></div>
+  <div class="note-grid">
+    <section class="subcard" style="min-height:auto">
+      <h3>Ajouter une note</h3>
+      <div class="note-form">
+        <select id="noteType"><option>Idée</option><option>Commentaire</option><option>Problème</option><option>Bug</option><option>Décision</option><option>Action</option></select>
+        <input id="noteTitle" placeholder="Titre court : ex. bouton Drive Sync peu visible">
+        <textarea id="noteText" placeholder="Détail de l'idée, du commentaire, du problème, du bug..."></textarea>
+      </div>
+      <button class="mini-btn" onclick="addStructuredNote()">＋ Ajouter la note</button>
+      <button class="mini-btn" onclick="selectAllNotes(true)">Tout sélectionner</button>
+      <button class="mini-btn" onclick="selectAllNotes(false)">Tout retirer</button>
+      <div class="note-list" style="margin-top:12px">
+        ${p.notes.map((n,i)=>renderNoteItem(n,i)).join('')||'<p class="muted">Aucune note. Ajoute une idée, un commentaire, un bug ou un problème.</p>'}
+      </div>
+    </section>
+    <section class="subcard" style="min-height:auto">
+      <h3>Panier → prompt pour GPT</h3>
+      <p class="muted">Sélectionne des notes à gauche. Le texte ci-dessous devient une base de prompt à me coller.</p>
+      <div class="prompt-box" id="promptBox">${esc(buildPromptBasket(p))}</div>
+      <div class="prompt-actions">
+        <button class="mini-btn" onclick="copyPromptBasket()">📋 Copier prompt</button>
+        <button class="mini-btn" onclick="downloadPromptBasket()">⬇ Télécharger TXT</button>
+      </div>
+    </section>
+  </div>`
 }
-function renderNotesView(){
- const p=selected(), el=$('notesView'); if(!el||!p)return;
- el.innerHTML=(p.notes||[]).map(n=>`<div class="read-item"><div class="top"><b>${esc(n.title)}</b><small>${esc(n.date)}</small></div><p>${esc(n.text)}</p></div>`).join('')||'<div class="empty">Aucune note renseignée.</div>';
+function renderNoteItem(n,i){
+  const typ=String(n.type||'Commentaire').toLowerCase();
+  return `<div class="note-item ${n.selected?'selected':''}">
+    <input type="checkbox" ${n.selected?'checked':''} onchange="toggleNoteBasket(${i},this.checked)">
+    <div><span class="note-type ${typ}">${esc(n.type||'Commentaire')}</span> <b>${esc(n.title||'Sans titre')}</b><br><small class="muted">${esc(n.date||'')}</small><p style="margin:7px 0 0;color:#d8edfb">${esc(n.text||'')}</p></div>
+    <button class="icon-btn" onclick="deleteNote(${i})">×</button>
+  </div>`
 }
-function renderIADView(){
- const p=selected(), el=$('iadView'); if(!el||!p)return;
- const links=(p.links||[]).map(l=>`<div class="read-item"><div class="top"><b>${linkIcon(l.type)} ${esc(l.title)}</b><small>${esc(l.type)}</small></div><p>${esc(l.url||'lien à renseigner')}</p>${l.url?`<a href="${esc(l.url)}" target="_blank">ouvrir</a>`:''}</div>`).join('')||'<div class="empty">Aucun lien IA / Drive pour ce projet.</div>';
- const coverage=Math.round(state.projects.filter(x=>(x.links||[]).length).length/Math.max(1,state.projects.length)*100);
- el.innerHTML=`<div><div class="tile"><h4>Liens du projet</h4><p>${(p.links||[]).length} lien(s). Couverture globale : ${coverage}% des projets ont au moins un lien.</p><div class="bar" style="margin-top:10px"><span style="width:${coverage}%"></span></div></div><div style="height:10px"></div>${links}</div><div><div class="tile"><h4>Cartouche IA & stockage</h4><p>Rappel des familles utiles : assistant, docs, sauvegarde, versions, livraison.</p></div><div style="height:10px"></div><div class="brand-matrix">${BRANDS.map(([b,s,i])=>`<div class="brand-tile"><div class="ico">${i}</div><b>${esc(b)}</b><small>${esc(s)}</small></div>`).join('')}</div></div>`;
+function buildPromptBasket(p){
+  const selected=(p.notes||[]).filter(n=>n.selected);
+  if(!selected.length)return 'Aucune note sélectionnée. Coche des notes dans la liste pour construire le prompt.';
+  return `Contexte : nous travaillons sur le BI "${p.name}" (${VERSION}).\nObjectif : analyser les notes sélectionnées et proposer des corrections concrètes / priorisées.\n\nNotes sélectionnées :\n`+
+    selected.map((n,i)=>`\n${i+1}. [${n.type||'Note'}] ${n.title||'Sans titre'}\nDate : ${n.date||''}\nDétail : ${n.text||''}`).join('\n')+
+    `\n\nRéponse attendue : synthèse, priorités, proposition de modification du BI, points à vérifier avant publication.`;
 }
-function renderDeploymentView(){
- const el=$('deploymentView'); if(!el)return;
- const total=state.projects.length, clients=state.projects.filter(p=>p.space==='Clients').length, secure=state.projects.filter(p=>p.options&&p.options.security).length, training=state.projects.filter(p=>p.options&&p.options.training).length;
- el.innerHTML=`<div class="deploy-rail"><div class="deploy-step"><div class="ico">🧩</div><h4>1. Cadrage</h4><p>Besoin, utilisateur, données sources, budget, contraintes.</p></div><div class="deploy-step"><div class="ico">🎛️</div><h4>2. BI métier</h4><p>Interface simple : agenda, stocks, clients, planning, suivi.</p></div><div class="deploy-step"><div class="ico">💾</div><h4>3. Données</h4><p>Import/export JSON/CSV/PDF, sauvegarde locale, snapshots.</p></div><div class="deploy-step"><div class="ico">🤖</div><h4>4. IA utile</h4><p>Rédaction, analyse, synthèse, automatisation contrôlée.</p></div><div class="deploy-step"><div class="ico">🛟</div><h4>5. Suivi</h4><p>Versions, corrections, formation et maintenance légère.</p></div></div><div class="summary-grid" style="margin-top:12px"><div class="tile"><b class="big">${clients}/${total}</b><h4>Projets clients</h4><p>À préparer pour livraison micro-entreprise.</p></div><div class="tile"><b class="big">${secure}/${total}</b><h4>Sécurité</h4><p>Option sécurité / RGPD cochée.</p></div><div class="tile"><b class="big">${training}/${total}</b><h4>Formation</h4><p>Support prévu pour user non expert.</p></div><div class="tile"><b class="big">JSON</b><h4>Sauvegarde</h4><p>Chaque modification crée un snapshot local.</p></div></div>`;
+function addStructuredNote(){
+  const p=selected(); p.notes=p.notes||[];
+  const type=$('noteType').value, title=$('noteTitle').value.trim()||type+' sans titre', text=$('noteText').value.trim();
+  p.notes.unshift({type,title,text,date:nowFr(),selected:false});
+  persist('note structurée ajoutée');toast('Note ajoutée');renderAll();
 }
-
-function ghClass(s){return s==='Synchronisé'?'ok':s==='À corriger'?'bad':s==='En cours'?'warn':''}
-function srcLink(label,url){return url?`<a class="mini-btn" href="${esc(url)}" target="_blank">ouvrir ${esc(label)}</a>`:`<span class="mini-btn">${esc(label)} à renseigner</span>`}
-function projectManifest(p){return {app:'Cockpit Projets BI',cockpit_version:VERSION,exported_at:now(),project:{id:p.id,name:p.name,space:p.space,type:p.type,phase:p.phase,status:p.status,progress:p.progress,priority:p.priority,due:p.due,goal:p.goal,nextAction:p.nextAction,stack:p.stack,tags:p.tags||[],sources:Object.assign(baseSources(),p.sources||{}),links:p.links||[],versions:p.versions||[],notes:p.notes||[],blockers:p.blockers||[]}}}
-function renderSourcesView(){const p=selected(),el=$('sourcesView');if(!el||!p)return;const s=Object.assign(baseSources(),p.sources||{});const driveReady=!!s.driveHtml;const snapReady=!!s.snapshotJson;const ghReady=s.githubStatus==='Synchronisé';const manifest=JSON.stringify(projectManifest(p),null,2);el.innerHTML=`<div class="source-kpi"><div class="tile"><b class="big">${driveReady?'OK':'—'}</b><h4>HTML Drive</h4><p>${driveReady?'fichier maître renseigné':'lien maître à ajouter'}</p></div><div class="tile"><b class="big">${snapReady?'OK':'—'}</b><h4>Snapshot</h4><p>${snapReady?'dernier JSON lié':'export JSON à déposer'}</p></div><div class="tile"><b class="big">${esc(s.githubStatus||'—')}</b><h4>GitHub</h4><p>${esc(s.githubPath||'chemin à définir')}</p></div><div class="tile"><b class="big">${esc(s.lastStepDate||'—')}</b><h4>Étape</h4><p>${esc(s.lastCompletedStep||'non renseignée')}</p></div></div><div class="source-grid"><div class="source-card"><h4>☁️ Drive</h4><p>HTML maître : ${esc(s.driveHtml||'non renseigné')}<br>Dossier : ${esc(s.driveFolder||'non renseigné')}<br>Snapshot : ${esc(s.snapshotJson||'non renseigné')}</p><div class="src-actions">${srcLink('HTML',s.driveHtml)}${srcLink('dossier',s.driveFolder)}${srcLink('snapshot',s.snapshotJson)}</div></div><div class="source-card"><h4>⌥ GitHub</h4><p><span class="status-dot ${ghClass(s.githubStatus)}">${esc(s.githubStatus||'Non relié')}</span><br><br>Dépôt : ${esc(s.githubRepo||'à créer / relier')}<br>Branche : <span class="github-path">${esc(s.githubBranch||'main')}</span><br>Chemin : <span class="github-path">${esc(s.githubPath||'apps/...')}</span><br>Pages : ${s.pagesUrl?`<a href="${esc(s.pagesUrl)}" target="_blank">ouvrir</a>`:'non renseigné'}</p></div><div class="source-card"><h4>🧾 Documents support</h4><p>Manifest : ${esc(s.manifestDoc||'non renseigné')}<br>Suivi étapes : ${esc(s.sheetSuivi||'non renseigné')}<br>Archive : ${esc(s.archiveLink||'non renseigné')}</p><div class="src-actions">${srcLink('manifest',s.manifestDoc)}${srcLink('suivi',s.sheetSuivi)}${srcLink('archive',s.archiveLink)}</div></div><div class="source-card"><h4>🛤️ Étape réelle</h4><p>Dernière étape : ${esc(s.lastCompletedStep||'non renseignée')}<br>Date : ${esc(s.lastStepDate||'—')}<br>Prochaine étape : ${esc(s.nextMilestone||'à préciser')}</p></div></div><div style="height:12px"></div><div class="source-card"><h4>▤ Manifest projet exportable</h4><div class="src-actions"><button class="mini-btn" id="copyProjectManifest">Copier manifest</button><button class="mini-btn" id="downloadProjectManifest">Télécharger manifest JSON</button></div><div style="height:10px"></div><div class="manifest-box">${esc(manifest)}</div></div>`;setTimeout(()=>{const copy=$('copyProjectManifest'),down=$('downloadProjectManifest');if(copy)copy.onclick=()=>navigator.clipboard.writeText(manifest).then(()=>toast('Manifest copié'));if(down)down.onclick=()=>downloadObject(projectManifest(p),'manifest_'+p.id+'_'+today()+'.json')},0)}
-function renderSync(p){const s=Object.assign(baseSources(),p.sources||{});$('sideBody').innerHTML=`<div class="sync-grid"><div class="sync-tile"><b>☁️ Drive</b><small>${s.driveHtml?'HTML maître lié':'HTML maître à renseigner'}<br>${s.snapshotJson?'Snapshot lié':'Snapshot à exporter'}</small></div><div class="sync-tile"><b>⌥ GitHub</b><small>${esc(s.githubStatus||'Non relié')}<br><span class="github-path">${esc(s.githubPath||'apps/...')}</span></small></div><div class="sync-tile"><b>🧾 Étapes</b><small>${esc(s.lastCompletedStep||'non renseigné')}<br>${esc(s.nextMilestone||'prochaine étape à définir')}</small></div></div><div style="height:10px"></div><div class="mini-form"><div class="field"><label>HTML maître Drive</label><input id="syncDriveHtml" value="${esc(s.driveHtml||'')}"></div><div class="field"><label>Snapshot JSON</label><input id="syncSnapshot" value="${esc(s.snapshotJson||'')}"></div><div class="row2"><div class="field"><label>GitHub repo</label><input id="syncRepo" value="${esc(s.githubRepo||'')}"></div><div class="field"><label>Chemin GitHub</label><input id="syncPath" value="${esc(s.githubPath||'')}"></div></div><div class="row2"><div class="field"><label>Dernière étape réalisée</label><input id="syncLast" value="${esc(s.lastCompletedStep||'')}"></div><div class="field"><label>Prochaine étape</label><input id="syncNext" value="${esc(s.nextMilestone||'')}"></div></div><button class="btn green" id="saveSync">Enregistrer sync</button><button class="btn" id="copySyncManifest">Copier manifest projet</button></div>`;$('saveSync').onclick=()=>{p.sources=Object.assign(baseSources(),p.sources||{},{driveHtml:$('syncDriveHtml').value.trim(),snapshotJson:$('syncSnapshot').value.trim(),githubRepo:$('syncRepo').value.trim(),githubPath:$('syncPath').value.trim(),lastCompletedStep:$('syncLast').value.trim(),lastStepDate:today(),nextMilestone:$('syncNext').value.trim()});persist('sync projet modifiée');toast('Sync enregistrée');renderAll()};$('copySyncManifest').onclick=()=>navigator.clipboard.writeText(JSON.stringify(projectManifest(p),null,2)).then(()=>toast('Manifest copié'))}
-function exportFullManifest(){downloadObject({app:'Cockpit Projets BI',version:VERSION,exported_at:now(),drive_root:'https://drive.google.com/drive/folders/1kGlo2n1G9ZIQlxRTIKj0vK13UxYKJx-1',github_status:'GitHub Pages actif',recovery:recoveryHealth(),projects:state.projects.map(p=>projectManifest(p).project)},'manifest_bi_central_'+today()+'.json');toast('Manifest global téléchargé')}
-
-function initSelects(){const opt=a=>'<option value="">Tous</option>'+a.map(x=>`<option>${esc(x)}</option>`).join('');$('phaseFilter').innerHTML=opt(PHASES);$('statusFilter').innerHTML=opt(STATUSES);$('mSpace').innerHTML=SPACES.filter(x=>x!=='Tous').map(x=>`<option>${esc(x)}</option>`).join('');$('mType').innerHTML=TYPES.map(x=>`<option>${esc(x)}</option>`).join('');$('mPhase').innerHTML=PHASES.map(x=>`<option>${esc(x)}</option>`).join('');$('mStatus').innerHTML=STATUSES.map(x=>`<option>${esc(x)}</option>`).join('')}
-function openModal(){$('projectModal').classList.add('active');$('mName').value='';$('mSpace').value='Perso';$('mIcon').value='🧩';$('mType').value='BI métier';$('mPhase').value='Idée';$('mStatus').value='À lancer';$('mClient').value='';$('mProgress').value=5;$('mDue').value='';$('mNext').value='';$('mGoal').value=''}
-function closeModal(){$('projectModal').classList.remove('active')}
-function createProject(){const name=$('mName').value.trim();if(!name){toast('Nom obligatoire');return}const p={id:uid(),name,space:$('mSpace').value,icon:$('mIcon').value.trim()||'🧩',type:$('mType').value,client:$('mClient').value.trim(),phase:$('mPhase').value,status:$('mStatus').value,progress:Math.max(0,Math.min(100,+$('mProgress').value||0)),priority:'Moyenne',due:$('mDue').value,goal:$('mGoal').value.trim(),nextAction:$('mNext').value.trim(),stack:'HTML autonome, JSON',tags:[],options:baseOptions(),blockers:[],links:[],sources:baseSources({githubStatus:'Non relié',lastCompletedStep:'Projet créé dans le cockpit',lastStepDate:today(),nextMilestone:'Définir dossier Drive et fichier maître'}),versions:[{name:'V0',type:'Création',date:today(),text:'Projet créé dans le cockpit Projets BI.'}],notes:[]};state.projects.unshift(p);state.selectedId=p.id;activeSpace=p.space;closeModal();persist('création projet');toast('Projet créé');renderAll()}
-function downloadObject(obj,filename){const blob=new Blob([JSON.stringify(obj,null,2)],{type:'application/json'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download=filename;document.body.appendChild(a);a.click();a.remove();URL.revokeObjectURL(url)}
-function exportJson(){downloadObject({app:'Cockpit Projets BI',version:VERSION,exported_at:now(),recovery:recoveryHealth(),driveSync:{enabled:driveSync.enabled,lastSent:driveSync.lastSent,lastStatus:driveSync.lastStatus},state},'cockpit_projets_bi_'+today()+'.json');toast('Export JSON lancé')}
-function exportSnapshot(){const snaps=getSnapshots();const snap=snaps[0]||{date:now(),action:'export manuel',payload:{app:'Cockpit Projets BI',version:VERSION,exported_at:now(),selectedId:state.selectedId,projects:state.projects}};downloadObject(snap.payload,'snapshot_projets_bi_'+today()+'.json');toast('Dernier snapshot téléchargé')}
-function importJson(file){const r=new FileReader();r.onload=()=>{try{const data=JSON.parse(r.result);state=normalize(data.state||data);if(!state.projects?.length)throw new Error('format');if(!state.selectedId)state.selectedId=state.projects[0].id;persist('import json');toast('Import réussi');renderAll()}catch(e){toast('Import impossible : JSON non compatible')}};r.readAsText(file)}
-function resetDemo(){if(!confirm('Réinitialiser la démo ? Pense à exporter avant.'))return;state=normalize(seed());activeSpace='Tous';activeSide='notes';persist('reset démo');toast('Démo réinitialisée');renderAll()}
+function toggleNoteBasket(i,val){const p=selected();if(p.notes&&p.notes[i]){p.notes[i].selected=val;persist('panier notes');renderAll()}}
+function deleteNote(i){const p=selected();if(!p.notes||!p.notes[i])return;if(!confirm('Supprimer cette note ?'))return;p.notes.splice(i,1);persist('suppression note');renderAll()}
+function selectAllNotes(val){const p=selected();(p.notes||[]).forEach(n=>n.selected=val);persist('panier notes');renderAll()}
+async function copyPromptBasket(){const txt=buildPromptBasket(selected());try{await navigator.clipboard.writeText(txt);toast('Prompt copié')}catch(e){toast('Copie impossible, sélectionne le texte')}}
+function downloadPromptBasket(){const blob=new Blob([buildPromptBasket(selected())],{type:'text/plain;charset=utf-8'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download='PROMPT_'+selected().name.replace(/[^a-z0-9]+/gi,'_')+'_'+today()+'.txt';a.click();URL.revokeObjectURL(url)}
+function renderMainView(){
+  const p=selected(), total=state.projects.length, active=state.projects.filter(p=>['En cours','Déployé','Validé','À tester'].includes(p.status)).length, avg=Math.round(state.projects.reduce((a,p)=>a+projectReadiness(p),0)/Math.max(1,total));
+  let html='';
+  if(activeMain==='fiche'){html=''}
+  else if(activeMain==='dashboard'){html=`<div class="view-title"><h2>📊 Dashboard</h2><span class="pill">${active}/${total} actifs</span></div>${renderPilotageBoard()}<div class="subcard" style="min-height:auto"><h3>Portefeuille</h3><p class="muted">Maturité moyenne ${avg}% · Drive Sync ${getDriveConfig().enabled?'connecté':'à configurer'} · snapshots ${getSnapshots().length}.</p></div>`}
+  else if(activeMain==='active'){html=`<div class="view-title"><h2>🟢 Mode actif</h2><span class="pill green">${esc(p.status)}</span></div>${renderPilotageBoard()}<div class="subcard" style="min-height:auto"><p>Dernière reprise : <b>${esc(recoveryMeta.source)}</b>. Drive Sync : <b>${esc(getDriveConfig().lastStatus)}</b>.</p><button class="mini-btn" onclick="sendDriveSync('manuel')">☁ Envoyer maintenant</button><button class="mini-btn" onclick="exportManifest()">▤ Manifest global</button></div>`}
+  else if(activeMain==='roadmap'){html=`<div class="view-title"><h2>📈 Roadmap</h2><span class="pill violet">${esc(p.phase)}</span></div>${renderPilotageBoard()}<div class="subcard" style="min-height:auto"><h3>Roadmap complète</h3><p>Maintenant : ${esc(p.nextAction||'—')}</p><p>Milestone : ${esc(p.sources?.nextMilestone||'—')}</p><p>Après : stabiliser, publier, archiver.</p></div>`}
+  else if(activeMain==='deploy'){html=`<div class="view-title"><h2>🚀 Déploiement</h2><span class="pill green">GitHub Pages</span></div>${renderPilotageBoard()}<div class="subcard" style="min-height:auto"><p>Publication manuelle conservée : remplacer <b>apps/gestion-projets-bi/index.html</b>.</p><p><a href="${PUBLIC_ROOT}gestion-projets-bi/" target="_blank">Ouvrir la version publiée</a></p></div>`}
+  else if(activeMain==='notes'){html=renderNotesModule()}
+  else if(activeMain==='data'){html=`<div class="view-title"><h2>🟢 Données & sync</h2><span class="pill ${getDriveConfig().enabled?'green':'orange'}">${getDriveConfig().enabled?'Connecté':'À configurer'}</span></div><div class="subcard" style="min-height:auto"><p>Clé active : <b>${KEY}</b></p><p>Snapshots locaux : <b>${getSnapshots().length}</b></p><p>Dernière sync : <b>${esc(getDriveConfig().lastSent||'—')}</b></p><button class="mini-btn" onclick="exportJson()">Export JSON</button><button class="mini-btn" onclick="exportSnapshot()">Snapshot</button><button class="mini-btn" onclick="sendDriveSync('manuel')">Drive Sync maintenant</button></div>`}
+  else if(activeMain==='sources'){html=`<div class="view-title"><h2>🔗 Sources</h2><span class="pill">Drive / GitHub / GPT</span></div><div class="subcard" style="min-height:auto"><pre style="white-space:pre-wrap;color:#cfe6f5">${esc(JSON.stringify(p.sources||{},null,2))}</pre></div>`}
+  $('mainView').innerHTML=html
+}
+function renderSidebar(){
+  const cfg=getDriveConfig(), snaps=getSnapshots(), p=selected();
+  const cahier=(p.notes||[])[0]?.text||'';
+  $('rightSidebar').innerHTML=`<div class="acc cahier open"><div class="acc-head"><div>📓</div><div><h3>Cahier de projet</h3><small>note rapide liée au projet</small></div><button class="icon-btn" onclick="saveCahier()">💾</button></div><div class="accordion-body"><textarea id="cahierText" placeholder="Notes rapides, décisions, points à revoir...">${esc(cahier)}</textarea><div class="side-small">Sauvegarde dans les notes du projet + snapshot local.</div></div></div>
+  <div class="acc" data-acc="data"><div class="acc-head"><div>🟢</div><div><h3>Données & sauvegardes</h3><small>JSON: ${state.projects.length} projets<br>Snapshots: ${snaps.length}</small></div><div class="chev">⌄</div></div><div class="accordion-body"><button class="mini-btn" onclick="exportJson()">Export JSON</button><button class="mini-btn" onclick="exportSnapshot()">Snapshot</button></div></div>
+  <div class="acc" data-acc="sync"><div class="acc-head"><div>△</div><div><h3>Drive Sync</h3><small><span class="state">${cfg.enabled?'Connecté':'À configurer'}</span><br>Dernière sync: ${esc(cfg.lastSent?cfg.lastSent.slice(0,16).replace('T',' '):'—')}</small></div><div class="chev">⌄</div></div><div class="accordion-body"><button class="mini-btn" onclick="configureDriveSync()">Configurer</button><button class="mini-btn" onclick="sendDriveSync('manuel')">Envoyer</button></div></div>
+  <div class="acc" data-acc="diag"><div class="acc-head"><div>〽</div><div><h3>Diagnostic</h3><small><span class="state">Système opérationnel</span><br>${esc(recoveryMeta.reason)}</small></div><div class="chev">⌄</div></div><div class="accordion-body side-small">Source reprise : ${esc(recoveryMeta.source)}<br>Clé active : ${KEY}<br>Version : ${VERSION}</div></div>
+  <div class="acc" data-acc="versions"><div class="acc-head"><div>🏷</div><div><h3>Versions</h3><small>Version actuelle: <span style="color:var(--cyan)">${VERSION}</span><br>Dernière maj: ${today()}</small></div><div class="chev">⌄</div></div><div class="accordion-body">${renderVersionsMini(p)}</div></div>
+  <div class="acc" data-acc="links"><div class="acc-head"><div>🔗</div><div><h3>Liens externes</h3><small>${(p.links||[]).length+3} liens configurés<br><span class="state">Tous accessibles</span></small></div><div class="chev">⌄</div></div><div class="accordion-body">${renderLinks(p,p.sources||{})}</div></div>`;
+  document.querySelectorAll('.acc[data-acc]').forEach(a=>a.querySelector('.acc-head').onclick=()=>a.classList.toggle('open'));
+}
+function saveCahier(){
+  const p=selected(); const txt=$('cahierText')?.value||'';
+  p.notes=p.notes||[];
+  if(p.notes[0]&&p.notes[0].title==='Cahier de projet'){p.notes[0].text=txt;p.notes[0].date=nowFr()}
+  else p.notes.unshift({title:'Cahier de projet',date:nowFr(),text:txt});
+  persist('cahier de projet'); toast('Cahier sauvegardé'); renderAll();
+}
+function spark(color){return `<div class="spark"><svg viewBox="0 0 120 42"><path d="M2 34 L14 26 L25 30 L37 20 L48 25 L61 12 L72 18 L84 9 L96 14 L118 3" fill="none" stroke="${color}" stroke-width="3" stroke-linecap="round"/><path d="M2 34 L14 26 L25 30 L37 20 L48 25 L61 12 L72 18 L84 9 L96 14 L118 3" fill="none" stroke="${color}" stroke-width="8" opacity=".12" stroke-linecap="round"/></svg></div>`}
+function renderKpis(){const total=state.projects.length, active=state.projects.filter(p=>['En cours','Déployé','Validé','À tester'].includes(p.status)).length, snaps=getSnapshots().length, cfg=getDriveConfig();$('kpis').innerHTML=`<div class="kpi"><div class="kpi-ico">👥</div><div><h3>Projets actifs</h3><b>${active} / ${total}</b><small>${Math.round(active/Math.max(1,total)*100)}% des projets en cours</small></div>${spark('#28eaff')}</div><div class="kpi"><div class="kpi-ico">📷</div><div><h3>Snapshots</h3><b>${snaps}</b><small>Dernier: ${esc(getSnapshots()[0]?.date?.slice(0,16).replace('T',' ')||'—')}</small></div>${spark('#b45dff')}</div><div class="kpi"><div class="kpi-ico">△</div><div><h3>Drive connecté</h3><b>${cfg.enabled?'OK':'—'}</b><small>${esc(cfg.lastStatus)}</small></div>${spark('#35f384')}</div><div class="kpi"><div class="kpi-ico">◉</div><div><h3>GitHub Pages</h3><b>En ligne</b><small>Dernière mise à jour: ${today()}</small></div>${spark('#197bff')}</div>`}
+function addNote(){const p=selected();const title=prompt('Titre de la note','Nouvelle note');if(!title)return;const text=prompt('Texte de la note','');p.notes=p.notes||[];p.notes.unshift({title,date:nowFr(),text:text||''});persist('note ajoutée');renderAll()}
+function openModal(){$('projectModal').classList.add('show')} function closeModal(){$('projectModal').classList.remove('show')}
+function createProject(){const name=$('mName').value.trim();if(!name){toast('Nom obligatoire');return}const p={id:uid(),name,space:$('mSpace').value,icon:$('mIcon').value.trim()||'🧩',type:$('mType').value,client:$('mClient').value.trim(),phase:$('mPhase').value,status:$('mStatus').value,progress:Math.max(0,Math.min(100,+$('mProgress').value||0)),priority:'Moyenne',due:$('mDue').value,goal:$('mGoal').value.trim(),nextAction:$('mNext').value.trim(),stack:'HTML autonome, JSON',tags:[],options:baseOptions(),blockers:[],links:[],sources:baseSources({githubStatus:'Non relié',lastCompletedStep:'Projet créé dans le cockpit',lastStepDate:today(),nextMilestone:'Définir dossier Drive et fichier maître'}),versions:[{name:'V0',type:'Création',date:today(),text:'Projet créé dans le cockpit.'}],notes:[]};state.projects.unshift(p);state.selectedId=p.id;activeSpace=p.space;closeModal();persist('création projet');toast('Projet créé');renderAll()}
 function toast(msg){const t=$('toast');t.textContent=msg;t.classList.add('show');clearTimeout(window.__toast);window.__toast=setTimeout(()=>t.classList.remove('show'),2300)}
-function renderAll(){renderQuickLinks();renderTopStats();renderWorkspaceTabs();renderList();renderDetail();renderPhaseRail();renderMiniDashboard();renderRoadmapFull();renderVersionsView();renderNotesView();renderIADView();renderSourcesView();renderDeploymentView();renderActiveView();renderSide();renderMainTabs()}
-document.addEventListener('DOMContentLoaded',()=>{initSelects();$('search').addEventListener('input',renderList);$('phaseFilter').addEventListener('input',renderList);$('statusFilter').addEventListener('input',renderList);$('newBtn').onclick=openModal;$('closeModal').onclick=closeModal;$('projectModal').addEventListener('click',e=>{if(e.target===$('projectModal'))closeModal()});$('createBtn').onclick=createProject;$('exportBtn').onclick=exportJson;$('manifestBtn').onclick=exportFullManifest;$('snapshotBtn').onclick=exportSnapshot;$('driveSyncBtn').onclick=configureDriveSync;$('importFile').onchange=e=>{if(e.target.files[0])importJson(e.target.files[0]);e.target.value=''};$('resetBtn').onclick=resetDemo;renderAll();if(!localStorage.getItem(KEY)||recoveryMeta.source!==KEY){persist('reprise automatique depuis '+recoveryMeta.source);toast('Reprise automatique active')}});
+function renderAll(){renderQuickLinks();renderCentralTabs();renderList();renderDetail();renderMainView();renderSidebar();renderKpis();}
+document.addEventListener('DOMContentLoaded',()=>{initSelect('phaseFilter',PHASES,true);initSelect('statusFilter',STATUSES,true);initSelect('mSpace',SPACES.filter(x=>x!=='Tous'));initSelect('mType',TYPES);initSelect('mPhase',PHASES);initSelect('mStatus',STATUSES);$('search').oninput=renderList;$('phaseFilter').onchange=renderList;$('statusFilter').onchange=renderList;$('newBtn').onclick=openModal;$('newBtn2').onclick=openModal;$('closeModal').onclick=closeModal;$('projectModal').onclick=e=>{if(e.target===$('projectModal'))closeModal()};$('createBtn').onclick=createProject;$('exportBtn').onclick=exportJson;$('snapshotBtn').onclick=exportSnapshot;$('manifestBtn').onclick=exportManifest;$('driveSyncBtn').onclick=configureDriveSync;$('importFile').onchange=e=>{if(e.target.files[0])importJson(e.target.files[0]);e.target.value=''};$('resetBtn').onclick=resetDemo;renderAll();if(!localStorage.getItem(KEY)||recoveryMeta.source!==KEY){persist('reprise automatique depuis '+recoveryMeta.source);toast('Reprise automatique active')}});
 </script>
 </body>
 </html>
