@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>Cockpit Projets BI · V6.4E Roadmap pilotable</title>
+<title>Cockpit Projets BI · V6.4G Marges réduites</title>
 <style>
 :root{
   --bg:#030711;--bg2:#06112a;--panel:rgba(7,18,41,.82);--panel2:rgba(9,28,61,.72);
@@ -22,8 +22,8 @@ body:before{content:"";position:fixed;inset:0;pointer-events:none;background:
 body:after{content:"";position:fixed;inset:-40px;pointer-events:none;background-image:radial-gradient(rgba(42,220,255,.40) 1px,transparent 1px);background-size:48px 48px;mask-image:radial-gradient(circle at 50% 25%,black,transparent 72%);opacity:.14;z-index:-1}
 button,input,select,textarea{font-family:inherit}
 button{cursor:pointer;color:var(--txt);border:0} a{color:inherit;text-decoration:none}
-.app{max-width:1720px;margin:0 auto;padding:28px clamp(26px,3vw,46px)}
-.header{display:grid;grid-template-columns:minmax(420px,1fr) minmax(520px,720px);gap:16px;margin-bottom:14px}
+.app{width:100%;max-width:none;margin:0 auto;padding:18px clamp(8px,1.1vw,18px)}
+.header{display:grid;grid-template-columns:minmax(420px,1fr) minmax(520px,720px);gap:12px;margin-bottom:12px}
 .brand,.quick,.actionbar,.family,.panel,.kpi{border:1px solid rgba(55,177,255,.32);background:linear-gradient(145deg,rgba(8,20,45,.82),rgba(4,9,26,.78));box-shadow:var(--shadow);border-radius:26px;position:relative;overflow:hidden}
 .brand:before,.quick:before,.actionbar:before,.family:before,.panel:before,.kpi:before{content:"";position:absolute;inset:0;background:linear-gradient(105deg,rgba(255,255,255,.052),transparent 28%,transparent 78%,rgba(42,234,255,.035));pointer-events:none}
 .brand{display:flex;align-items:center;gap:18px;padding:18px 20px}
@@ -35,14 +35,14 @@ h1{margin:0;font-size:clamp(32px,4vw,52px);line-height:.96;text-transform:upperc
 .toplink{min-width:178px;display:flex;align-items:center;gap:12px;padding:13px 16px;border-radius:17px;border:1px solid rgba(89,190,255,.36);background:linear-gradient(180deg,rgba(12,39,78,.94),rgba(7,18,42,.91));box-shadow:0 0 16px rgba(28,143,255,.11);font-weight:950}
 .toplink:hover{transform:translateY(-1px);border-color:rgba(74,229,255,.82);box-shadow:0 0 22px rgba(40,234,255,.20)}
 .toplink small{display:block;color:var(--muted2);font-size:11px;font-weight:800}.topicon{width:28px;height:28px;display:grid;place-items:center;font-size:24px}.topicon svg{width:28px;height:28px}
-.actionbar{display:flex;align-items:center;justify-content:center;gap:12px;flex-wrap:wrap;padding:12px;margin-bottom:14px}
+.actionbar{display:flex;align-items:center;justify-content:center;gap:10px;flex-wrap:wrap;padding:10px;margin-bottom:12px}
 .btn,.mini-btn,.tab{position:relative;z-index:1;display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:10px 14px;border-radius:14px;border:1px solid rgba(89,190,255,.35);background:linear-gradient(180deg,rgba(12,39,78,.92),rgba(7,18,42,.91));box-shadow:0 0 14px rgba(28,143,255,.10);font-weight:900;font-size:13px;color:#f5fbff}
 .btn:hover,.mini-btn:hover,.tab:hover{border-color:rgba(74,229,255,.8);box-shadow:0 0 20px rgba(40,234,255,.18)}
 .btn.green{border-color:rgba(53,243,132,.50)}.btn.violet{border-color:rgba(180,93,255,.55)}.btn.orange{border-color:rgba(255,195,77,.55)}.btn.red{border-color:rgba(255,100,114,.58)}
 .familybar{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:14px}
 .family{padding:14px 16px}.family h3{display:flex;align-items:center;gap:11px;margin:0 0 12px;font-size:19px}.family .ico{font-size:25px;filter:drop-shadow(0 0 10px rgba(40,234,255,.45))}
 .tabs{display:flex;gap:7px;flex-wrap:wrap}.tab{padding:9px 11px;font-size:12px}.tab.active{background:linear-gradient(180deg,rgba(38,116,255,.75),rgba(57,20,126,.70));border-color:rgba(180,93,255,.80);box-shadow:0 0 18px rgba(180,93,255,.22)}
-.layout{display:grid;grid-template-columns:340px minmax(0,1fr) 320px;gap:16px;align-items:start}
+.layout{display:grid;grid-template-columns:340px minmax(0,1fr) 320px;gap:12px;align-items:start}
 .panel{padding:16px}.panel-title{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px}.panel-title h2{margin:0;font-size:17px;text-transform:none}
 .project-tools{display:flex;gap:8px}.icon-btn{width:36px;height:36px;border-radius:12px;border:1px solid rgba(95,184,255,.25);background:rgba(3,12,28,.7);display:grid;place-items:center}
 .filters{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px}.filters input{grid-column:1/-1}
@@ -127,8 +127,46 @@ textarea{resize:vertical;min-height:76px} input:focus,select:focus,textarea:focu
 .road-empty{border:1px dashed rgba(255,255,255,.14);border-radius:14px;padding:18px;text-align:center;color:var(--muted);font-size:12px}
 .road-summary{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:12px}
 .road-k{border:1px solid rgba(80,178,255,.22);background:rgba(5,15,35,.52);border-radius:15px;padding:10px}.road-k b{font-size:22px}.road-k small{display:block;color:var(--muted)}
+
+.table-wrap{overflow:auto;border:1px solid rgba(80,178,255,.22);border-radius:16px;background:rgba(2,8,20,.28)}
+.data-table{width:100%;border-collapse:collapse;min-width:920px;font-size:12px}
+.data-table th,.data-table td{border-bottom:1px solid rgba(255,255,255,.075);padding:9px 8px;text-align:left;vertical-align:top}
+.data-table th{position:sticky;top:0;background:rgba(7,20,44,.96);color:#8efaff;text-transform:uppercase;letter-spacing:.035em;font-size:11px;z-index:1}
+.data-table tr:hover td{background:rgba(40,234,255,.035)}
+.tiny-input,.tiny-select{padding:7px 8px;border-radius:10px;font-size:12px;min-width:120px}
+.tiny-text{min-height:42px;padding:7px 8px;border-radius:10px;font-size:12px;min-width:210px}
+.link-badge{display:inline-flex;gap:5px;align-items:center;border-radius:999px;padding:3px 7px;border:1px solid rgba(40,234,255,.32);background:rgba(40,234,255,.06);font-size:11px;color:#d8fbff;font-weight:800}
+.table-tools{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 10px}
+.table-note-linked{border-left:3px solid var(--green)}
+.table-note-unlinked{border-left:3px solid var(--orange)}
+.dual-view{display:grid;grid-template-columns:1fr;gap:12px}
+.small-help{font-size:12px;color:var(--muted);line-height:1.4;margin:6px 0 10px}
+
+
+.wide-note{position:fixed;left:12px;bottom:12px;z-index:10;font-size:11px;color:rgba(210,240,255,.55);pointer-events:none}
+@media(min-width:1600px){.detail{min-width:0}.info-grid{gap:14px}.roadmap-board{gap:14px}}
+
 @media(max-width:1260px){.roadmap-board,.road-summary{grid-template-columns:repeat(2,1fr)}.road-form{grid-template-columns:1fr 1fr}}
 @media(max-width:760px){.roadmap-board,.road-summary,.road-form{grid-template-columns:1fr}}
+
+
+.table-wrap{overflow:auto;border:1px solid rgba(80,178,255,.22);border-radius:16px;background:rgba(2,8,20,.28)}
+.data-table{width:100%;border-collapse:collapse;min-width:920px;font-size:12px}
+.data-table th,.data-table td{border-bottom:1px solid rgba(255,255,255,.075);padding:9px 8px;text-align:left;vertical-align:top}
+.data-table th{position:sticky;top:0;background:rgba(7,20,44,.96);color:#8efaff;text-transform:uppercase;letter-spacing:.035em;font-size:11px;z-index:1}
+.data-table tr:hover td{background:rgba(40,234,255,.035)}
+.tiny-input,.tiny-select{padding:7px 8px;border-radius:10px;font-size:12px;min-width:120px}
+.tiny-text{min-height:42px;padding:7px 8px;border-radius:10px;font-size:12px;min-width:210px}
+.link-badge{display:inline-flex;gap:5px;align-items:center;border-radius:999px;padding:3px 7px;border:1px solid rgba(40,234,255,.32);background:rgba(40,234,255,.06);font-size:11px;color:#d8fbff;font-weight:800}
+.table-tools{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 10px}
+.table-note-linked{border-left:3px solid var(--green)}
+.table-note-unlinked{border-left:3px solid var(--orange)}
+.dual-view{display:grid;grid-template-columns:1fr;gap:12px}
+.small-help{font-size:12px;color:var(--muted);line-height:1.4;margin:6px 0 10px}
+
+
+.wide-note{position:fixed;left:12px;bottom:12px;z-index:10;font-size:11px;color:rgba(210,240,255,.55);pointer-events:none}
+@media(min-width:1600px){.detail{min-width:0}.info-grid{gap:14px}.roadmap-board{gap:14px}}
 
 @media(max-width:1260px){.header,.layout{grid-template-columns:1fr}.kpis{grid-template-columns:repeat(2,1fr)}.info-grid{grid-template-columns:1fr 1fr}}
 @media(max-width:760px){.app{padding:12px}.header,.info-grid,.kpis,.form-grid,.note-form,.note-grid{grid-template-columns:1fr}.quick,.actionbar{justify-content:flex-start}.toplink,.btn{width:100%;justify-content:flex-start}.object-head{grid-template-columns:58px 1fr}.status-zone{grid-column:1/-1}.kpi{grid-template-columns:58px 1fr}.spark{display:none}}
@@ -140,7 +178,7 @@ textarea{resize:vertical;min-height:76px} input:focus,select:focus,textarea:focu
   <header class="header">
     <section class="brand">
       <div class="logo">BI</div>
-      <div><h1>Cockpit Projets BI</h1><p class="subtitle">V6.4E · roadmap pilotable · blocs traitement validation</p></div>
+      <div><h1>Cockpit Projets BI</h1><p class="subtitle">V6.4G · marges réduites · lecture centrale élargie</p></div>
     </section>
     <nav class="quick">
       <a class="toplink" id="projectGptLink" target="_blank" rel="noopener">
@@ -212,9 +250,9 @@ textarea{resize:vertical;min-height:76px} input:focus,select:focus,textarea:focu
 
 <script>
 'use strict';
-const VERSION='V6.4E-roadmap-pilotable';
+const VERSION='V6.4G-marges-reduites';
 const STABLE_KEY='central_bi_project_manager_current';
-const VERSION_KEY='central_bi_project_manager_v64e';
+const VERSION_KEY='central_bi_project_manager_v64g';
 const KEY=STABLE_KEY;
 const MIRROR_KEYS=[VERSION_KEY,'central_bi_project_manager_v61','central_bi_project_manager_v6'];
 const PREVIOUS_KEYS=[VERSION_KEY,'central_bi_project_manager_v61','central_bi_project_manager_v6','central_bi_project_manager_v5','central_bi_project_manager_v4','central_bi_project_manager_v1'];
@@ -339,33 +377,80 @@ function renderCentralTabs(){
   document.querySelectorAll('[data-central]').forEach(b=>b.onclick=()=>{activeMain=b.dataset.central;renderAll()});
 }
 function renderNotesModule(){
-  const p=selected(); p.notes=p.notes||[];
-  return `<div class="view-title"><h2>📓 Notes / panier prompt</h2><span class="pill green">${p.notes.filter(n=>n.selected).length} note(s) panier</span></div>
+  const p=selected(); p.notes=p.notes||[]; ensureRoadmap(p);
+  const linked=p.notes.filter(n=>n.roadmapId).length;
+  return `<div class="view-title"><h2>📓 Notes / table & panier prompt</h2><span class="pill green">${p.notes.filter(n=>n.selected).length} note(s) panier · ${linked} liée(s)</span></div>
   <div class="note-grid">
     <section class="subcard" style="min-height:auto">
-      <h3>Ajouter une note</h3>
+      <h3>Ajouter une note liée</h3>
+      <p class="small-help">Une note peut rester libre, ou être attachée à un bloc de roadmap pour suivre un bug, une idée, un problème ou une validation.</p>
       <div class="note-form">
-        <select id="noteType"><option>Idée</option><option>Commentaire</option><option>Problème</option><option>Bug</option><option>Décision</option><option>Action</option></select>
+        <select id="noteType"><option>Idée</option><option>Commentaire</option><option>Problème</option><option>Bug</option><option>Décision</option><option>Action</option><option>Validation</option></select>
         <input id="noteTitle" placeholder="Titre court : ex. bouton Drive Sync peu visible">
+        <select id="noteStatus"><option>À traiter</option><option>En cours</option><option>Validation</option><option>Validé</option><option>Archivé</option></select>
+        <select id="noteRoadmapId"><option value="">Sans lien roadmap</option>${roadmapOptions(p)}</select>
         <textarea id="noteText" placeholder="Détail de l'idée, du commentaire, du problème, du bug..."></textarea>
       </div>
       <button class="mini-btn" onclick="addStructuredNote()">＋ Ajouter la note</button>
       <button class="mini-btn" onclick="selectAllNotes(true)">Tout sélectionner</button>
       <button class="mini-btn" onclick="selectAllNotes(false)">Tout retirer</button>
-      <div class="note-list" style="margin-top:12px">
-        ${p.notes.map((n,i)=>renderNoteItem(n,i)).join('')||'<p class="muted">Aucune note. Ajoute une idée, un commentaire, un bug ou un problème.</p>'}
-      </div>
     </section>
     <section class="subcard" style="min-height:auto">
       <h3>Panier → prompt pour GPT</h3>
-      <p class="muted">Sélectionne des notes à gauche. Le texte ci-dessous devient une base de prompt à me coller.</p>
+      <p class="muted">Les notes sélectionnées indiquent désormais leur bloc roadmap lié.</p>
       <div class="prompt-box" id="promptBox">${esc(buildPromptBasket(p))}</div>
-      <div class="prompt-actions">
-        <button class="mini-btn" onclick="copyPromptBasket()">📋 Copier prompt</button>
-        <button class="mini-btn" onclick="downloadPromptBasket()">⬇ Télécharger TXT</button>
-      </div>
+      <div class="prompt-actions"><button class="mini-btn" onclick="copyPromptBasket()">📋 Copier prompt</button><button class="mini-btn" onclick="downloadPromptBasket()">⬇ Télécharger TXT</button></div>
     </section>
-  </div>`
+  </div>
+  <section class="subcard" style="min-height:auto;margin-top:12px">
+    <h3>Table des notes</h3>
+    <div class="table-tools">
+      <button class="mini-btn" onclick="filterNotesTable('all')">Toutes</button>
+      <button class="mini-btn" onclick="filterNotesTable('linked')">Liées</button>
+      <button class="mini-btn" onclick="filterNotesTable('unlinked')">Sans lien</button>
+      <button class="mini-btn" onclick="notesToRoadmapBlocks()">Créer blocs roadmap depuis notes non liées</button>
+    </div>
+    <div class="table-wrap">${renderNotesTable(p)}</div>
+  </section>`
+}
+function roadmapOptions(p){
+  ensureRoadmap(p);
+  return (p.roadmapBlocks||[]).map(b=>`<option value="${esc(b.id)}">${esc(b.status)} · ${esc(b.title)}</option>`).join('');
+}
+let notesFilter='all';
+function filterNotesTable(mode){notesFilter=mode;renderAll()}
+function renderNotesTable(p){
+  let notes=p.notes||[];
+  if(notesFilter==='linked')notes=notes.filter(n=>n.roadmapId);
+  if(notesFilter==='unlinked')notes=notes.filter(n=>!n.roadmapId);
+  return `<table class="data-table"><thead><tr><th>Panier</th><th>Type</th><th>Statut</th><th>Titre</th><th>Détail</th><th>Lien roadmap</th><th>Date</th><th>Actions</th></tr></thead><tbody>
+  ${notes.map(n=>renderNoteTableRow(p,n,(p.notes||[]).indexOf(n))).join('')||'<tr><td colspan="8">Aucune note.</td></tr>'}
+  </tbody></table>`
+}
+function renderNoteTableRow(p,n,i){
+  const linked=!!n.roadmapId;
+  return `<tr class="${linked?'table-note-linked':'table-note-unlinked'}">
+    <td><input type="checkbox" ${n.selected?'checked':''} onchange="toggleNoteBasket(${i},this.checked)"></td>
+    <td><select class="tiny-select" onchange="updateNoteField(${i},'type',this.value)">${['Idée','Commentaire','Problème','Bug','Décision','Action','Validation'].map(x=>`<option ${n.type===x?'selected':''}>${x}</option>`).join('')}</select></td>
+    <td><select class="tiny-select" onchange="updateNoteField(${i},'status',this.value)">${['À traiter','En cours','Validation','Validé','Archivé'].map(x=>`<option ${n.status===x?'selected':''}>${x}</option>`).join('')}</select></td>
+    <td><input class="tiny-input" value="${esc(n.title||'')}" onchange="updateNoteField(${i},'title',this.value)"></td>
+    <td><textarea class="tiny-text" onchange="updateNoteField(${i},'text',this.value)">${esc(n.text||'')}</textarea></td>
+    <td><select class="tiny-select" onchange="updateNoteField(${i},'roadmapId',this.value)"><option value="">Sans lien</option>${(p.roadmapBlocks||[]).map(b=>`<option value="${esc(b.id)}" ${n.roadmapId===b.id?'selected':''}>${esc(b.status)} · ${esc(b.title)}</option>`).join('')}</select></td>
+    <td>${esc(n.date||'')}</td>
+    <td><button class="mini-btn" onclick="openLinkedRoadmap('${esc(n.roadmapId||'')}')">Voir bloc</button><button class="mini-btn" onclick="deleteNote(${i})">×</button></td>
+  </tr>`
+}
+function updateNoteField(i,field,value){const p=selected();if(!p.notes||!p.notes[i])return;p.notes[i][field]=value;p.notes[i].updated=nowFr();persist('table note modifiée');renderAll()}
+function openLinkedRoadmap(id){if(!id){toast('Note sans lien roadmap');return}activeMain='roadmap';renderAll();setTimeout(()=>{const el=document.querySelector(`[data-road-id="${CSS.escape(id)}"]`);if(el){el.scrollIntoView({behavior:'smooth',block:'center'});el.style.boxShadow='0 0 30px rgba(53,243,132,.45)';setTimeout(()=>el.style.boxShadow='',1600)}},120)}
+function notesToRoadmapBlocks(){
+  const p=selected();ensureRoadmap(p);
+  const notes=(p.notes||[]).filter(n=>!n.roadmapId);
+  if(!notes.length){toast('Aucune note non liée');return}
+  notes.forEach(n=>{
+    const block={id:uid(),title:n.title||n.type||'Note',type:n.type||'Note',status:n.status&&ROAD_STATUSES.includes(n.status)?n.status:'À traiter',priority:n.type==='Bug'||n.type==='Problème'?'Haute':'Moyenne',text:n.text||'',created:nowFr()};
+    p.roadmapBlocks.unshift(block);n.roadmapId=block.id;n.updated=nowFr();
+  });
+  persist('notes converties en roadmap');toast('Notes converties et liées');activeMain='roadmap';renderAll();
 }
 function renderNoteItem(n,i){
   const typ=String(n.type||'Commentaire').toLowerCase();
@@ -379,13 +464,14 @@ function buildPromptBasket(p){
   const selected=(p.notes||[]).filter(n=>n.selected);
   if(!selected.length)return 'Aucune note sélectionnée. Coche des notes dans la liste pour construire le prompt.';
   return `Contexte : nous travaillons sur le BI "${p.name}" (${VERSION}).\nObjectif : analyser les notes sélectionnées et proposer des corrections concrètes / priorisées.\n\nNotes sélectionnées :\n`+
-    selected.map((n,i)=>`\n${i+1}. [${n.type||'Note'}] ${n.title||'Sans titre'}\nDate : ${n.date||''}\nDétail : ${n.text||''}`).join('\n')+
+    selected.map((n,i)=>{const rb=(p.roadmapBlocks||[]).find(b=>b.id===n.roadmapId);return `\n${i+1}. [${n.type||'Note'} · ${n.status||'À traiter'}] ${n.title||'Sans titre'}\nLien roadmap : ${rb?rb.status+' · '+rb.title:'sans lien'}\nDate : ${n.date||''}\nDétail : ${n.text||''}`}).join('\n')+
     `\n\nRéponse attendue : synthèse, priorités, proposition de modification du BI, points à vérifier avant publication.`;
 }
 function addStructuredNote(){
-  const p=selected(); p.notes=p.notes||[];
+  const p=selected(); p.notes=p.notes||[]; ensureRoadmap(p);
   const type=$('noteType').value, title=$('noteTitle').value.trim()||type+' sans titre', text=$('noteText').value.trim();
-  p.notes.unshift({type,title,text,date:nowFr(),selected:false});
+  const status=$('noteStatus')?.value||'À traiter', roadmapId=$('noteRoadmapId')?.value||'';
+  p.notes.unshift({type,title,text,status,roadmapId,date:nowFr(),selected:false});
   persist('note structurée ajoutée');toast('Note ajoutée');renderAll();
 }
 function toggleNoteBasket(i,val){const p=selected();if(p.notes&&p.notes[i]){p.notes[i].selected=val;persist('panier notes');renderAll()}}
@@ -406,6 +492,26 @@ function ensureRoadmap(p){
     ];
   }
 }
+
+function renderRoadmapTable(p){
+  ensureRoadmap(p);
+  return `<div class="table-wrap"><table class="data-table"><thead><tr><th>Statut</th><th>Priorité</th><th>Type</th><th>Titre</th><th>Détail</th><th>Notes liées</th><th>Actions</th></tr></thead><tbody>
+  ${(p.roadmapBlocks||[]).map((b,i)=>renderRoadTableRow(p,b,i)).join('')||'<tr><td colspan="7">Aucun bloc roadmap.</td></tr>'}
+  </tbody></table></div>`
+}
+function renderRoadTableRow(p,b,i){
+  const linked=(p.notes||[]).filter(n=>n.roadmapId===b.id);
+  return `<tr>
+    <td><select class="tiny-select" onchange="updateRoadField('${esc(b.id)}','status',this.value)">${ROAD_STATUSES.map(x=>`<option ${b.status===x?'selected':''}>${x}</option>`).join('')}</select></td>
+    <td><select class="tiny-select" onchange="updateRoadField('${esc(b.id)}','priority',this.value)">${ROAD_PRIOS.map(x=>`<option ${b.priority===x?'selected':''}>${x}</option>`).join('')}</select></td>
+    <td><input class="tiny-input" value="${esc(b.type||'')}" onchange="updateRoadField('${esc(b.id)}','type',this.value)"></td>
+    <td><input class="tiny-input" value="${esc(b.title||'')}" onchange="updateRoadField('${esc(b.id)}','title',this.value)"></td>
+    <td><textarea class="tiny-text" onchange="updateRoadField('${esc(b.id)}','text',this.value)">${esc(b.text||'')}</textarea></td>
+    <td><span class="link-badge">${linked.length} note(s)</span>${linked.slice(0,2).map(n=>`<br><small>${esc(n.type||'Note')} · ${esc(n.title||'')}</small>`).join('')}</td>
+    <td><button class="mini-btn" onclick="activeMain='notes';renderAll()">Notes</button><button class="mini-btn" onclick="deleteRoadBlock('${esc(b.id)}')">×</button></td>
+  </tr>`
+}
+function updateRoadField(id,field,value){const b=findRoadBlock(id);if(!b)return;b[field]=value;b.updated=nowFr();persist('table roadmap modifiée');renderAll()}
 function renderRoadmapPilotable(){
   const p=selected(); ensureRoadmap(p);
   const blocks=p.roadmapBlocks||[];
@@ -429,6 +535,11 @@ function renderRoadmapPilotable(){
   </div>
   <section class="roadmap-board">
     ${ROAD_STATUSES.map(status=>renderRoadColumn(status,blocks.filter(b=>b.status===status))).join('')}
+  </section>
+  <section class="subcard" style="min-height:auto;margin-top:12px">
+    <h3>Table roadmap éditable</h3>
+    <p class="small-help">Même données que les blocs ci-dessus, mais sous forme de table pour modifier rapidement statut, priorité, type et détail. Les notes liées sont visibles par ligne.</p>
+    ${renderRoadmapTable(p)}
   </section>`
 }
 function renderRoadColumn(status,items){
@@ -441,7 +552,7 @@ function renderRoadColumn(status,items){
 }
 function renderRoadCard(b){
   const cls='road-prio-'+String(b.priority||'Moyenne').toLowerCase();
-  return `<article class="road-card ${cls}" draggable="true" ondragstart="dragRoadBlock(event,'${esc(b.id)}')" ondragend="this.classList.remove('dragging')">
+  return `<article class="road-card ${cls}" data-road-id="${esc(b.id)}" draggable="true" ondragstart="dragRoadBlock(event,'${esc(b.id)}')" ondragend="this.classList.remove('dragging')">
     <h4>${esc(b.title||'Bloc sans titre')}</h4>
     <div class="road-meta"><span class="pill">${esc(b.type||'Action')}</span><span class="pill ${b.priority==='Haute'?'red':b.priority==='Moyenne'?'orange':'green'}">${esc(b.priority||'Moyenne')}</span></div>
     <p>${esc(b.text||'')}</p>
