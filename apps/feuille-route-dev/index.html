@@ -1,10 +1,107 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="fr">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>BI Feuille de Route Dev</title>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>BI Feuille de Route Dev — Pilotage Central</title>
 <style>
-body{margin:0;min-height:100vh;background:radial-gradient(circle at 30% 20%,rgba(36,215,255,.18),transparent 32%),linear-gradient(135deg,#03050d,#071227 55%,#03040a);color:#eef6ff;font-family:Inter,Segoe UI,Arial,sans-serif;display:grid;place-items:center}.card{width:min(880px,92vw);border:1px solid rgba(36,215,255,.55);border-radius:26px;background:linear-gradient(145deg,rgba(9,19,39,.94),rgba(5,8,21,.94));padding:34px;box-shadow:0 0 36px rgba(36,215,255,.22)}h1{margin:0 0 10px;color:#24d7ff;font-size:38px}.tag{color:#41f07c;font-weight:900}.muted{color:#9ec5df;line-height:1.6}.pill{display:inline-block;margin-top:16px;padding:10px 14px;border-radius:999px;border:1px solid rgba(65,240,124,.65);color:#41f07c;background:rgba(65,240,124,.08);font-weight:900}</style>
+:root{
+  --bg:#050815; --panel:#091327; --panel2:#0d1830; --line:#153968;
+  --txt:#eef6ff; --muted:#8fb2d7; --cyan:#24d7ff; --blue:#248bff;
+  --green:#41f07c; --violet:#a855f7; --pink:#ff4edb; --red:#ff5361; --orange:#ffbf36;
+  --shadow:0 0 24px rgba(36,215,255,.18), inset 0 0 18px rgba(36,139,255,.08);
+  --radius:18px;
+}
+*{box-sizing:border-box} html,body{height:100%}
+body{margin:0;background:radial-gradient(circle at 45% 35%,rgba(35,129,255,.12),transparent 28%),radial-gradient(circle at 80% 70%,rgba(168,85,247,.12),transparent 32%),linear-gradient(135deg,#03050d,#071227 55%,#03040a);color:var(--txt);font-family:Inter,Segoe UI,Roboto,Arial,sans-serif;overflow:hidden}
+.app{height:100vh;display:grid;grid-template-columns:96px 1fr;gap:14px;padding:12px}
+.sidebar{background:linear-gradient(180deg,rgba(9,19,39,.92),rgba(5,8,21,.94));border:1px solid rgba(36,139,255,.42);border-radius:22px;box-shadow:var(--shadow);padding:14px 9px;display:flex;flex-direction:column;align-items:center;gap:12px}
+.logo{width:66px;height:66px;border-radius:22px;border:1px solid rgba(36,215,255,.65);display:grid;place-items:center;font-size:31px;background:radial-gradient(circle,rgba(36,139,255,.38),rgba(5,8,21,.12));box-shadow:0 0 26px rgba(36,139,255,.45)}
+.nav{width:100%;display:flex;flex-direction:column;gap:8px;margin-top:6px}.nav button{all:unset;cursor:pointer;min-height:58px;border-radius:16px;border:1px solid transparent;color:#d7e7ff;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;font-size:11px;text-align:center;transition:.18s}.nav button b{font-size:22px;line-height:1}.nav button.active,.nav button:hover{border-color:rgba(36,215,255,.7);background:linear-gradient(135deg,rgba(25,93,255,.28),rgba(36,215,255,.12));box-shadow:0 0 18px rgba(36,139,255,.35)}
+.main{min-width:0;display:grid;grid-template-rows:auto auto 1fr auto;gap:12px}.header{height:84px;border:1px solid rgba(36,139,255,.35);border-radius:20px;background:rgba(6,12,27,.76);box-shadow:var(--shadow);display:flex;align-items:center;justify-content:space-between;padding:18px 22px}.title h1{font-size:29px;letter-spacing:1px;margin:0}.title p{margin:3px 0 0;color:var(--cyan);font-weight:600}.actions{display:flex;gap:10px;flex-wrap:wrap}.pill{border:1px solid rgba(36,215,255,.55);border-radius:13px;background:rgba(7,18,38,.72);padding:11px 16px;color:#eaf6ff;display:flex;align-items:center;gap:8px;box-shadow:inset 0 0 12px rgba(36,215,255,.09);font-weight:700;cursor:pointer}.pill.green{border-color:rgba(65,240,124,.65)}.pill.purple{border-color:rgba(168,85,247,.75)}.pill:hover{filter:brightness(1.16)}
+.kpis{display:grid;grid-template-columns:repeat(6,1fr);gap:10px}.kpi{border:1px solid rgba(36,215,255,.42);border-radius:16px;background:linear-gradient(180deg,rgba(10,21,45,.92),rgba(6,11,25,.82));padding:13px 14px;min-height:92px;display:grid;grid-template-columns:46px 1fr;align-items:center;box-shadow:var(--shadow)}.kpi:nth-child(3),.kpi:nth-child(4),.kpi:nth-child(5){border-color:rgba(168,85,247,.55)}.kpi:nth-child(6){border-color:rgba(255,83,97,.65)}.ico{font-size:32px}.kpi small{color:var(--muted)}.kpi .num{font-size:28px;font-weight:900;line-height:1.1}.trend{font-size:12px;color:var(--green);font-weight:800}.down{color:var(--red)}
+.content{min-height:0;display:grid;grid-template-columns:1.9fr .72fr;gap:12px}.leftgrid{min-width:0;display:grid;grid-template-rows:1.26fr .74fr;gap:12px}.panel{background:linear-gradient(180deg,rgba(8,18,38,.88),rgba(5,9,22,.88));border:1px solid rgba(36,139,255,.38);border-radius:18px;box-shadow:var(--shadow);padding:14px;min-height:0}.panel h2{font-size:17px;margin:0 0 12px;letter-spacing:.8px}.panel h2 span{color:var(--cyan);font-size:14px;float:right;font-weight:600;cursor:pointer}.roadmap{display:grid;grid-template-columns:repeat(6,1fr);gap:9px;position:relative}.phase{border:1px solid rgba(36,215,255,.54);border-radius:16px;padding:11px;min-height:255px;background:linear-gradient(180deg,rgba(11,26,54,.82),rgba(3,8,20,.82));position:relative;overflow:hidden}.phase:before{content:"";position:absolute;left:-20%;top:24px;width:140%;height:2px;background:linear-gradient(90deg,transparent,var(--cyan),transparent);opacity:.45}.phase.green{border-color:rgba(65,240,124,.65)}.phase.purple{border-color:rgba(168,85,247,.72)}.phase.red{border-color:rgba(255,83,97,.7)}.phasehead{display:flex;gap:8px;align-items:center}.badge{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;background:rgba(36,139,255,.35);border:1px solid var(--cyan);font-weight:900;box-shadow:0 0 18px rgba(36,139,255,.45)}.phase h3{font-size:13px;margin:0;line-height:1.2}.status{display:inline-block;margin:10px 0 6px;border:1px solid var(--green);color:var(--green);border-radius:999px;padding:4px 12px;font-size:12px;font-weight:800;background:rgba(65,240,124,.08)}.status.todo{border-color:var(--violet);color:#e0b9ff;background:rgba(168,85,247,.08)}.status.review{border-color:#73b7ff;color:#b9dbff;background:rgba(115,183,255,.08)}.percent{font-size:27px;font-weight:900;color:var(--cyan)}.phase.green .percent{color:var(--green)}.bar{height:8px;border:1px solid rgba(220,240,255,.25);background:#07111f;border-radius:99px;overflow:hidden;margin:5px 0 12px}.bar i{display:block;height:100%;width:var(--w);background:linear-gradient(90deg,var(--blue),var(--cyan));box-shadow:0 0 12px var(--cyan)}.phase.green .bar i{background:linear-gradient(90deg,#37d75e,#a6ff64)}.phase.purple .bar i{background:linear-gradient(90deg,#9847ff,#ff4edb)}ul{list-style:none;margin:0;padding:0}li{font-size:12px;color:#d5e8ff;margin:7px 0;display:flex;gap:6px}.check{color:var(--cyan)}.phase.green .check{color:var(--green)}.date{position:absolute;bottom:8px;left:0;right:0;text-align:center;color:#9ed4ff;font-size:12px}.summaryline{display:grid;grid-template-columns:1.2fr 1fr 1fr 1fr;gap:12px;margin-top:12px;padding:12px;border:1px solid rgba(36,215,255,.27);border-radius:14px;background:rgba(6,14,28,.55)}.summaryline b{color:var(--cyan)}
+.bottompanels{display:grid;grid-template-columns:1fr 1.08fr 1.06fr;gap:12px}.cards{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}.mini{border:1px solid rgba(36,215,255,.42);border-radius:13px;padding:10px;background:rgba(5,12,27,.76);min-height:126px}.mini.purple{border-color:rgba(168,85,247,.58)}.mini .top{font-size:24px}.mini h4{font-size:12px;margin:5px 0 9px}.chip{display:inline-block;border:1px solid var(--green);border-radius:7px;color:var(--green);font-size:11px;padding:3px 7px;background:rgba(65,240,124,.09)}.chip.todo{border-color:var(--violet);color:#e2bbff}.mini .bar{height:6px;margin-top:8px}.tiles{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}.tile{border:1px solid rgba(36,215,255,.36);border-radius:12px;min-height:64px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;background:rgba(5,12,27,.7);font-size:11px;text-align:center}.tile b{font-size:25px}.flow{margin-top:9px;border:1px solid rgba(65,240,124,.35);border-radius:11px;padding:7px;text-align:center;color:var(--green);font-size:12px}
+.rightcol{display:grid;grid-template-rows:auto auto 1fr;gap:12px;min-height:0}.table{width:100%;border-collapse:collapse;font-size:12px}.table th{color:#9cc7ed;text-align:left;border-bottom:1px solid rgba(80,140,210,.32);padding:6px}.table td{padding:6px;border-bottom:1px solid rgba(80,140,210,.18)}.stat{border:1px solid var(--green);color:var(--green);border-radius:6px;padding:2px 7px;font-size:11px}.stat.blue{border-color:#59a9ff;color:#93caff}.stat.red{border-color:var(--red);color:var(--red)}.alert{border-color:rgba(255,83,97,.58);box-shadow:0 0 20px rgba(255,83,97,.14)}.alert h2{color:#ff8b90}.alert li{color:#ffd0d0}.versions .vrow{display:grid;grid-template-columns:44px 78px 1fr 64px;gap:8px;align-items:center;border-bottom:1px solid rgba(80,140,210,.2);padding:7px 0;font-size:11px}.vtag{border:1px solid var(--violet);border-radius:6px;text-align:center;color:#e4c2ff}.published{border:1px solid var(--green);border-radius:6px;color:var(--green);text-align:center;padding:2px 4px}
+.footer{display:grid;grid-template-columns:repeat(6,1fr);gap:10px}.rule{border:1px solid rgba(36,139,255,.42);border-radius:15px;background:rgba(6,13,28,.82);padding:14px 16px;display:flex;gap:12px;align-items:center;font-weight:800;box-shadow:var(--shadow)}.rule b{font-size:25px;color:var(--cyan)}
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.62);display:none;align-items:center;justify-content:center;z-index:5}.modal.open{display:flex}.box{width:min(920px,92vw);max-height:84vh;overflow:auto;border:1px solid rgba(36,215,255,.6);border-radius:18px;background:#081225;box-shadow:0 0 40px rgba(36,215,255,.25);padding:18px}.box textarea{width:100%;height:260px;background:#030817;color:#dff5ff;border:1px solid rgba(36,215,255,.45);border-radius:12px;padding:12px}.box .row{display:flex;gap:10px;justify-content:flex-end;margin-top:10px}.btn{border:1px solid rgba(36,215,255,.55);background:#07162d;color:white;border-radius:10px;padding:9px 13px;cursor:pointer}.btn.green{border-color:var(--green)}.btn.red{border-color:var(--red)}
+.toast{position:fixed;right:18px;bottom:18px;background:#081b24;border:1px solid var(--cyan);border-radius:13px;padding:12px 16px;color:white;box-shadow:0 0 20px rgba(36,215,255,.3);display:none}.toast.show{display:block}
+@media(max-width:1200px){body{overflow:auto}.app{height:auto;min-height:100vh}.kpis{grid-template-columns:repeat(3,1fr)}.content{grid-template-columns:1fr}.bottompanels{grid-template-columns:1fr}.roadmap{grid-template-columns:repeat(2,1fr)}.footer{grid-template-columns:repeat(2,1fr)}}
+</style>
 </head>
-<body><main class="card"><div class="tag">Route GitHub prête</div><h1>📈 BI Feuille de Route Dev</h1><p class="muted">La route GitHub Pages est créée. Le fichier HTML complet existe dans le pack local et doit être remplacé ici par la version complète dès que le connecteur accepte l’écriture du gros contenu ou via push local.</p><p class="muted">Chemin cible : <b>apps/feuille-route-dev/index.html</b></p><span class="pill">À remplacer par BI_FEUILLE_DE_ROUTE_DEV_V1.html</span></main></body></html>
+<body>
+<div class="app">
+  <aside class="sidebar">
+    <div class="logo">📈</div>
+    <nav class="nav" id="nav">
+      <button data-view="accueil"><b>⌂</b>Accueil</button><button class="active" data-view="pilotage"><b>◉</b>Pilotage</button><button data-view="projets"><b>▣</b>Projets</button><button data-view="clients"><b>👥</b>Clients</button><button data-view="finance"><b>€</b>Finance</button><button data-view="ia"><b>🧠</b>IA</button><button data-view="drive"><b>◍</b>Drive &<br>Données</button><button data-view="versions"><b>◇</b>Versions</button><button data-view="params"><b>⚙</b>Paramètres</button>
+    </nav>
+  </aside>
+  <main class="main">
+    <header class="header">
+      <div class="title"><h1>BI PILOTAGE CENTRAL</h1><p>tableau de bord opérationnel, suivi et décision</p></div>
+      <div class="actions"><button class="pill" id="globalBtn">🌐 Vue globale</button><button class="pill green" id="saveBtn">🧪 Sprint actif ●</button><button class="pill purple" id="exportBtn">⤴ Exports</button><button class="pill" id="jsonBtn">{} JSON</button><button class="pill" id="filterBtn">⌁ Filtres</button></div>
+    </header>
+    <section class="kpis" id="kpis"></section>
+    <section class="content">
+      <div class="leftgrid">
+        <section class="panel"><h2>🧬 FEUILLE DE ROUTE</h2><div class="roadmap" id="roadmap"></div><div class="summaryline"><div>Avancement global<br><b id="globalProgress">52%</b></div><div>Livraison cible<br><b>22 juillet 2025</b></div><div>Jours restants<br><b>38 jours</b></div><div>Risque global<br><b style="color:var(--orange)">Modéré</b></div></div></section>
+        <section class="bottompanels">
+          <div class="panel"><h2>GESTION INTERNE <span>Voir tout</span></h2><div class="cards" id="modules"></div></div>
+          <div class="panel"><h2>CONNEXIONS & DONNÉES <span>Voir tout</span></h2><div class="tiles" id="connections"></div><div class="flow">Collecter → Stocker → Synchroniser → Diffuser</div></div>
+          <div class="panel"><h2 style="color:#ffc5ff">ASSISTANTS IA <span>Voir tout</span></h2><div class="tiles" id="agents"></div></div>
+        </section>
+      </div>
+      <aside class="rightcol">
+        <section class="panel"><h2><span style="float:none;color:var(--green)">●</span> TÂCHES EN COURS <span>Voir tout</span></h2><table class="table" id="tasks"></table></section>
+        <section class="panel alert"><h2>⚠ ALERTES / BLOCAGES <span>Voir tout</span></h2><ul id="alerts"></ul></section>
+        <section class="panel versions"><h2>JOURNAL DES VERSIONS <span>Voir tout</span></h2><div id="versions"></div></section>
+      </aside>
+    </section>
+    <footer class="footer"><div class="rule"><b>◎</b>Priorités claires</div><div class="rule"><b>▧</b>Modulaire</div><div class="rule"><b>☁</b>Sauvegarde auto</div><div class="rule"><b>⇪</b>Export JSON / CSV / PDF</div><div class="rule"><b>🧠</b>Connectable à l’IA</div><div class="rule"><b>🛠</b>Simple à maintenir</div></footer>
+  </main>
+</div>
+<div class="modal" id="modal"><div class="box"><h2 id="modalTitle">JSON</h2><textarea id="jsonArea"></textarea><div class="row"><input type="file" id="importFile" accept="application/json" style="display:none"><button class="btn" id="importBtn">Importer JSON</button><button class="btn green" id="copyBtn">Copier</button><button class="btn" id="downloadBtn">Télécharger</button><button class="btn red" id="closeBtn">Fermer</button></div></div></div>
+<div class="toast" id="toast">Sauvegardé</div>
+<script>
+const defaultData={
+  kpis:[['🎯','Priorités',24,'↑ 15%','vs semaine dernière','up'],['☑','Tâches actives',128,'↑ 18%','vs semaine dernière','up'],['👥','Clients suivis',37,'↑ 8%','vs mois dernier','up'],['◈','Modules BI',19,'↑ 12%','en production','up'],['▤','Livrables',78,'↑ 21%','vs mois dernier','up'],['🔔','Alertes',7,'↓ 30%','vs semaine dernière','down']],
+  phases:[
+    {n:1,title:'Cadrage stratégique',status:'Terminé',kind:'ok',pct:100,items:['Objectifs validés','Périmètre défini','Gouvernance OK'],date:'10 mai'},
+    {n:2,title:'Analyse & conception',status:'En cours',kind:'ok',pct:72,items:['Ateliers métiers','Spécifications','Maquettes BI'],date:'27 mai'},
+    {n:3,title:'Développement & intégrations',status:'En cours',kind:'ok',pct:58,items:['Développements','Intégrations API','Qualité code'],date:'10 juin',green:true},
+    {n:4,title:'Tests & validation',status:'À valider',kind:'review',pct:28,items:['Tests fonctionnels','Recette métier','Corrections'],date:'24 juin',purple:true},
+    {n:5,title:'Recette & formation',status:'À venir',kind:'todo',pct:0,items:['Recette utilisateur','Formation équipes','Supports & docs'],date:'8 juil.',purple:true},
+    {n:6,title:'Déploiement & suivi',status:'À venir',kind:'todo',pct:0,items:['Mise en production','Monitoring','Améliorations'],date:'22 juil.',purple:true}
+  ],
+  modules:[['◴','Cockpit pilotage','En cours',82],['☑','Tâches & projets','En cours',76],['👥','CRM / activité','En cours',68],['€','Finance & admin','En cours',71]],
+  connections:[['🔺','Google Drive'],['◆','Dropbox'],['☁','OneDrive'],['☁','iCloud'],['◉','Snapshots JSON'],['⇅','Import / Export JSON CSV PDF'],['</>','Apps Script'],['📊','Excel / Sheets / Power BI']],
+  agents:[['🤖','Agent Coordination'],['🤖','Agent Finance'],['🤖','Agent Développement'],['🤖','Agent Client / Support'],['🤖','Agent Veille IA'],['◎','ChatGPT'],['✦','Gemini'],['◒','Grok'],['🐋','DeepSeek'],['🌈','Copilot']],
+  tasks:[['Refonte dashboard commercial','En cours','Alice','27 mai'],['Intégration API CRM','En cours','Bob','29 mai'],['KPI Finance Q2','À valider','Claire','30 mai'],['Automatisation rapports','En cours','David','2 juin'],['Nettoyage & qualité données','Bloqué','Eva','3 juin']],
+  alerts:['API CRM indisponible depuis 45 min','Dépendance sur livrable “Modèle financier”','Données manquantes sur 12 clients','Accès Drive expiré – Projet Alpha'],
+  versions:[['v2.3','23 mai 2024','Tableau KPI commerciaux','Publié'],['v2.2','20 mai 2024','Modèle financier Q2','Publié'],['v2.1','18 mai 2024','Connecteurs & intégrations','Publié'],['v2.0','10 mai 2024','Base de données clients','Publié']]
+};
+let data=JSON.parse(localStorage.getItem('bi_roadmap_data')||'null')||defaultData;
+function save(){data.meta={app:'BI PILOTAGE CENTRAL',version:'1.0',savedAt:new Date().toISOString()};localStorage.setItem('bi_roadmap_data',JSON.stringify(data));localStorage.setItem('bi_roadmap_snapshot_'+Date.now(),JSON.stringify(data));toast('Snapshot JSON sauvegardé');}
+function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),1800)}
+function render(){
+ document.getElementById('kpis').innerHTML=data.kpis.map(k=>`<div class="kpi"><div class="ico">${k[0]}</div><div><small>${k[1]}</small><div class="num">${k[2]}</div><div class="trend ${k[5]==='down'?'down':''}">${k[3]}</div><small>${k[4]}</small></div></div>`).join('');
+ document.getElementById('roadmap').innerHTML=data.phases.map(p=>`<div class="phase ${p.green?'green':''} ${p.purple?'purple':''}"><div class="phasehead"><div class="badge">${p.n}</div><h3>${p.title}</h3></div><span class="status ${p.kind==='todo'?'todo':p.kind==='review'?'review':''}">${p.status}</span><div class="percent">${p.pct}%</div><div class="bar" style="--w:${p.pct}%"><i></i></div><ul>${p.items.map(x=>`<li><span class="check">◉</span>${x}</li>`).join('')}</ul><div class="date">${p.date}</div></div>`).join('');
+ const avg=Math.round(data.phases.reduce((a,p)=>a+p.pct,0)/data.phases.length);document.getElementById('globalProgress').textContent=avg+'%';
+ document.getElementById('modules').innerHTML=data.modules.map(m=>`<div class="mini"><div class="top">${m[0]}</div><h4>${m[1]}</h4><span class="chip">${m[2]}</span><div style="margin-top:10px;color:var(--cyan);font-weight:900">${m[3]}%</div><div class="bar" style="--w:${m[3]}%"><i></i></div></div>`).join('');
+ document.getElementById('connections').innerHTML=data.connections.map(c=>`<div class="tile"><b>${c[0]}</b><span>${c[1]}</span></div>`).join('');
+ document.getElementById('agents').innerHTML=data.agents.map(a=>`<div class="tile"><b>${a[0]}</b><span>${a[1]}</span></div>`).join('');
+ document.getElementById('tasks').innerHTML='<tr><th>Tâche</th><th>Statut</th><th>Propriétaire</th><th>Échéance</th></tr>'+data.tasks.map(r=>`<tr><td>${r[0]}</td><td><span class="stat ${r[1]==='Bloqué'?'red':r[1]==='À valider'?'blue':''}">${r[1]}</span></td><td>${r[2]}</td><td>${r[3]}</td></tr>`).join('');
+ document.getElementById('alerts').innerHTML=data.alerts.map(a=>`<li><span style="color:var(--red)">▲</span>${a}</li>`).join('');
+ document.getElementById('versions').innerHTML=data.versions.map(v=>`<div class="vrow"><span class="vtag">${v[0]}</span><span>${v[1]}</span><span>${v[2]}</span><span class="published">${v[3]}</span></div>`).join('');
+}
+function openJson(){document.getElementById('jsonArea').value=JSON.stringify(data,null,2);document.getElementById('modal').classList.add('open')}
+function download(){const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='BI_PILOTAGE_CENTRAL_snapshot_'+new Date().toISOString().slice(0,10)+'.json';a.click();URL.revokeObjectURL(a.href)}
+document.getElementById('saveBtn').onclick=save;document.getElementById('jsonBtn').onclick=openJson;document.getElementById('exportBtn').onclick=download;document.getElementById('downloadBtn').onclick=download;document.getElementById('closeBtn').onclick=()=>document.getElementById('modal').classList.remove('open');document.getElementById('copyBtn').onclick=()=>navigator.clipboard.writeText(document.getElementById('jsonArea').value).then(()=>toast('JSON copié'));
+document.getElementById('importBtn').onclick=()=>document.getElementById('importFile').click();document.getElementById('importFile').onchange=e=>{const f=e.target.files[0];if(!f)return;const rd=new FileReader();rd.onload=()=>{try{data=JSON.parse(rd.result);save();render();document.getElementById('modal').classList.remove('open')}catch(err){alert('JSON invalide')}};rd.readAsText(f)};
+document.getElementById('filterBtn').onclick=()=>{document.body.classList.toggle('compact');toast('Filtres visuels simulés')};document.getElementById('globalBtn').onclick=()=>toast('Vue globale active');
+document.querySelectorAll('.nav button').forEach(b=>b.onclick=()=>{document.querySelectorAll('.nav button').forEach(x=>x.classList.remove('active'));b.classList.add('active');toast('Vue '+b.textContent.trim()+' sélectionnée')});
+render();setInterval(()=>{localStorage.setItem('bi_roadmap_autosave',JSON.stringify({...data,autosavedAt:new Date().toISOString()}))},30000);
+</script>
+</body>
+</html>
