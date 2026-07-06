@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>Cockpit Projets BI · V6.5B Logo fichier / collage</title>
+<title>Cockpit Projets BI · V6.5C Refonte onglets</title>
 <style>
 :root{
   --bg:#030711;--bg2:#06112a;--panel:rgba(7,18,41,.82);--panel2:rgba(9,28,61,.72);
@@ -461,6 +461,36 @@ textarea{resize:vertical;min-height:76px} input:focus,select:focus,textarea:focu
 .logo-preview-inline .thumb span{font-size:28px}
 .logo-source-note{font-size:11px;color:var(--muted)}
 
+
+/* V6.5C - Refonte onglets pilotage */
+.summary-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-bottom:12px}
+.summary-card{border:1px solid rgba(80,178,255,.24);background:linear-gradient(135deg,rgba(7,18,42,.78),rgba(12,9,34,.66));border-radius:18px;padding:13px;min-height:106px;position:relative;overflow:hidden}
+.summary-card:after{content:"";position:absolute;right:-42px;top:-42px;width:110px;height:110px;border-radius:50%;background:radial-gradient(circle,rgba(40,234,255,.12),transparent 68%)}
+.summary-card small{display:block;color:var(--muted);font-size:11px;line-height:1.35}
+.summary-card b{display:block;font-size:23px;color:#f5fbff;margin:4px 0}
+.summary-card .ico{font-size:24px;margin-bottom:5px}
+.summary-wide{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(320px,.95fr);gap:12px}
+.summary-panel{border:1px solid rgba(80,178,255,.22);background:rgba(5,15,35,.55);border-radius:20px;padding:14px}
+.summary-panel h3{margin:0 0 10px;color:#8efaff}
+.summary-road-mini{display:grid;gap:8px}
+.summary-road-row{display:grid;grid-template-columns:105px 1fr 70px;gap:8px;align-items:center;border:1px solid rgba(255,255,255,.08);background:rgba(2,8,20,.27);border-radius:12px;padding:8px;font-size:12px}
+.summary-action-box{border:1px solid rgba(53,243,132,.28);background:rgba(53,243,132,.055);border-radius:14px;padding:10px;color:#dfffe9}
+.summary-quick-links{display:flex;gap:7px;flex-wrap:wrap}
+.timeline-version{position:relative;padding-left:22px;display:grid;gap:10px}
+.timeline-version:before{content:"";position:absolute;left:7px;top:4px;bottom:4px;width:2px;background:linear-gradient(var(--cyan),var(--violet),var(--green))}
+.version-node{border:1px solid rgba(89,190,255,.22);background:rgba(5,15,35,.58);border-radius:16px;padding:11px;position:relative}
+.version-node:before{content:"";position:absolute;left:-21px;top:16px;width:12px;height:12px;border-radius:50%;background:var(--cyan);box-shadow:0 0 14px rgba(40,234,255,.8)}
+.version-node h4{margin:0 0 5px;color:#f5fbff}
+.version-node p{margin:0;color:#cfe6f5;font-size:12px;line-height:1.4}
+.worktime-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-bottom:12px}
+.worktime-card{border:1px solid rgba(255,255,255,.10);background:rgba(2,8,20,.31);border-radius:16px;padding:12px}
+.worktime-card small{display:block;color:var(--muted);font-size:11px}.worktime-card b{display:block;font-size:24px;color:#fff;margin:4px 0}
+.worktime-settings{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-bottom:12px}
+.worktime-settings input{width:100%}
+.worktime-note{border:1px solid rgba(255,195,77,.34);background:rgba(255,195,77,.055);border-radius:14px;padding:10px;color:#ffe8ad;font-size:12px;line-height:1.45}
+@media(max-width:1250px){.summary-grid,.worktime-grid,.worktime-settings{grid-template-columns:repeat(2,minmax(0,1fr))}.summary-wide{grid-template-columns:1fr}}
+@media(max-width:760px){.summary-grid,.worktime-grid,.worktime-settings{grid-template-columns:1fr}}
+
 @media(max-width:1260px){.roadmap-board,.road-summary{grid-template-columns:repeat(2,1fr)}.road-form{grid-template-columns:1fr 1fr}}
 @media(max-width:760px){.roadmap-board,.road-summary,.road-form{grid-template-columns:1fr}}
 
@@ -798,6 +828,36 @@ textarea{resize:vertical;min-height:76px} input:focus,select:focus,textarea:focu
 .logo-preview-inline .thumb span{font-size:28px}
 .logo-source-note{font-size:11px;color:var(--muted)}
 
+
+/* V6.5C - Refonte onglets pilotage */
+.summary-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-bottom:12px}
+.summary-card{border:1px solid rgba(80,178,255,.24);background:linear-gradient(135deg,rgba(7,18,42,.78),rgba(12,9,34,.66));border-radius:18px;padding:13px;min-height:106px;position:relative;overflow:hidden}
+.summary-card:after{content:"";position:absolute;right:-42px;top:-42px;width:110px;height:110px;border-radius:50%;background:radial-gradient(circle,rgba(40,234,255,.12),transparent 68%)}
+.summary-card small{display:block;color:var(--muted);font-size:11px;line-height:1.35}
+.summary-card b{display:block;font-size:23px;color:#f5fbff;margin:4px 0}
+.summary-card .ico{font-size:24px;margin-bottom:5px}
+.summary-wide{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(320px,.95fr);gap:12px}
+.summary-panel{border:1px solid rgba(80,178,255,.22);background:rgba(5,15,35,.55);border-radius:20px;padding:14px}
+.summary-panel h3{margin:0 0 10px;color:#8efaff}
+.summary-road-mini{display:grid;gap:8px}
+.summary-road-row{display:grid;grid-template-columns:105px 1fr 70px;gap:8px;align-items:center;border:1px solid rgba(255,255,255,.08);background:rgba(2,8,20,.27);border-radius:12px;padding:8px;font-size:12px}
+.summary-action-box{border:1px solid rgba(53,243,132,.28);background:rgba(53,243,132,.055);border-radius:14px;padding:10px;color:#dfffe9}
+.summary-quick-links{display:flex;gap:7px;flex-wrap:wrap}
+.timeline-version{position:relative;padding-left:22px;display:grid;gap:10px}
+.timeline-version:before{content:"";position:absolute;left:7px;top:4px;bottom:4px;width:2px;background:linear-gradient(var(--cyan),var(--violet),var(--green))}
+.version-node{border:1px solid rgba(89,190,255,.22);background:rgba(5,15,35,.58);border-radius:16px;padding:11px;position:relative}
+.version-node:before{content:"";position:absolute;left:-21px;top:16px;width:12px;height:12px;border-radius:50%;background:var(--cyan);box-shadow:0 0 14px rgba(40,234,255,.8)}
+.version-node h4{margin:0 0 5px;color:#f5fbff}
+.version-node p{margin:0;color:#cfe6f5;font-size:12px;line-height:1.4}
+.worktime-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-bottom:12px}
+.worktime-card{border:1px solid rgba(255,255,255,.10);background:rgba(2,8,20,.31);border-radius:16px;padding:12px}
+.worktime-card small{display:block;color:var(--muted);font-size:11px}.worktime-card b{display:block;font-size:24px;color:#fff;margin:4px 0}
+.worktime-settings{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-bottom:12px}
+.worktime-settings input{width:100%}
+.worktime-note{border:1px solid rgba(255,195,77,.34);background:rgba(255,195,77,.055);border-radius:14px;padding:10px;color:#ffe8ad;font-size:12px;line-height:1.45}
+@media(max-width:1250px){.summary-grid,.worktime-grid,.worktime-settings{grid-template-columns:repeat(2,minmax(0,1fr))}.summary-wide{grid-template-columns:1fr}}
+@media(max-width:760px){.summary-grid,.worktime-grid,.worktime-settings{grid-template-columns:1fr}}
+
 @media(max-width:1260px){.header,.layout{grid-template-columns:1fr}.kpis{grid-template-columns:repeat(2,1fr)}.info-grid{grid-template-columns:1fr 1fr}}
 @media(max-width:760px){.app{padding:12px}.header,.info-grid,.kpis,.form-grid,.note-form,.note-grid{grid-template-columns:1fr}.quick,.actionbar{justify-content:flex-start}.toplink,.btn{width:100%;justify-content:flex-start}.object-head{grid-template-columns:58px 1fr}.status-zone{grid-column:1/-1}.kpi{grid-template-columns:58px 1fr}.spark{display:none}}
 @media print{body{background:white;color:#111}.quick,.actionbar,.familybar,.sidebar,.btn,.icon-btn,.modal,.toast{display:none!important}.app{max-width:none}.layout{grid-template-columns:1fr}.panel{box-shadow:none;border:1px solid #999;background:white;color:#111}.subcard{background:white}.pill{color:#111}}
@@ -808,7 +868,7 @@ textarea{resize:vertical;min-height:76px} input:focus,select:focus,textarea:focu
   <header class="header">
     <section class="brand">
       <div class="logo">BI</div>
-      <div><h1>Cockpit Projets BI</h1><p class="subtitle">V6.5B · logos par fichier ou collage</p></div>
+      <div><h1>Cockpit Projets BI</h1><p class="subtitle">V6.5C · onglets pilotage clarifiés</p></div>
     </section>
     <nav class="quick">
       <a class="toplink" id="projectGptLink" target="_blank" rel="noopener">
@@ -880,9 +940,9 @@ textarea{resize:vertical;min-height:76px} input:focus,select:focus,textarea:focu
 
 <script>
 'use strict';
-const VERSION='V6.5B-logo-fichier-coller';
+const VERSION='V6.5C-refonte-onglets-pilotage';
 const STABLE_KEY='central_bi_project_manager_current';
-const VERSION_KEY='central_bi_project_manager_v65b';
+const VERSION_KEY='central_bi_project_manager_v65c';
 const KEY=STABLE_KEY;
 const MIRROR_KEYS=[VERSION_KEY,'central_bi_project_manager_v61','central_bi_project_manager_v6'];
 const PREVIOUS_KEYS=[VERSION_KEY,'central_bi_project_manager_v61','central_bi_project_manager_v6','central_bi_project_manager_v5','central_bi_project_manager_v4','central_bi_project_manager_v1'];
@@ -1102,23 +1162,10 @@ function zoneTagClass(space){
   if(s==='promerlet')return 'zone-tag-promerlet';
   return '';
 }
-function renderDetail(){const p=selected();if(!p)return;if(activeMain!=='fiche'){$('projectDetail').innerHTML='';return}const s=Object.assign(baseSources(),p.sources||{}), cfg=getDriveConfig(), snaps=getSnapshots();$('projectDetail').innerHTML=`<div class="object-head"><div class="object-icon">${esc(p.icon)}</div><div class="object-title"><h2>${esc(p.name)}</h2><p>${esc(p.goal||'Projet BI')}</p></div><div class="status-zone"><span class="status-badge"><span class="dot green"></span> ${esc(p.status)}</span><button class="icon-btn" title="Options">⋮</button></div></div>${renderProgressEstimatePanel(p)}${renderProjectLinksTeaser(p)}<div class="info-grid"><div class="subcard"><h3>① Identité du projet</h3>
-  <div class="inline-edit-grid">
-    <div><label>Nom</label><input value="${esc(p.name)}" onchange="updateProjectField('name',this.value)"></div>
-    <div><label>Icône</label><input value="${esc(p.icon)}" onchange="updateProjectField('icon',this.value)"></div>
-    <div><label>Zone</label><select onchange="updateProjectField('space',this.value)">${SPACES.filter(x=>x!=='Tous').map(x=>`<option ${p.space===x?'selected':''}>${x}</option>`).join('')}</select></div>
-    <div><label>Type</label><select onchange="updateProjectField('type',this.value)">${TYPES.map(x=>`<option ${p.type===x?'selected':''}>${x}</option>`).join('')}</select></div>
-    <div class="full"><label>Client / responsable</label><input value="${esc(p.client||'')}" onchange="updateProjectField('client',this.value)"></div>
-  </div>
-  <div class="row"><span>Référence</span><b>${esc(p.id)}</b></div><div class="row"><span>Dernière maj.</span><b>${esc(state.updated?.slice(0,16).replace('T',' ')||'—')}</b></div></div><div class="subcard"><h3>② État / Priorité / Avancement</h3>
-  <div class="inline-edit-grid">
-    <div><label>Statut</label><select onchange="updateProjectField('status',this.value)">${STATUSES.map(x=>`<option ${p.status===x?'selected':''}>${x}</option>`).join('')}</select></div>
-    <div><label>Priorité</label><select onchange="updateProjectField('priority',this.value)">${PRIORITIES.map(x=>`<option ${p.priority===x?'selected':''}>${x}</option>`).join('')}</select></div>
-    <div><label>Phase</label><select onchange="updateProjectField('phase',this.value)">${PHASES.map(x=>`<option ${p.phase===x?'selected':''}>${x}</option>`).join('')}</select></div>
-    <div><label>Échéance</label><input type="date" value="${esc(p.due||'')}" onchange="updateProjectField('due',this.value)"></div>
-    <div class="full"><label>Avancement : ${+p.progress||0}%</label><input type="range" min="0" max="100" value="${+p.progress||0}" onchange="updateProjectField('progress',Number(this.value))"></div>
-  </div>
-  <div class="row"><span>Santé</span><b><span class="pill green">${(+p.progress||0)>60?'Bonne':'À suivre'}</span></b></div></div><div class="subcard"><h3>③ Roadmap courte</h3><div class="timeline"><div class="tline"><span class="q">Maint.</span><span>${esc(p.nextAction||'Prochaine action à définir')}</span><span class="check">✓</span></div><div class="tline"><span class="q">Sprint</span><span>${esc(p.phase)}</span><span>○</span></div><div class="tline"><span class="q">Cible</span><span>${esc(p.due||'échéance libre')}</span><span>○</span></div><div class="tline"><span class="q">Après</span><span>${esc(s.nextMilestone||'stabiliser puis publier')}</span><span>○</span></div></div></div><div class="subcard"><h3>④ Notes / Versions</h3><div class="tabs"><button class="tab active" onclick="activeSide='notes';renderAll()">Notes</button><button class="tab" onclick="activeSide='versions';renderAll()">Versions</button></div><div class="note-box">${activeSide==='versions'?renderVersionsMini(p):renderNotesMini(p)}<button class="mini-btn" style="margin-top:10px" onclick="addNote()">＋ Nouvelle note</button></div></div><div class="subcard"><h3>⑤ Liens réels</h3><div class="linklist">${renderLinks(p,s)}</div></div><div class="subcard"><h3>⑥ Données / Sync</h3><div class="row"><span>JSON</span><b><span class="pill green">À jour</span></b></div><div class="row"><span>Snapshots</span><b><span class="pill">${snaps.length}</span></b></div><div class="row"><span>Dernier snapshot</span><b>${esc(snaps[0]?.date?.slice(0,16).replace('T',' ')||'—')}</b></div><div class="row"><span>Drive Sync</span><b><span class="pill ${cfg.enabled?'green':'orange'}">${esc(cfg.enabled?'OK':'À configurer')}</span></b></div><div class="row"><span>Dernière sync</span><b>${esc(cfg.lastSent?cfg.lastSent.slice(0,16).replace('T',' '):'—')}</b></div></div></div>`}
+function renderDetail(){
+  if(activeMain!=='fiche'){$('projectDetail').innerHTML='';return}
+  $('projectDetail').innerHTML=renderSummaryProject();
+}
 function renderNotesMini(p){return (p.notes||[]).slice(0,2).map(n=>`<p><b>${esc(n.title)}</b><br>${esc(n.text)}<br><small>${esc(n.date)}</small></p>`).join('')||'<p class="muted">Aucune note.</p>'}
 function renderVersionsMini(p){return (p.versions||[]).slice(0,3).map(v=>`<p><b>${esc(v.name)}</b> · ${esc(v.type||'version')}<br>${esc(v.text)}<br><small>${esc(v.date)}</small></p>`).join('')||'<p class="muted">Aucune version.</p>'}
 function renderLinks(p,s){const links=[...(p.links||[])]; if(s.driveFolder)links.unshift({type:'Drive',title:'Google Drive (Dossier projet)',url:s.driveFolder}); if(s.githubRepo)links.push({type:'GitHub',title:'GitHub Repository',url:s.githubRepo}); if(s.pagesUrl)links.push({type:'Pages',title:'GitHub Pages (Cockpit)',url:s.pagesUrl}); links.push({type:'GPT',title:'Discussion GPT (Projet)',url:quickLinks.gpt||GPT_PROJECT_FALLBACK}); return links.slice(0,6).map(l=>`<div class="linkrow"><span>${l.type==='Drive'?'△':l.type==='GitHub'?'◉':l.type==='GPT'?'🤖':'🌐'}</span><a href="${esc(l.url||'#')}" target="_blank">${esc(l.title)}</a><span>↗</span></div>`).join('')}
@@ -1153,14 +1200,15 @@ function renderPilotageBoard(){
 }
 function renderCentralTabs(){
   const tabs=[
-    ['fiche','🧩 Fiche projet'],
-    ['dashboard','📊 Dashboard'],
+    ['fiche','🧩 Synthèse'],
     ['active','🟢 Mode actif'],
     ['roadmap','📈 Roadmap simple'],
-    ['deploy','🚀 Déploiement'],
-    ['notes','📓 Notes / panier prompt'],
+    ['progress','📊 Avancement'],
+    ['versionsTimeline','🕒 Versions'],
+    ['worktime','⏱ Temps BI'],
+    ['notes','📓 Notes / panier'],
     ['data','🟢 Données & sync'],
-    ['sources','🔗 Liens externes']
+    ['sources','🔗 Liens']
   ];
   $('centralTabs').innerHTML=tabs.map(t=>`<button class="central-tab ${activeMain===t[0]?'active':''}" data-central="${t[0]}">${t[1]}</button>`).join('');
   document.querySelectorAll('[data-central]').forEach(b=>b.onclick=()=>{activeMain=b.dataset.central;renderAll()});
@@ -2565,10 +2613,128 @@ function renderSelectedLinkConfig(l){
   </div>`;
 }
 
+
+function statusIcon(status){
+  const s=String(status||'').toLowerCase();
+  if(s.includes('valid'))return '✅';
+  if(s.includes('cours')||s.includes('déploy'))return '🟢';
+  if(s.includes('traiter'))return '🟡';
+  if(s.includes('bloq'))return '🔴';
+  return '⚪';
+}
+function getProjectVersions(p){
+  const versions=[];
+  (p.versions||[]).forEach(v=>versions.push({title:v.title||v.version||'Version',date:v.date||v.created||'',text:v.text||v.note||v.description||''}));
+  (p.notes||[]).filter(n=>/v\d|version|déploiement|deploy/i.test((n.title||'')+' '+(n.text||''))).forEach(n=>versions.push({title:n.title||'Note version',date:n.date||n.created||'',text:n.text||''}));
+  (p.roadmapBlocks||[]).filter(b=>/déploiement|deploy|version|v6|v\d/i.test((b.title||'')+' '+(b.text||''))).forEach(b=>versions.push({title:b.title||'Bloc version',date:b.updated||b.created||'',text:b.text||b.status||''}));
+  versions.sort((a,b)=>String(b.date||'').localeCompare(String(a.date||'')));
+  return versions.slice(0,30);
+}
+function renderSummaryProject(){
+  const p=selected(); if(!p)return '';
+  ensureRoadmap(p); ensureProjectLinks(p);
+  const e=estimateProjectProgress(p);
+  const links=p.links||[];
+  const filledLinks=links.filter(l=>l.url).length;
+  const road=p.roadmapBlocks||[];
+  const validRoad=road.filter(b=>roadStatusScore(b.status)>=1).length;
+  const activeRoad=road.filter(b=>String(b.status||'').toLowerCase().includes('cours')||String(b.status||'').toLowerCase().includes('validation')).length;
+  const cfg=getDriveConfig();
+  const drive=driveRealSummary();
+  const topLinks=links.filter(l=>l.url).slice(0,5);
+  return `<div class="view-title"><h2>🧩 Synthèse projet</h2><span class="pill green">${esc(p.name)}</span></div>
+  <section class="summary-grid">
+    <div class="summary-card"><div class="ico">📊</div><small>Avancement estimé</small><b>${e?e.final:0}%</b><small>manuel ${+p.progress||0}%</small></div>
+    <div class="summary-card"><div class="ico">${statusIcon(p.status)}</div><small>Statut projet</small><b>${esc(p.status||'—')}</b><small>${esc(p.phase||'phase libre')}</small></div>
+    <div class="summary-card"><div class="ico">📈</div><small>Roadmap</small><b>${validRoad}/${road.length}</b><small>${activeRoad} bloc(s) actifs</small></div>
+    <div class="summary-card"><div class="ico">🔗</div><small>Liens externes</small><b>${filledLinks}</b><small>${links.length} lien(s) configurables</small></div>
+  </section>
+  <section class="summary-wide">
+    <div class="summary-panel">
+      <h3>🎯 Lecture rapide</h3>
+      <div class="summary-action-box"><b>Prochaine action :</b><br>${esc(p.nextAction||'À définir')}</div>
+      <div class="links-mini-stats" style="margin-top:10px">
+        <div class="links-mini-stat"><small>Drive Sync</small><b>${cfg.enabled?'OK':'—'}</b></div>
+        <div class="links-mini-stat"><small>CURRENT Drive</small><b>${drive.available?drive.current:'—'}</b></div>
+        <div class="links-mini-stat"><small>Snapshots Drive</small><b>${drive.available?drive.snapshots:'—'}</b></div>
+        <div class="links-mini-stat"><small>Notes</small><b>${(p.notes||[]).length}</b></div>
+      </div>
+      <h3 style="margin-top:14px">🔗 Accès rapides</h3>
+      <div class="summary-quick-links">${topLinks.map(l=>`<a class="link-mini" href="${esc(safeUrl(l.url))}" target="_blank" rel="noopener">${esc(l.icon||'🔗')} ${esc(l.type||l.title||'Lien')}</a>`).join('')||'<span class="muted">Aucun lien renseigné.</span>'}</div>
+    </div>
+    <div class="summary-panel">
+      <h3>📈 Roadmap lisible</h3>
+      <div class="summary-road-mini">
+        ${road.slice(0,7).map(b=>`<div class="summary-road-row"><span class="pill">${esc(b.status||'—')}</span><b>${esc(b.title||'Bloc')}</b><span>${Math.round(roadStatusScore(b.status)*100)}%</span></div>`).join('')||'<p class="muted">Aucun bloc roadmap.</p>'}
+      </div>
+      <div class="link-config-actions"><button class="mini-btn" onclick="activeMain='roadmap';renderAll()">Ouvrir roadmap</button><button class="mini-btn" onclick="activeMain='progress';renderAll()">Voir avancement</button></div>
+    </div>
+  </section>`;
+}
+function renderProgressTab(){
+  const p=selected();
+  return `<div class="view-title"><h2>📊 Avancement</h2><span class="pill">calcul détaillé</span></div>${renderProgressEstimatePanel(p)}`;
+}
+function renderVersionsTimeline(){
+  const p=selected();
+  const versions=getProjectVersions(p);
+  const road=p.roadmapBlocks||[];
+  return `<div class="view-title"><h2>🕒 Versions / frise</h2><span class="pill">${versions.length} élément(s)</span></div>
+  <section class="summary-wide">
+    <div class="summary-panel">
+      <h3>Frise versions & déploiements</h3>
+      <div class="timeline-version">
+        ${versions.map(v=>`<div class="version-node"><h4>${esc(v.title)}</h4><p><b>${esc(v.date||'date non renseignée')}</b><br>${esc((v.text||'').slice(0,260))}</p></div>`).join('')||'<p class="muted">Aucune version détectée dans les notes ou blocs.</p>'}
+      </div>
+    </div>
+    <div class="summary-panel">
+      <h3>Frise des blocs roadmap</h3>
+      <div class="timeline-version">
+        ${road.map(b=>`<div class="version-node"><h4>${esc(b.title||'Bloc')}</h4><p><b>${esc(b.status||'—')}</b> · ${esc(b.updated||b.created||'')}<br>${esc((b.text||'').slice(0,220))}</p></div>`).join('')||'<p class="muted">Aucun bloc roadmap.</p>'}
+      </div>
+    </div>
+  </section>`;
+}
+function workTimeSettings(){
+  try{return Object.assign({minutesPerVersion:35,minutesPerBlock:20,minutesPerNote:8,minutesPerSnapshot:4},JSON.parse(localStorage.getItem('bi_central_worktime_settings')||'{}'))}catch(e){return {minutesPerVersion:35,minutesPerBlock:20,minutesPerNote:8,minutesPerSnapshot:4}}
+}
+function setWorkTimeSetting(k,v){const s=workTimeSettings();s[k]=Number(v)||0;localStorage.setItem('bi_central_worktime_settings',JSON.stringify(s));renderAll()}
+function renderWorkTimeCalculator(){
+  const p=selected(), s=workTimeSettings();
+  const versions=getProjectVersions(p).length;
+  const blocks=(p.roadmapBlocks||[]).length;
+  const notes=(p.notes||[]).length;
+  const snaps=getSnapshots().length;
+  const minutes=versions*s.minutesPerVersion + blocks*s.minutesPerBlock + notes*s.minutesPerNote + snaps*s.minutesPerSnapshot;
+  const hours=(minutes/60).toFixed(1);
+  return `<div class="view-title"><h2>⏱ Temps BI</h2><span class="pill orange">estimation</span></div>
+  <section class="summary-panel">
+    <h3>Calculateur temps de travail estimé</h3>
+    <p class="muted">Ce calcul donne un ordre de grandeur à partir de l’historique interne : versions détectées, blocs roadmap, notes et snapshots locaux. Ce n’est pas un chronomètre réel.</p>
+    <div class="worktime-grid">
+      <div class="worktime-card"><small>Versions détectées</small><b>${versions}</b><small>${s.minutesPerVersion} min / version</small></div>
+      <div class="worktime-card"><small>Blocs roadmap</small><b>${blocks}</b><small>${s.minutesPerBlock} min / bloc</small></div>
+      <div class="worktime-card"><small>Notes projet</small><b>${notes}</b><small>${s.minutesPerNote} min / note</small></div>
+      <div class="worktime-card"><small>Snapshots locaux</small><b>${snaps}</b><small>${s.minutesPerSnapshot} min / snapshot</small></div>
+    </div>
+    <div class="summary-card" style="margin-bottom:12px"><small>Total estimé</small><b>${hours} h</b><small>${minutes} minutes estimées</small></div>
+    <h3>Paramètres de calcul</h3>
+    <div class="worktime-settings">
+      <div><label>Min / version</label><input type="number" value="${s.minutesPerVersion}" onchange="setWorkTimeSetting('minutesPerVersion',this.value)"></div>
+      <div><label>Min / bloc</label><input type="number" value="${s.minutesPerBlock}" onchange="setWorkTimeSetting('minutesPerBlock',this.value)"></div>
+      <div><label>Min / note</label><input type="number" value="${s.minutesPerNote}" onchange="setWorkTimeSetting('minutesPerNote',this.value)"></div>
+      <div><label>Min / snapshot</label><input type="number" value="${s.minutesPerSnapshot}" onchange="setWorkTimeSetting('minutesPerSnapshot',this.value)"></div>
+    </div>
+    <div class="worktime-note"><b>Piste future :</b> ajouter un vrai journal d’activité : ouverture BI, sauvegarde, création bloc, validation, publication GitHub, snapshot Drive. Cela permettrait de passer d’une estimation à une mesure semi-réelle.</div>
+  </section>`;
+}
 function renderMainView(){
   const p=selected(), total=state.projects.length, active=state.projects.filter(p=>['En cours','Déployé','Validé','À tester'].includes(p.status)).length, avg=Math.round(state.projects.reduce((a,p)=>a+projectReadiness(p),0)/Math.max(1,total));
   let html='';
   if(activeMain==='fiche'){html=''}
+  else if(activeMain==='progress'){html=renderProgressTab()}
+  else if(activeMain==='versionsTimeline'){html=renderVersionsTimeline()}
+  else if(activeMain==='worktime'){html=renderWorkTimeCalculator()}
   else if(activeMain==='dashboard'){html=`<div class="view-title"><h2>📊 Dashboard</h2><span class="pill">${active}/${total} actifs</span></div>${renderPilotageBoard()}<div class="subcard" style="min-height:auto"><h3>Portefeuille</h3><p class="muted">Maturité moyenne ${avg}% · Drive Sync ${getDriveConfig().enabled?'connecté':'à configurer'} · snapshots ${getSnapshots().length}.</p></div>${renderDriveDashboardCards()}`}
   else if(activeMain==='active'){html=`<div class="view-title"><h2>🟢 Mode actif</h2><span class="pill green">${esc(p.status)}</span></div>${renderPilotageBoard()}<div class="subcard" style="min-height:auto"><p>Dernière reprise : <b>${esc(recoveryMeta.source)}</b>. Drive Sync : <b>${esc(getDriveConfig().lastStatus)}</b>.</p><button class="mini-btn" onclick="sendDriveSync('manuel courant',false,'current')">☁ Envoyer maintenant</button><button class="mini-btn" onclick="exportManifest()">▤ Manifest global</button></div>`}
   else if(activeMain==='roadmap'){html=renderRoadmapPilotable()}
