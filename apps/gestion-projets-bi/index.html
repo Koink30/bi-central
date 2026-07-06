@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>Cockpit Projets BI · V6.4W Correction roadmap score</title>
+<title>Cockpit Projets BI · V6.4X Roadmap score diagnostic</title>
 <style>
 :root{
   --bg:#030711;--bg2:#06112a;--panel:rgba(7,18,41,.82);--panel2:rgba(9,28,61,.72);
@@ -375,6 +375,18 @@ textarea{resize:vertical;min-height:76px} input:focus,select:focus,textarea:focu
 /* V6.4W - correction liaison roadmap / avancement */
 .road-link-debug{border:1px solid rgba(255,195,77,.30);background:rgba(255,195,77,.045);border-radius:12px;padding:8px;margin-top:8px;font-size:11px;color:#ffe8ad;line-height:1.35}
 
+
+/* V6.4X - diagnostic liaison roadmap score */
+.road-score-debug-panel{border:1px solid rgba(255,195,77,.32);background:rgba(255,195,77,.045);border-radius:14px;padding:10px;margin-top:10px}
+.road-score-debug-panel h4{margin:0 0 8px;color:#ffe2a5}
+.road-score-list{display:grid;gap:6px;max-height:230px;overflow:auto}
+.road-score-row{display:grid;grid-template-columns:46px 1fr 110px 76px;gap:7px;align-items:center;border:1px solid rgba(255,255,255,.08);background:rgba(2,8,20,.24);border-radius:10px;padding:7px;font-size:11px}
+.road-score-row.ok{border-color:rgba(53,243,132,.28)}
+.road-score-row.no{opacity:.62}
+.road-score-badge{border:1px solid rgba(255,255,255,.14);border-radius:999px;padding:3px 6px;text-align:center;font-weight:900}
+.road-score-badge.ok{color:#dfffe9;border-color:rgba(53,243,132,.35)}
+.road-score-badge.no{color:#ffe2a5;border-color:rgba(255,195,77,.35)}
+
 @media(max-width:1260px){.roadmap-board,.road-summary{grid-template-columns:repeat(2,1fr)}.road-form{grid-template-columns:1fr 1fr}}
 @media(max-width:760px){.roadmap-board,.road-summary,.road-form{grid-template-columns:1fr}}
 
@@ -626,6 +638,18 @@ textarea{resize:vertical;min-height:76px} input:focus,select:focus,textarea:focu
 /* V6.4W - correction liaison roadmap / avancement */
 .road-link-debug{border:1px solid rgba(255,195,77,.30);background:rgba(255,195,77,.045);border-radius:12px;padding:8px;margin-top:8px;font-size:11px;color:#ffe8ad;line-height:1.35}
 
+
+/* V6.4X - diagnostic liaison roadmap score */
+.road-score-debug-panel{border:1px solid rgba(255,195,77,.32);background:rgba(255,195,77,.045);border-radius:14px;padding:10px;margin-top:10px}
+.road-score-debug-panel h4{margin:0 0 8px;color:#ffe2a5}
+.road-score-list{display:grid;gap:6px;max-height:230px;overflow:auto}
+.road-score-row{display:grid;grid-template-columns:46px 1fr 110px 76px;gap:7px;align-items:center;border:1px solid rgba(255,255,255,.08);background:rgba(2,8,20,.24);border-radius:10px;padding:7px;font-size:11px}
+.road-score-row.ok{border-color:rgba(53,243,132,.28)}
+.road-score-row.no{opacity:.62}
+.road-score-badge{border:1px solid rgba(255,255,255,.14);border-radius:999px;padding:3px 6px;text-align:center;font-weight:900}
+.road-score-badge.ok{color:#dfffe9;border-color:rgba(53,243,132,.35)}
+.road-score-badge.no{color:#ffe2a5;border-color:rgba(255,195,77,.35)}
+
 @media(max-width:1260px){.header,.layout{grid-template-columns:1fr}.kpis{grid-template-columns:repeat(2,1fr)}.info-grid{grid-template-columns:1fr 1fr}}
 @media(max-width:760px){.app{padding:12px}.header,.info-grid,.kpis,.form-grid,.note-form,.note-grid{grid-template-columns:1fr}.quick,.actionbar{justify-content:flex-start}.toplink,.btn{width:100%;justify-content:flex-start}.object-head{grid-template-columns:58px 1fr}.status-zone{grid-column:1/-1}.kpi{grid-template-columns:58px 1fr}.spark{display:none}}
 @media print{body{background:white;color:#111}.quick,.actionbar,.familybar,.sidebar,.btn,.icon-btn,.modal,.toast{display:none!important}.app{max-width:none}.layout{grid-template-columns:1fr}.panel{box-shadow:none;border:1px solid #999;background:white;color:#111}.subcard{background:white}.pill{color:#111}}
@@ -636,7 +660,7 @@ textarea{resize:vertical;min-height:76px} input:focus,select:focus,textarea:focu
   <header class="header">
     <section class="brand">
       <div class="logo">BI</div>
-      <div><h1>Cockpit Projets BI</h1><p class="subtitle">V6.4W · liaison roadmap avancement corrigée</p></div>
+      <div><h1>Cockpit Projets BI</h1><p class="subtitle">V6.4X · diagnostic liaison roadmap</p></div>
     </section>
     <nav class="quick">
       <a class="toplink" id="projectGptLink" target="_blank" rel="noopener">
@@ -708,9 +732,9 @@ textarea{resize:vertical;min-height:76px} input:focus,select:focus,textarea:focu
 
 <script>
 'use strict';
-const VERSION='V6.4W-correction-liaison-roadmap-avancement';
+const VERSION='V6.4X-roadmap-score-diagnostic-liaison';
 const STABLE_KEY='central_bi_project_manager_current';
-const VERSION_KEY='central_bi_project_manager_v64w';
+const VERSION_KEY='central_bi_project_manager_v64x';
 const KEY=STABLE_KEY;
 const MIRROR_KEYS=[VERSION_KEY,'central_bi_project_manager_v61','central_bi_project_manager_v6'];
 const PREVIOUS_KEYS=[VERSION_KEY,'central_bi_project_manager_v61','central_bi_project_manager_v6','central_bi_project_manager_v5','central_bi_project_manager_v4','central_bi_project_manager_v1'];
@@ -1679,6 +1703,14 @@ function statusScore(status){
   if(s.includes('idée')||s.includes('idee')||s.includes('brouillon'))return 10;
   return 25;
 }
+
+function normKey(v){
+  return String(v||'')
+    .normalize('NFD').replace(/[\u0300-\u036f]/g,'')
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g,' ')
+    .trim();
+}
 function roadStatusScore(status){
   const s=normKey(status);
   if(s.includes('valide') || s.includes('termine') || s.includes('fait') || s.includes('done'))return 1;
@@ -1687,29 +1719,85 @@ function roadStatusScore(status){
   if(s.includes('bloque'))return .25;
   return 0;
 }
+function possibleProjectRefs(p){
+  if(!p)return [];
+  return [p.id,p.uid,p.key,p.slug,p.name,p.title,p.label,normKey(p.name),normKey(p.title),normKey(p.label)]
+    .filter(v=>v!==undefined&&v!==null&&String(v).trim()!=='').map(v=>String(v));
+}
+function possibleBlockProjectRefs(b){
+  if(!b)return [];
+  return [
+    b.projectId,b.project_id,b.project,b.projectKey,b.projectName,b.projectLabel,
+    b.parentProjectId,b.parentId,b.ownerProjectId,b.owner,
+    b.bi,b.biId,b.biName,b.scope,b.linkedProject,b.projectRef,b.refProject
+  ].filter(v=>v!==undefined&&v!==null&&String(v).trim()!=='').map(v=>String(v));
+}
+function roadBlockHasExplicitProjectRef(b){
+  return possibleBlockProjectRefs(b).length>0;
+}
+function textMentionsProject(b,p){
+  const pn=normKey(p.name||p.title||'');
+  if(!pn)return false;
+  const hay=normKey([b.title,b.name,b.text,b.description,b.notes,b.projectName,b.project,b.scope].join(' '));
+  return hay.includes(pn) || (hay.length>8 && pn.includes(hay));
+}
+function isCurrentProjectRoadBlock(b,p){
+  if(!b||!p)return false;
+  const pRefs=possibleProjectRefs(p);
+  const bRefs=possibleBlockProjectRefs(b);
+  if(pRefs.some(pr=>bRefs.some(br=>String(br)===String(pr))))return true;
+  if(pRefs.some(pr=>bRefs.some(br=>normKey(br)===normKey(pr))))return true;
+  if(textMentionsProject(b,p))return true;
+  if(Array.isArray(p.roadmapIds) && p.roadmapIds.map(String).includes(String(b.id)))return true;
+  if(Array.isArray(p.roadIds) && p.roadIds.map(String).includes(String(b.id)))return true;
+  return false;
+}
+function roadmapLinkMode(p,linked,all){
+  if(linked.length)return 'liens explicites détectés';
+  const explicitRefs=all.filter(roadBlockHasExplicitProjectRef).length;
+  if(all.length && explicitRefs===0)return 'fallback : roadmap globale sans champ projet';
+  if(all.length && normKey(p?.name).includes('bi gestion projets bi'))return 'fallback : projet cockpit actif';
+  return 'aucun lien fiable';
+}
 function projectRoadBlocks(projectId){
   const p=selected();
-  if(!Array.isArray(state.roadmap))return [];
-  let blocks=state.roadmap.filter(b=>isCurrentProjectRoadBlock(b,p));
-  // Compatibilité ancienne : si aucun lien explicite et qu'on est dans le projet actif principal,
-  // on prend les blocs roadmap non affectés comme appartenant au projet courant.
-  if(!blocks.length && p && normKey(p.name).includes('bi gestion projets bi')){
-    blocks=state.roadmap.filter(b=>{
-      const refs=possibleBlockProjectRefs(b);
-      return refs.length===0 || refs.every(x=>!String(x).trim());
-    });
-  }
-  // Dernier filet de sécurité : si un seul projet existe ou si la roadmap est clairement globale au cockpit,
-  // on ne laisse pas le score à 0 par absence de champ projectId.
-  if(!blocks.length && state.projects && state.projects.length<=1){
-    blocks=state.roadmap.slice();
-  }
-  return blocks;
+  const all=Array.isArray(state.roadmap)?state.roadmap:[];
+  if(!all.length)return [];
+  let linked=all.filter(b=>isCurrentProjectRoadBlock(b,p));
+  const mode=roadmapLinkMode(p,linked,all);
+  if(!linked.length && mode.includes('fallback')) linked=all.slice();
+  return linked;
+}
+function projectRoadBlocksDiagnostic(p){
+  const all=Array.isArray(state.roadmap)?state.roadmap:[];
+  const explicit=all.filter(b=>isCurrentProjectRoadBlock(b,p));
+  const mode=roadmapLinkMode(p,explicit,all);
+  const used=explicit.length?explicit:(mode.includes('fallback')?all:[]);
+  const usedIds=new Set(used.map(b=>String(b.id)));
+  return {all,explicit,used,mode,usedIds};
 }
 function roadBlockLinkDebug(p,blocks){
-  const total=Array.isArray(state.roadmap)?state.roadmap.length:0;
-  if(blocks.length)return `${blocks.length}/${total} blocs roadmap liés détectés`;
-  return `0/${total} bloc lié détecté · vérifie les champs projectId/projectName des blocs`;
+  const d=projectRoadBlocksDiagnostic(p);
+  if(blocks.length)return `${blocks.length}/${d.all.length} blocs roadmap pris en compte · ${d.mode}`;
+  return `0/${d.all.length} bloc pris en compte · ${d.mode}`;
+}
+function renderRoadmapScoreDiagnostic(p){
+  const d=projectRoadBlocksDiagnostic(p);
+  const rows=d.all.slice(0,40).map(b=>{
+    const used=d.usedIds.has(String(b.id));
+    const refs=possibleBlockProjectRefs(b).join(' · ') || 'aucune référence projet';
+    return `<div class="road-score-row ${used?'ok':'no'}">
+      <span class="road-score-badge ${used?'ok':'no'}">${used?'pris':'ignoré'}</span>
+      <div><b>${esc(b.title||b.name||'Bloc sans titre')}</b><br><small>${esc(refs)}</small></div>
+      <span>${esc(b.status||'—')}</span>
+      <span>${Math.round(roadStatusScore(b.status)*100)}%</span>
+    </div>`;
+  }).join('');
+  return `<div class="road-score-debug-panel">
+    <h4>Diagnostic liaison roadmap</h4>
+    <div class="progress-explain">Mode : <b>${esc(d.mode)}</b> · utilisés : <b>${d.used.length}/${d.all.length}</b>. Si les blocs n’ont aucun champ projet, le BI considère la roadmap comme globale pour ce cockpit.</div>
+    <div class="road-score-list">${rows||'<div class="muted">Aucun bloc roadmap dans state.roadmap.</div>'}</div>
+  </div>`;
 }
 function estimateDocumentationScore(p){
   let score=0, detail=[];
@@ -1778,6 +1866,7 @@ function renderProgressDetailTable(e){
     <tr><th>Facteur</th><th>Score</th><th>Poids</th><th>Contribution</th><th>Détail</th></tr>
     ${rows.map(r=>`<tr><td><b>${esc(r[0])}</b><br><small>${esc(r[5])}</small></td><td>${r[1]}%</td><td>${r[2]}%</td><td><b>${r[3]} pts</b></td><td>${esc(r[4])}</td></tr>`).join('')}
   </table>
+  ${renderRoadmapScoreDiagnostic(selected())}
   <div class="progress-formula">
     <b>Formule :</b> (${rows.map(r=>`${r[0]} ${r[1]}% × ${r[2]}%`).join(') + (')}) = <b>${e.final}%</b><br>
     Le score est un indicateur de pilotage. Le taux manuel reste disponible pour ajuster l’appréciation humaine.
