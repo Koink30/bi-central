@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>Cockpit Projets BI · V6.4P Données Sync réel</title>
+<title>Cockpit Projets BI · V6.4Q Sync local vs Drive</title>
 <style>
 :root{
   --bg:#030711;--bg2:#06112a;--panel:rgba(7,18,41,.82);--panel2:rgba(9,28,61,.72);
@@ -283,6 +283,11 @@ textarea{resize:vertical;min-height:76px} input:focus,select:focus,textarea:focu
 @media(max-width:1100px){.sync-grid{grid-template-columns:repeat(2,1fr)}.sync-two{grid-template-columns:1fr}}
 @media(max-width:760px){.sync-grid{grid-template-columns:1fr}}
 
+
+.sync-truth-warning{border:1px solid rgba(255,195,77,.45);background:rgba(255,195,77,.065);border-radius:16px;padding:12px;color:#ffe9b8}
+.sync-truth-warning b{color:#fff4cc}
+.sync-mini-note{font-size:11px;color:var(--muted);line-height:1.35;margin-top:5px}
+
 @media(max-width:1260px){.roadmap-board,.road-summary{grid-template-columns:repeat(2,1fr)}.road-form{grid-template-columns:1fr 1fr}}
 @media(max-width:760px){.roadmap-board,.road-summary,.road-form{grid-template-columns:1fr}}
 
@@ -442,6 +447,11 @@ textarea{resize:vertical;min-height:76px} input:focus,select:focus,textarea:focu
 @media(max-width:1100px){.sync-grid{grid-template-columns:repeat(2,1fr)}.sync-two{grid-template-columns:1fr}}
 @media(max-width:760px){.sync-grid{grid-template-columns:1fr}}
 
+
+.sync-truth-warning{border:1px solid rgba(255,195,77,.45);background:rgba(255,195,77,.065);border-radius:16px;padding:12px;color:#ffe9b8}
+.sync-truth-warning b{color:#fff4cc}
+.sync-mini-note{font-size:11px;color:var(--muted);line-height:1.35;margin-top:5px}
+
 @media(max-width:1260px){.header,.layout{grid-template-columns:1fr}.kpis{grid-template-columns:repeat(2,1fr)}.info-grid{grid-template-columns:1fr 1fr}}
 @media(max-width:760px){.app{padding:12px}.header,.info-grid,.kpis,.form-grid,.note-form,.note-grid{grid-template-columns:1fr}.quick,.actionbar{justify-content:flex-start}.toplink,.btn{width:100%;justify-content:flex-start}.object-head{grid-template-columns:58px 1fr}.status-zone{grid-column:1/-1}.kpi{grid-template-columns:58px 1fr}.spark{display:none}}
 @media print{body{background:white;color:#111}.quick,.actionbar,.familybar,.sidebar,.btn,.icon-btn,.modal,.toast{display:none!important}.app{max-width:none}.layout{grid-template-columns:1fr}.panel{box-shadow:none;border:1px solid #999;background:white;color:#111}.subcard{background:white}.pill{color:#111}}
@@ -452,7 +462,7 @@ textarea{resize:vertical;min-height:76px} input:focus,select:focus,textarea:focu
   <header class="header">
     <section class="brand">
       <div class="logo">BI</div>
-      <div><h1>Cockpit Projets BI</h1><p class="subtitle">V6.4P · données sync réel · diagnostic lisible</p></div>
+      <div><h1>Cockpit Projets BI</h1><p class="subtitle">V6.4Q · sync local vs Drive clarifié</p></div>
     </section>
     <nav class="quick">
       <a class="toplink" id="projectGptLink" target="_blank" rel="noopener">
@@ -524,9 +534,9 @@ textarea{resize:vertical;min-height:76px} input:focus,select:focus,textarea:focu
 
 <script>
 'use strict';
-const VERSION='V6.4P-donnees-sync-reel';
+const VERSION='V6.4Q-sync-local-vs-drive-clarifie';
 const STABLE_KEY='central_bi_project_manager_current';
-const VERSION_KEY='central_bi_project_manager_v64p';
+const VERSION_KEY='central_bi_project_manager_v64q';
 const KEY=STABLE_KEY;
 const MIRROR_KEYS=[VERSION_KEY,'central_bi_project_manager_v61','central_bi_project_manager_v6'];
 const PREVIOUS_KEYS=[VERSION_KEY,'central_bi_project_manager_v61','central_bi_project_manager_v6','central_bi_project_manager_v5','central_bi_project_manager_v4','central_bi_project_manager_v1'];
@@ -1269,6 +1279,19 @@ function bytesLabel(n){
   if(n<1024*1024)return (n/1024).toFixed(1)+' Ko';
   return (n/1024/1024).toFixed(2)+' Mo';
 }
+function fmtLocalDateTime(value){
+  if(!value || value==='—')return '—';
+  try{
+    const d=new Date(value);
+    if(isNaN(d.getTime()))return String(value);
+    return d.toLocaleString('fr-FR',{dateStyle:'short',timeStyle:'medium'});
+  }catch(e){return String(value)}
+}
+function fmtIsoInfo(value){
+  if(!value || value==='—')return '—';
+  return esc(String(value))+'<div class="sync-mini-note">Heure affichée convertie en heure locale navigateur. Drive peut afficher sa propre heure locale/modification serveur.</div>';
+}
+
 function storageSize(key){
   try{return (localStorage.getItem(key)||'').length}catch(e){return 0}
 }
@@ -1288,13 +1311,14 @@ function buildSyncDiagnostics(){
   const currentLocalSize=storageSize(CURRENT_KEY);
   const activeSize=storageSize(KEY);
   const lastSent=cfg.lastSent||'—';
+  const lastSentLocal=fmtLocalDateTime(lastSent);
   const lastMode=cfg.lastMode||'current';
   const selectedProject=selected();
   const hasProjects=Array.isArray(state.projects)&&state.projects.length>0;
   const currentSaved=!!localStorage.getItem(CURRENT_KEY);
   const lastAuto = typeof lastAutoSnapshotLabel==='function' ? lastAutoSnapshotLabel() : '—';
   const endpointDisplay=driveEndpointMasked(cfg.endpoint);
-  return {cfg,snaps,endpointOk,enabledOk,currentLocalSize,activeSize,lastSent,lastMode,selectedProject,hasProjects,currentSaved,lastAuto,endpointDisplay};
+  return {cfg,snaps,endpointOk,enabledOk,currentLocalSize,activeSize,lastSent,lastSentLocal,lastMode,selectedProject,hasProjects,currentSaved,lastAuto,endpointDisplay};
 }
 function renderRealSyncDashboard(){
   const d=buildSyncDiagnostics();
@@ -1302,13 +1326,17 @@ function renderRealSyncDashboard(){
   const driveOk=d.endpointOk && d.enabledOk;
   const snapshotOk=d.snaps.length<=SNAPSHOT_RETENTION_MAX;
   const selectedName=d.selectedProject?d.selectedProject.name:'—';
-  return `<div class="view-title"><h2>🟢 Données & sync réel</h2><span class="pill ${driveOk?'green':'orange'}">${driveOk?'Drive configuré':'Drive à vérifier'}</span></div>
+  return `<div class="view-title"><h2>🟢 Données & sync</h2><span class="pill ${driveOk?'green':'orange'}">${driveOk?'BI prêt à envoyer vers Drive':'Drive à vérifier'}</span></div>
   <section class="sync-dashboard">
+    <div class="sync-truth-warning">
+      <b>Lecture claire :</b> cette page affiche les informations connues par le BI local et les derniers envois demandés vers Drive.
+      Elle ne compte pas encore directement les fichiers présents dans le dossier Drive. Donc un compteur local peut différer du vrai nombre de fichiers Drive.
+    </div>
     <div class="sync-grid">
       <div class="sync-card ${d.hasProjects?'ok':'warn'}"><small>Projets réels</small><b>${state.projects.length}</b><small>Source : state.projects</small></div>
       <div class="sync-card ok"><small>Version BI</small><b>${esc(VERSION.replace('V6.4','6.4'))}</b><small>Source : constante VERSION</small></div>
-      <div class="sync-card ${currentOk?'ok':'warn'}"><small>État courant local</small><b>${bytesLabel(d.currentLocalSize)}</b><small>${currentOk?'CURRENT présent':'CURRENT non encore écrit'}</small></div>
-      <div class="sync-card ${snapshotOk?'ok':'warn'}"><small>Snapshots locaux</small><b>${d.snaps.length} / ${SNAPSHOT_RETENTION_MAX}</b><small>Rétention active</small></div>
+      <div class="sync-card ${currentOk?'ok':'warn'}"><small>CURRENT local</small><b>${bytesLabel(d.currentLocalSize)}</b><small>${currentOk?'CURRENT présent':'CURRENT non encore écrit'}</small></div>
+      <div class="sync-card ${snapshotOk?'ok':'warn'}"><small>Snapshots locaux BI</small><b>${d.snaps.length} / ${SNAPSHOT_RETENTION_MAX}</b><small>localStorage, pas Drive</small></div>
     </div>
 
     <div class="sync-two">
@@ -1321,7 +1349,7 @@ function renderRealSyncDashboard(){
           <tr><td>Clé état courant</td><td><span class="sync-code">${esc(CURRENT_KEY)}</span></td></tr>
           <tr><td>Taille état courant</td><td>${bytesLabel(d.currentLocalSize)}</td></tr>
           <tr><td>Projet sélectionné</td><td>${esc(selectedName)}</td></tr>
-          <tr><td>Dernière maj locale</td><td>${esc(state.updated||'—')}</td></tr>
+          <tr><td>Dernière maj locale BI</td><td>${fmtLocalDateTime(state.updated||'—')}<div class="sync-mini-note">Source : state.updated, convertie en heure locale navigateur.</div></td></tr>
         </table>
       </section>
 
@@ -1332,9 +1360,9 @@ function renderRealSyncDashboard(){
           <tr><td>Endpoint</td><td>${boolStatus(d.endpointOk,'renseigné','non renseigné')}<br><span class="sync-code">${esc(d.endpointDisplay)}</span></td></tr>
           <tr><td>Sync activée</td><td>${boolStatus(d.enabledOk,'activée','désactivée')}</td></tr>
           <tr><td>Dernier statut</td><td>${esc(d.cfg.lastStatus||'—')}</td></tr>
-          <tr><td>Dernier envoi</td><td>${esc(d.lastSent)}</td></tr>
+          <tr><td>Dernier envoi demandé par le BI</td><td>${esc(d.lastSentLocal)}<div class="sync-mini-note">Source : configuration locale du BI, pas date modifiée Drive.</div></td></tr>
           <tr><td>Dernier mode</td><td>${esc(d.lastMode)}</td></tr>
-          <tr><td>File courant Drive</td><td><span class="sync-code">${esc(CURRENT_SYNC_FILENAME)}</span></td></tr>
+          <tr><td>File courant Drive attendu</td><td><span class="sync-code">${esc(CURRENT_SYNC_FILENAME)}</span></td></tr><tr><td>Nombre fichiers Drive</td><td><span class="sync-status warn">● non lu par le BI</span><div class="sync-mini-note">À vérifier dans Drive ou via une future API diagnostic Apps Script.</div></td></tr>
         </table>
       </section>
     </div>
@@ -1343,15 +1371,15 @@ function renderRealSyncDashboard(){
       <h3>3. CURRENT vs SNAPSHOT</h3>
       <div class="snapshot-rule-grid">
         <div class="snapshot-rule-card"><b>CURRENT</b><small>Fichier vivant : il se remplace. Bouton : Envoyer état courant.</small></div>
-        <div class="snapshot-rule-card"><b>SNAPSHOT manuel</b><small>Point de restauration demandé volontairement.</small></div>
-        <div class="snapshot-rule-card"><b>SNAPSHOT auto</b><small>Déclenché sur passage en Validation ou Validé, anti-spam 15 min.</small></div>
+        <div class="snapshot-rule-card"><b>SNAPSHOT manuel</b><small>Point de restauration demandé volontairement, créé dans Drive seulement via bouton Drive.</small></div>
+        <div class="snapshot-rule-card"><b>SNAPSHOT auto</b><small>Demandé au Drive lors d’un passage Validation / Validé, anti-spam 15 min.</small></div>
       </div>
       <table class="sync-table" style="margin-top:10px">
         <tr><th>Info snapshot</th><th>Valeur réelle</th></tr>
-        <tr><td>Nombre local</td><td>${d.snaps.length}</td></tr>
+        <tr><td>Nombre snapshots locaux BI</td><td>${d.snaps.length}<div class="sync-mini-note">Ce nombre ne correspond pas forcément au nombre de fichiers dans Drive.</div></td></tr>
         <tr><td>Limite</td><td>${SNAPSHOT_RETENTION_MAX}</td></tr>
-        <tr><td>Dernier snapshot local</td><td>${esc(d.snaps[0]?.date||'—')} · ${esc(d.snaps[0]?.action||'')}</td></tr>
-        <tr><td>Dernier snapshot auto Drive</td><td>${esc(d.lastAuto)}</td></tr>
+        <tr><td>Dernier snapshot local BI</td><td>${fmtLocalDateTime(d.snaps[0]?.date||'—')} · ${esc(d.snaps[0]?.action||'')}</td></tr>
+        <tr><td>Dernier snapshot auto demandé</td><td>${esc(d.lastAuto)}<div class="sync-mini-note">Source : navigateur/localStorage, pas lecture directe du dossier Drive.</div></td></tr>
       </table>
     </section>
 
@@ -1376,7 +1404,7 @@ function renderRealSyncDashboard(){
         <tr><td>CURRENT local</td><td>${boolStatus(currentOk,'OK','à écrire')}</td></tr>
         <tr><td>Endpoint Drive</td><td>${boolStatus(d.endpointOk,'OK','à configurer')}</td></tr>
         <tr><td>Mode courant</td><td>${boolStatus(d.lastMode==='current'||d.lastMode==='snapshot','OK','inconnu')}</td></tr>
-        <tr><td>Rétention snapshots</td><td>${boolStatus(snapshotOk,'OK','à purger')}</td></tr>
+        <tr><td>Rétention snapshots locaux</td><td>${boolStatus(snapshotOk,'OK','à purger')}</td></tr><tr><td>Comptage fichiers Drive</td><td><span class="sync-status warn">● non disponible</span></td></tr>
       </table>
     </section>
   </section>`
