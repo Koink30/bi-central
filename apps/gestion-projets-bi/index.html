@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>Cockpit Projets BI · V6.5A Onglet liens externes</title>
+<title>Cockpit Projets BI · V6.5B Logo fichier / collage</title>
 <style>
 :root{
   --bg:#030711;--bg2:#06112a;--panel:rgba(7,18,41,.82);--panel2:rgba(9,28,61,.72);
@@ -449,6 +449,18 @@ textarea{resize:vertical;min-height:76px} input:focus,select:focus,textarea:focu
 @media(max-width:1250px){.links-hero-grid{grid-template-columns:repeat(3,minmax(0,1fr))}.links-workspace,.links-hero{grid-template-columns:1fr}}
 @media(max-width:760px){.links-hero-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.links-mini-stats{grid-template-columns:1fr 1fr}.link-config-grid{grid-template-columns:1fr}}
 
+
+/* V6.5B - logos par fichier / collage */
+.logo-tools{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+.logo-upload-input{display:none}
+.logo-dropzone{border:1px dashed rgba(255,255,255,.18);border-radius:14px;padding:12px;background:rgba(255,255,255,.025);color:#d6eefb;font-size:12px;line-height:1.4}
+.logo-dropzone b{color:#fff}
+.logo-preview-inline{margin-top:10px;display:flex;align-items:center;gap:12px}
+.logo-preview-inline .thumb{width:64px;height:64px;border-radius:16px;border:1px solid rgba(92,202,255,.25);background:rgba(37,142,255,.11);display:grid;place-items:center;overflow:hidden}
+.logo-preview-inline .thumb img{width:100%;height:100%;object-fit:cover}
+.logo-preview-inline .thumb span{font-size:28px}
+.logo-source-note{font-size:11px;color:var(--muted)}
+
 @media(max-width:1260px){.roadmap-board,.road-summary{grid-template-columns:repeat(2,1fr)}.road-form{grid-template-columns:1fr 1fr}}
 @media(max-width:760px){.roadmap-board,.road-summary,.road-form{grid-template-columns:1fr}}
 
@@ -774,6 +786,18 @@ textarea{resize:vertical;min-height:76px} input:focus,select:focus,textarea:focu
 @media(max-width:1250px){.links-hero-grid{grid-template-columns:repeat(3,minmax(0,1fr))}.links-workspace,.links-hero{grid-template-columns:1fr}}
 @media(max-width:760px){.links-hero-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.links-mini-stats{grid-template-columns:1fr 1fr}.link-config-grid{grid-template-columns:1fr}}
 
+
+/* V6.5B - logos par fichier / collage */
+.logo-tools{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+.logo-upload-input{display:none}
+.logo-dropzone{border:1px dashed rgba(255,255,255,.18);border-radius:14px;padding:12px;background:rgba(255,255,255,.025);color:#d6eefb;font-size:12px;line-height:1.4}
+.logo-dropzone b{color:#fff}
+.logo-preview-inline{margin-top:10px;display:flex;align-items:center;gap:12px}
+.logo-preview-inline .thumb{width:64px;height:64px;border-radius:16px;border:1px solid rgba(92,202,255,.25);background:rgba(37,142,255,.11);display:grid;place-items:center;overflow:hidden}
+.logo-preview-inline .thumb img{width:100%;height:100%;object-fit:cover}
+.logo-preview-inline .thumb span{font-size:28px}
+.logo-source-note{font-size:11px;color:var(--muted)}
+
 @media(max-width:1260px){.header,.layout{grid-template-columns:1fr}.kpis{grid-template-columns:repeat(2,1fr)}.info-grid{grid-template-columns:1fr 1fr}}
 @media(max-width:760px){.app{padding:12px}.header,.info-grid,.kpis,.form-grid,.note-form,.note-grid{grid-template-columns:1fr}.quick,.actionbar{justify-content:flex-start}.toplink,.btn{width:100%;justify-content:flex-start}.object-head{grid-template-columns:58px 1fr}.status-zone{grid-column:1/-1}.kpi{grid-template-columns:58px 1fr}.spark{display:none}}
 @media print{body{background:white;color:#111}.quick,.actionbar,.familybar,.sidebar,.btn,.icon-btn,.modal,.toast{display:none!important}.app{max-width:none}.layout{grid-template-columns:1fr}.panel{box-shadow:none;border:1px solid #999;background:white;color:#111}.subcard{background:white}.pill{color:#111}}
@@ -784,7 +808,7 @@ textarea{resize:vertical;min-height:76px} input:focus,select:focus,textarea:focu
   <header class="header">
     <section class="brand">
       <div class="logo">BI</div>
-      <div><h1>Cockpit Projets BI</h1><p class="subtitle">V6.5A · onglet liens externes premium</p></div>
+      <div><h1>Cockpit Projets BI</h1><p class="subtitle">V6.5B · logos par fichier ou collage</p></div>
     </section>
     <nav class="quick">
       <a class="toplink" id="projectGptLink" target="_blank" rel="noopener">
@@ -856,9 +880,9 @@ textarea{resize:vertical;min-height:76px} input:focus,select:focus,textarea:focu
 
 <script>
 'use strict';
-const VERSION='V6.5A-onglet-liens-externes-premium';
+const VERSION='V6.5B-logo-fichier-coller';
 const STABLE_KEY='central_bi_project_manager_current';
-const VERSION_KEY='central_bi_project_manager_v65a';
+const VERSION_KEY='central_bi_project_manager_v65b';
 const KEY=STABLE_KEY;
 const MIRROR_KEYS=[VERSION_KEY,'central_bi_project_manager_v61','central_bi_project_manager_v6'];
 const PREVIOUS_KEYS=[VERSION_KEY,'central_bi_project_manager_v61','central_bi_project_manager_v6','central_bi_project_manager_v5','central_bi_project_manager_v4','central_bi_project_manager_v1'];
@@ -2264,6 +2288,7 @@ function defaultLinkVisual(type){
   };
   return map[type]||'🔗';
 }
+
 function ensureProjectLinks(p){
   if(!p.links || !Array.isArray(p.links))p.links=[];
   const seeds=[
@@ -2277,7 +2302,7 @@ function ensureProjectLinks(p){
     if(url && !p.links.some(l=>String(l.url||'')===String(url))){
       p.links.push({
         id:uid(),type,title:type,url,note,
-        icon:defaultLinkVisual(type),logoUrl:'',
+        icon:defaultLinkVisual(type),logoUrl:'',logoDataUrl:'',
         created:nowFr(),updated:nowFr()
       });
     }
@@ -2285,15 +2310,23 @@ function ensureProjectLinks(p){
   p.links.forEach(l=>{
     if(l.icon===undefined || l.icon===null || l.icon==='') l.icon=defaultLinkVisual(l.type||'Autre');
     if(l.logoUrl===undefined) l.logoUrl='';
+    if(l.logoDataUrl===undefined) l.logoDataUrl='';
     if(l.buttonText===undefined) l.buttonText='';
   });
   if(!selectedLinkId && p.links[0]) selectedLinkId=p.links[0].id;
   return p.links;
 }
+function getLinkLogoSrc(l){
+  const data=String(l.logoDataUrl||'').trim();
+  if(data) return data;
+  const logo=String(l.logoUrl||'').trim();
+  if(logo) return safeUrl(logo);
+  return '';
+}
 function linkVisualMarkup(l, cls=''){
-  const logo = String(l.logoUrl||'').trim();
+  const logoSrc = getLinkLogoSrc(l);
   const icon = String(l.icon||defaultLinkVisual(l.type||'Autre')).trim();
-  return `<div class="${cls}">${logo?`<img src="${esc(safeUrl(logo))}" alt="">`:`<span class="txt">${esc(icon||'🔗')}</span>`}</div>`;
+  return `<div class="${cls}">${logoSrc?`<img src="${esc(logoSrc)}" alt="">`:`<span class="txt">${esc(icon||'🔗')}</span>`}</div>`;
 }
 function getSelectedProjectLink(p){
   const links=ensureProjectLinks(p);
@@ -2308,7 +2341,7 @@ function selectProjectLink(id){
 function addProjectLink(){
   const p=selected(); if(!p)return;
   ensureProjectLinks(p);
-  const item={id:uid(),type:'Autre',title:'Nouveau lien',url:'',note:'',icon:'🔗',logoUrl:'',buttonText:'',created:nowFr(),updated:nowFr()};
+  const item={id:uid(),type:'Autre',title:'Nouveau lien',url:'',note:'',icon:'🔗',logoUrl:'',logoDataUrl:'',buttonText:'',created:nowFr(),updated:nowFr()};
   p.links.unshift(item);
   selectedLinkId=item.id;
   persist('lien projet ajouté');
@@ -2334,10 +2367,54 @@ function updateProjectLink(id,field,value){
   const links=ensureProjectLinks(p);
   const l=links.find(x=>String(x.id)===String(id));
   if(!l)return;
+  const oldType=l.type;
   l[field]=value;
-  if(field==='type' && (!l.icon || l.icon===defaultLinkVisual(l.type||''))) l.icon=defaultLinkVisual(value);
+  if(field==='type' && (!l.icon || l.icon===defaultLinkVisual(oldType||''))) l.icon=defaultLinkVisual(value);
   l.updated=nowFr();
   persist('lien projet modifié');
+}
+function setProjectLinkLogoData(id,dataUrl){
+  const p=selected(); if(!p)return;
+  const l=ensureProjectLinks(p).find(x=>String(x.id)===String(id));
+  if(!l)return;
+  l.logoDataUrl=dataUrl||'';
+  l.updated=nowFr();
+  persist('logo lien importé');
+  renderAll();
+}
+function importProjectLinkLogoFile(input,id){
+  const file=input?.files?.[0];
+  if(!file) return;
+  if(!file.type || !file.type.startsWith('image/')){toast('Choisis une image'); return;}
+  const reader=new FileReader();
+  reader.onload=()=>{ setProjectLinkLogoData(id, String(reader.result||'')); toast('Logo importé'); };
+  reader.readAsDataURL(file);
+}
+function handleProjectLinkLogoPaste(event,id){
+  const items = event.clipboardData?.items || [];
+  for(const item of items){
+    if(item.type && item.type.startsWith('image/')){
+      event.preventDefault();
+      const file=item.getAsFile();
+      if(!file) return;
+      const reader=new FileReader();
+      reader.onload=()=>{ setProjectLinkLogoData(id, String(reader.result||'')); toast('Logo collé'); };
+      reader.readAsDataURL(file);
+      return;
+    }
+  }
+  toast('Aucune image détectée dans le collage');
+}
+function clearProjectLinkImage(id){
+  const p=selected(); if(!p)return;
+  const l=ensureProjectLinks(p).find(x=>String(x.id)===String(id));
+  if(!l)return;
+  l.logoDataUrl='';
+  l.logoUrl='';
+  l.updated=nowFr();
+  persist('logo lien vidé');
+  renderAll();
+  toast('Logo supprimé');
 }
 function deleteProjectLink(id){
   const p=selected(); if(!p)return;
@@ -2434,19 +2511,22 @@ function renderLinksWorkspace(){
     </div>
   </section>`;
 }
+
 function renderSelectedLinkConfig(l){
+  const logoSrc=getLinkLogoSrc(l);
+  const logoMode = String(l.logoDataUrl||'').trim() ? 'image importée / collée' : (String(l.logoUrl||'').trim() ? 'image par URL' : 'logo texte');
   return `<div>
     <div class="link-config-head"><h3>Fiche du lien sélectionné</h3><span class="pill green">${esc(l.type||'Autre')}</span></div>
     <section class="link-preview-stage">
       <div class="link-preview-title"><b>Aperçu du lien</b><button class="mini-btn" onclick="openProjectLink('${esc(l.id)}')">Ouvrir ↗</button></div>
       <a class="link-preview-btn" href="${esc(l.url?safeUrl(l.url):'#')}" ${l.url?'target="_blank" rel="noopener"':'onclick="return false"'} >
-        <span class="logo">${String(l.logoUrl||'').trim()?`<img src="${esc(safeUrl(l.logoUrl))}" alt="">`:`<span class="txt">${esc(l.icon||'🔗')}</span>`}</span>
+        <span class="logo">${logoSrc?`<img src="${esc(logoSrc)}" alt="">`:`<span class="txt">${esc(l.icon||'🔗')}</span>`}</span>
         <span>${esc(l.buttonText||l.title||'Ouvrir le lien')}</span>
       </a>
       <div class="link-preview-meta">
         <span class="link-badge">${esc(l.type||'Autre')}</span>
         <span class="link-badge">${l.url?'URL présente':'URL manquante'}</span>
-        <span class="link-badge">${String(l.logoUrl||'').trim()?'logo image':'logo texte'}</span>
+        <span class="link-badge">${esc(logoMode)}</span>
       </div>
     </section>
     <div class="link-config-grid">
@@ -2454,7 +2534,26 @@ function renderSelectedLinkConfig(l){
       <div><label>Icône / logo texte</label><input value="${esc(l.icon||'')}" oninput="updateProjectLink('${esc(l.id)}','icon',this.value)" placeholder="🔗 ou GH ou GPT"></div>
       <div class="full"><label>Titre / texte</label><input value="${esc(l.title||'')}" oninput="updateProjectLink('${esc(l.id)}','title',this.value)" placeholder="Titre du lien"></div>
       <div class="full"><label>URL</label><input value="${esc(l.url||'')}" oninput="updateProjectLink('${esc(l.id)}','url',this.value)" placeholder="https://..."></div>
-      <div class="full"><label>Logo image (URL)</label><input value="${esc(l.logoUrl||'')}" oninput="updateProjectLink('${esc(l.id)}','logoUrl',this.value)" placeholder="https://.../logo.png"></div>
+      <div class="full"><label>Logo image par URL (option)</label><input value="${esc(l.logoUrl||'')}" oninput="updateProjectLink('${esc(l.id)}','logoUrl',this.value)" placeholder="https://.../logo.png"></div>
+      <div class="full">
+        <label>Logo image par fichier / collage</label>
+        <div class="logo-tools">
+          <label class="mini-btn" for="logoUpload_${esc(l.id)}">📁 Choisir fichier</label>
+          <input class="logo-upload-input" id="logoUpload_${esc(l.id)}" type="file" accept="image/*" onchange="importProjectLinkLogoFile(this,'${esc(l.id)}')">
+          <button class="mini-btn" onclick="clearProjectLinkImage('${esc(l.id)}')">🗑 Vider image</button>
+        </div>
+        <div class="logo-dropzone" contenteditable="true" onpaste="handleProjectLinkLogoPaste(event,'${esc(l.id)}')">
+          <b>Zone de collage rapide</b><br>
+          Clique ici puis fais <b>Ctrl+V</b> après avoir copié une capture d’écran ou une image.
+        </div>
+        <div class="logo-preview-inline">
+          <div class="thumb">${logoSrc?`<img src="${esc(logoSrc)}" alt="">`:`<span>${esc(l.icon||'🔗')}</span>`}</div>
+          <div>
+            <div><b>Source active :</b> ${esc(logoMode)}</div>
+            <div class="logo-source-note">Le fichier ou collage est stocké directement dans le projet. L’URL logo reste disponible si tu préfères un lien web.</div>
+          </div>
+        </div>
+      </div>
       <div class="full"><label>Texte du bouton / libellé</label><input value="${esc(l.buttonText||'')}" oninput="updateProjectLink('${esc(l.id)}','buttonText',this.value)" placeholder="Ex. Ouvrir le repository"></div>
       <div class="full"><label>Note / usage</label><textarea oninput="updateProjectLink('${esc(l.id)}','note',this.value)" placeholder="Description, usage, précision">${esc(l.note||'')}</textarea></div>
     </div>
@@ -2465,6 +2564,7 @@ function renderSelectedLinkConfig(l){
     </div>
   </div>`;
 }
+
 function renderMainView(){
   const p=selected(), total=state.projects.length, active=state.projects.filter(p=>['En cours','Déployé','Validé','À tester'].includes(p.status)).length, avg=Math.round(state.projects.reduce((a,p)=>a+projectReadiness(p),0)/Math.max(1,total));
   let html='';
