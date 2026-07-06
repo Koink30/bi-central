@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>Cockpit Projets BI · V6.5E Versions GitHub détaillées</title>
+<title>Cockpit Projets BI · V6.5F Frise GitHub</title>
 <style>
 :root{
   --bg:#030711;--bg2:#06112a;--panel:rgba(7,18,41,.82);--panel2:rgba(9,28,61,.72);
@@ -522,6 +522,23 @@ textarea{resize:vertical;min-height:76px} input:focus,select:focus,textarea:focu
 .github-unclassified{border:1px solid rgba(255,195,77,.26);background:rgba(255,195,77,.045);border-radius:18px;padding:13px;margin-top:12px}
 .github-version-empty{border:1px dashed rgba(255,255,255,.16);border-radius:16px;padding:14px;color:var(--muted)}
 
+
+/* V6.5F - frise alimentée GitHub + temps publication */
+.pub-timeline{position:relative;padding-left:22px;display:grid;gap:12px}
+.pub-timeline:before{content:"";position:absolute;left:8px;top:5px;bottom:5px;width:2px;background:linear-gradient(var(--cyan),var(--violet),var(--green))}
+.pub-node{border:1px solid rgba(40,234,255,.25);background:linear-gradient(135deg,rgba(7,18,42,.78),rgba(14,7,38,.72));border-radius:18px;padding:13px;position:relative}
+.pub-node:before{content:"";position:absolute;left:-21px;top:18px;width:12px;height:12px;border-radius:50%;background:var(--cyan);box-shadow:0 0 14px rgba(40,234,255,.8)}
+.pub-node.github:before{background:var(--green);box-shadow:0 0 14px rgba(53,243,132,.8)}
+.pub-node.drive:before{background:var(--violet);box-shadow:0 0 14px rgba(180,93,255,.8)}
+.pub-node.road:before{background:var(--orange);box-shadow:0 0 14px rgba(255,195,77,.8)}
+.pub-node h4{margin:0 0 6px;color:#f5fbff;font-size:16px}
+.pub-meta{display:flex;gap:7px;flex-wrap:wrap;margin:7px 0}
+.pub-desc{font-size:12px;line-height:1.4;color:#cfe6f5;white-space:pre-wrap;margin:0}
+.pub-files-mini{display:flex;gap:5px;flex-wrap:wrap;margin-top:8px}
+.pub-file-chip{border:1px solid rgba(255,255,255,.10);background:rgba(255,255,255,.035);border-radius:999px;padding:3px 7px;font-size:10.5px;color:#d8fbff;max-width:260px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.worktime-pub-line{display:grid;grid-template-columns:1fr 80px 90px;gap:8px;border:1px solid rgba(255,255,255,.08);background:rgba(2,8,20,.25);border-radius:12px;padding:8px;font-size:12px;align-items:center}
+.worktime-pub-list{display:grid;gap:7px;margin-top:10px;max-height:280px;overflow:auto}
+
 @media(max-width:1260px){.roadmap-board,.road-summary{grid-template-columns:repeat(2,1fr)}.road-form{grid-template-columns:1fr 1fr}}
 @media(max-width:760px){.roadmap-board,.road-summary,.road-form{grid-template-columns:1fr}}
 
@@ -920,6 +937,23 @@ textarea{resize:vertical;min-height:76px} input:focus,select:focus,textarea:focu
 .github-unclassified{border:1px solid rgba(255,195,77,.26);background:rgba(255,195,77,.045);border-radius:18px;padding:13px;margin-top:12px}
 .github-version-empty{border:1px dashed rgba(255,255,255,.16);border-radius:16px;padding:14px;color:var(--muted)}
 
+
+/* V6.5F - frise alimentée GitHub + temps publication */
+.pub-timeline{position:relative;padding-left:22px;display:grid;gap:12px}
+.pub-timeline:before{content:"";position:absolute;left:8px;top:5px;bottom:5px;width:2px;background:linear-gradient(var(--cyan),var(--violet),var(--green))}
+.pub-node{border:1px solid rgba(40,234,255,.25);background:linear-gradient(135deg,rgba(7,18,42,.78),rgba(14,7,38,.72));border-radius:18px;padding:13px;position:relative}
+.pub-node:before{content:"";position:absolute;left:-21px;top:18px;width:12px;height:12px;border-radius:50%;background:var(--cyan);box-shadow:0 0 14px rgba(40,234,255,.8)}
+.pub-node.github:before{background:var(--green);box-shadow:0 0 14px rgba(53,243,132,.8)}
+.pub-node.drive:before{background:var(--violet);box-shadow:0 0 14px rgba(180,93,255,.8)}
+.pub-node.road:before{background:var(--orange);box-shadow:0 0 14px rgba(255,195,77,.8)}
+.pub-node h4{margin:0 0 6px;color:#f5fbff;font-size:16px}
+.pub-meta{display:flex;gap:7px;flex-wrap:wrap;margin:7px 0}
+.pub-desc{font-size:12px;line-height:1.4;color:#cfe6f5;white-space:pre-wrap;margin:0}
+.pub-files-mini{display:flex;gap:5px;flex-wrap:wrap;margin-top:8px}
+.pub-file-chip{border:1px solid rgba(255,255,255,.10);background:rgba(255,255,255,.035);border-radius:999px;padding:3px 7px;font-size:10.5px;color:#d8fbff;max-width:260px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.worktime-pub-line{display:grid;grid-template-columns:1fr 80px 90px;gap:8px;border:1px solid rgba(255,255,255,.08);background:rgba(2,8,20,.25);border-radius:12px;padding:8px;font-size:12px;align-items:center}
+.worktime-pub-list{display:grid;gap:7px;margin-top:10px;max-height:280px;overflow:auto}
+
 @media(max-width:1260px){.header,.layout{grid-template-columns:1fr}.kpis{grid-template-columns:repeat(2,1fr)}.info-grid{grid-template-columns:1fr 1fr}}
 @media(max-width:760px){.app{padding:12px}.header,.info-grid,.kpis,.form-grid,.note-form,.note-grid{grid-template-columns:1fr}.quick,.actionbar{justify-content:flex-start}.toplink,.btn{width:100%;justify-content:flex-start}.object-head{grid-template-columns:58px 1fr}.status-zone{grid-column:1/-1}.kpi{grid-template-columns:58px 1fr}.spark{display:none}}
 @media print{body{background:white;color:#111}.quick,.actionbar,.familybar,.sidebar,.btn,.icon-btn,.modal,.toast{display:none!important}.app{max-width:none}.layout{grid-template-columns:1fr}.panel{box-shadow:none;border:1px solid #999;background:white;color:#111}.subcard{background:white}.pill{color:#111}}
@@ -930,7 +964,7 @@ textarea{resize:vertical;min-height:76px} input:focus,select:focus,textarea:focu
   <header class="header">
     <section class="brand">
       <div class="logo">BI</div>
-      <div><h1>Cockpit Projets BI</h1><p class="subtitle">V6.5E · versions GitHub détaillées</p></div>
+      <div><h1>Cockpit Projets BI</h1><p class="subtitle">V6.5F · frise GitHub · temps publication</p></div>
     </section>
     <nav class="quick">
       <a class="toplink" id="projectGptLink" target="_blank" rel="noopener">
@@ -1002,9 +1036,9 @@ textarea{resize:vertical;min-height:76px} input:focus,select:focus,textarea:focu
 
 <script>
 'use strict';
-const VERSION='V6.5E-versions-github-detaillees';
+const VERSION='V6.5F-frise-github-temps-publication';
 const STABLE_KEY='central_bi_project_manager_current';
-const VERSION_KEY='central_bi_project_manager_v65e';
+const VERSION_KEY='central_bi_project_manager_v65f';
 const KEY=STABLE_KEY;
 const MIRROR_KEYS=[VERSION_KEY,'central_bi_project_manager_v61','central_bi_project_manager_v6'];
 const PREVIOUS_KEYS=[VERSION_KEY,'central_bi_project_manager_v61','central_bi_project_manager_v6','central_bi_project_manager_v5','central_bi_project_manager_v4','central_bi_project_manager_v1'];
@@ -2913,30 +2947,102 @@ function renderExternalVersionHistory(){
   </section>`;
 }
 
+
+function getGithubVersionEvents(){
+  const gh=externalVersionHistory.github||[];
+  const g=groupedGitHubVersions ? groupedGitHubVersions() : {groups:{},unclassified:[]};
+  const events=[];
+  Object.keys(g.groups||{}).forEach(version=>{
+    const commits=g.groups[version]||[];
+    const first=commits[0]||{};
+    const files=[];
+    commits.forEach(c=>(c.files||[]).forEach(f=>files.push(f)));
+    events.push({
+      source:'github',
+      type:'Publication GitHub',
+      version,
+      title:`${version} · ${first.title||'Version publiée'}`,
+      date:first.date||'',
+      sha:first.sha||'',
+      author:first.author||'',
+      url:first.url||'',
+      text:first.description||first.text||'',
+      files,
+      additions:commits.reduce((a,c)=>a+(c.stats?.additions||0),0),
+      deletions:commits.reduce((a,c)=>a+(c.stats?.deletions||0),0),
+      commitCount:commits.length
+    });
+  });
+  return events;
+}
+function getDriveVersionEvents(){
+  return (externalVersionHistory.drive||[]).map(f=>({
+    source:'drive',
+    type:'Drive / snapshot',
+    version:versionFromFilename ? (versionFromFilename(f.title)||'Drive') : 'Drive',
+    title:f.title||'Fichier Drive',
+    date:f.date||'',
+    text:f.text||'',
+    url:f.url||'',
+    files:[]
+  }));
+}
+function getRoadmapTimelineEvents(p){
+  return (p.roadmapBlocks||[]).map(b=>({
+    source:'road',
+    type:'Bloc roadmap',
+    version:'',
+    title:b.title||'Bloc roadmap',
+    date:b.updated||b.created||'',
+    text:`${b.status||'—'} · ${(b.text||'').slice(0,260)}`,
+    status:b.status||''
+  }));
+}
+function getUnifiedVersionTimeline(p){
+  const events=[...getGithubVersionEvents(),...getDriveVersionEvents(),...getRoadmapTimelineEvents(p)];
+  return events.sort((a,b)=>String(b.date||'').localeCompare(String(a.date||'')));
+}
+function renderUnifiedVersionTimeline(p){
+  const events=getUnifiedVersionTimeline(p);
+  return `<div class="pub-timeline">
+    ${events.map(e=>`<article class="pub-node ${esc(e.source)}">
+      <h4>${esc(e.title)}</h4>
+      <div class="pub-meta">
+        <span class="link-badge">${esc(e.type)}</span>
+        ${e.version?`<span class="link-badge">${esc(e.version)}</span>`:''}
+        ${e.sha?`<span class="link-badge">sha ${esc(e.sha)}</span>`:''}
+        ${e.commitCount?`<span class="link-badge">${e.commitCount} commit(s)</span>`:''}
+        ${e.date?`<span class="link-badge">${esc(String(e.date).slice(0,16).replace('T',' '))}</span>`:''}
+        ${e.url?`<a class="link-mini" href="${esc(e.url)}" target="_blank" rel="noopener">ouvrir</a>`:''}
+      </div>
+      <p class="pub-desc">${esc((e.text||'').slice(0,520))}</p>
+      ${(e.files||[]).length?`<div class="pub-files-mini">${(e.files||[]).slice(0,12).map(f=>`<span class="pub-file-chip">${esc(f.status||'mod')} · ${esc(f.filename||'fichier')}</span>`).join('')}</div>`:''}
+    </article>`).join('') || '<div class="github-version-empty">Aucune donnée de frise. Interroge GitHub ou Drive, ou renseigne des blocs roadmap.</div>'}
+  </div>`;
+}
+function getPublicationWorktime(){
+  const gh=getGithubVersionEvents();
+  const dr=getDriveVersionEvents();
+  return {githubPubs:gh.length,drivePubs:dr.length,events:[...gh,...dr]};
+}
 function renderVersionsTimeline(){
   const p=selected();
-  const versions=getProjectVersions(p);
-  const road=p.roadmapBlocks||[];
-  return `<div class="view-title"><h2>🕒 Versions / frise</h2><span class="pill">${versions.length} local · ${(externalVersionHistory.github||[]).length} GitHub · ${(externalVersionHistory.drive||[]).length} Drive</span></div>
-  <section class="summary-wide">
-    <div class="summary-panel">
-      <h3>Frise versions locales</h3>
-      <p class="muted">Versions détectées dans les notes et blocs du projet. Pour l’historique complet, interroge GitHub ou Drive ci-dessous.</p>
-      <div class="timeline-version">
-        ${versions.map(v=>`<div class="version-node"><h4>${esc(v.title)}</h4><p><b>${esc(v.date||'date non renseignée')}</b><br>${esc((v.text||'').slice(0,260))}</p></div>`).join('')||'<p class="muted">Aucune version locale détectée dans les notes ou blocs.</p>'}
-      </div>
+  const events=getUnifiedVersionTimeline(p);
+  return `<div class="view-title"><h2>🕒 Versions / frise</h2><span class="pill">${events.length} événement(s)</span></div>
+  <section class="summary-panel">
+    <h3>Frise unifiée publications & blocs</h3>
+    <p class="muted">La frise est alimentée par les versions GitHub détectées, les fichiers/snapshots Drive repris du diagnostic, et les blocs roadmap. La frise locale issue des notes est supprimée pour éviter le bruit.</p>
+    <div class="version-tools">
+      <button class="mini-btn" onclick="fetchGitHubVersionHistory()">⚫ Mettre à jour GitHub</button>
+      <button class="mini-btn" onclick="loadDriveVersionHistoryFromDiagnostic()">🟢 Reprendre Drive diagnostic</button>
+      <button class="mini-btn" onclick="activeMain='worktime';renderAll()">⏱ Voir Temps BI</button>
     </div>
-    <div class="summary-panel">
-      <h3>Frise des blocs roadmap</h3>
-      <div class="timeline-version">
-        ${road.map(b=>`<div class="version-node"><h4>${esc(b.title||'Bloc')}</h4><p><b>${esc(b.status||'—')}</b> · ${esc(b.updated||b.created||'')}<br>${esc((b.text||'').slice(0,220))}</p></div>`).join('')||'<p class="muted">Aucun bloc roadmap.</p>'}
-      </div>
-    </div>
+    ${renderUnifiedVersionTimeline(p)}
   </section>
   ${renderExternalVersionHistory()}`;
 }
 function workTimeSettings(){
-  try{return Object.assign({minutesPerVersion:35,minutesPerBlock:20,minutesPerNote:8,minutesPerSnapshot:4},JSON.parse(localStorage.getItem('bi_central_worktime_settings')||'{}'))}catch(e){return {minutesPerVersion:35,minutesPerBlock:20,minutesPerNote:8,minutesPerSnapshot:4}}
+  try{return Object.assign({minutesPerVersion:35,minutesPerBlock:20,minutesPerNote:8,minutesPerSnapshot:4,minutesPerGithubPublication:45,minutesPerDrivePublication:12},JSON.parse(localStorage.getItem('bi_central_worktime_settings')||'{}'))}catch(e){return {minutesPerVersion:35,minutesPerBlock:20,minutesPerNote:8,minutesPerSnapshot:4,minutesPerGithubPublication:45,minutesPerDrivePublication:12}}
 }
 function setWorkTimeSetting(k,v){const s=workTimeSettings();s[k]=Number(v)||0;localStorage.setItem('bi_central_worktime_settings',JSON.stringify(s));renderAll()}
 function renderWorkTimeCalculator(){
@@ -2945,27 +3051,39 @@ function renderWorkTimeCalculator(){
   const blocks=(p.roadmapBlocks||[]).length;
   const notes=(p.notes||[]).length;
   const snaps=getSnapshots().length;
-  const minutes=versions*s.minutesPerVersion + blocks*s.minutesPerBlock + notes*s.minutesPerNote + snaps*s.minutesPerSnapshot;
+  const pubs=getPublicationWorktime();
+  const githubPubMin=pubs.githubPubs*s.minutesPerGithubPublication;
+  const drivePubMin=pubs.drivePubs*s.minutesPerDrivePublication;
+  const minutes=versions*s.minutesPerVersion + blocks*s.minutesPerBlock + notes*s.minutesPerNote + snaps*s.minutesPerSnapshot + githubPubMin + drivePubMin;
   const hours=(minutes/60).toFixed(1);
-  return `<div class="view-title"><h2>⏱ Temps BI</h2><span class="pill orange">estimation</span></div>
+  return `<div class="view-title"><h2>⏱ Temps BI</h2><span class="pill orange">estimation enrichie</span></div>
   <section class="summary-panel">
     <h3>Calculateur temps de travail estimé</h3>
-    <p class="muted">Ce calcul donne un ordre de grandeur à partir de l’historique interne : versions détectées, blocs roadmap, notes et snapshots locaux. Ce n’est pas un chronomètre réel.</p>
+    <p class="muted">Le calcul intègre désormais les heures de publication : versions GitHub détectées et éléments Drive repris du diagnostic. Plus l’historique externe est chargé, plus l’estimation est réaliste.</p>
     <div class="worktime-grid">
-      <div class="worktime-card"><small>Versions détectées</small><b>${versions}</b><small>${s.minutesPerVersion} min / version</small></div>
+      <div class="worktime-card"><small>Versions locales</small><b>${versions}</b><small>${s.minutesPerVersion} min / version</small></div>
       <div class="worktime-card"><small>Blocs roadmap</small><b>${blocks}</b><small>${s.minutesPerBlock} min / bloc</small></div>
       <div class="worktime-card"><small>Notes projet</small><b>${notes}</b><small>${s.minutesPerNote} min / note</small></div>
       <div class="worktime-card"><small>Snapshots locaux</small><b>${snaps}</b><small>${s.minutesPerSnapshot} min / snapshot</small></div>
+      <div class="worktime-card"><small>Publications GitHub</small><b>${pubs.githubPubs}</b><small>${s.minutesPerGithubPublication} min / publication</small></div>
+      <div class="worktime-card"><small>Publications Drive</small><b>${pubs.drivePubs}</b><small>${s.minutesPerDrivePublication} min / fichier</small></div>
+      <div class="worktime-card"><small>Temps publication</small><b>${((githubPubMin+drivePubMin)/60).toFixed(1)} h</b><small>${githubPubMin+drivePubMin} min</small></div>
+      <div class="worktime-card"><small>Total estimé</small><b>${hours} h</b><small>${minutes} min</small></div>
     </div>
-    <div class="summary-card" style="margin-bottom:12px"><small>Total estimé</small><b>${hours} h</b><small>${minutes} minutes estimées</small></div>
     <h3>Paramètres de calcul</h3>
     <div class="worktime-settings">
-      <div><label>Min / version</label><input type="number" value="${s.minutesPerVersion}" onchange="setWorkTimeSetting('minutesPerVersion',this.value)"></div>
+      <div><label>Min / version locale</label><input type="number" value="${s.minutesPerVersion}" onchange="setWorkTimeSetting('minutesPerVersion',this.value)"></div>
       <div><label>Min / bloc</label><input type="number" value="${s.minutesPerBlock}" onchange="setWorkTimeSetting('minutesPerBlock',this.value)"></div>
       <div><label>Min / note</label><input type="number" value="${s.minutesPerNote}" onchange="setWorkTimeSetting('minutesPerNote',this.value)"></div>
-      <div><label>Min / snapshot</label><input type="number" value="${s.minutesPerSnapshot}" onchange="setWorkTimeSetting('minutesPerSnapshot',this.value)"></div>
+      <div><label>Min / snapshot local</label><input type="number" value="${s.minutesPerSnapshot}" onchange="setWorkTimeSetting('minutesPerSnapshot',this.value)"></div>
+      <div><label>Min / publication GitHub</label><input type="number" value="${s.minutesPerGithubPublication}" onchange="setWorkTimeSetting('minutesPerGithubPublication',this.value)"></div>
+      <div><label>Min / fichier Drive</label><input type="number" value="${s.minutesPerDrivePublication}" onchange="setWorkTimeSetting('minutesPerDrivePublication',this.value)"></div>
     </div>
-    <div class="worktime-note"><b>Piste future :</b> ajouter un vrai journal d’activité : ouverture BI, sauvegarde, création bloc, validation, publication GitHub, snapshot Drive. Cela permettrait de passer d’une estimation à une mesure semi-réelle.</div>
+    <h3>Détail publications prises dans le calcul</h3>
+    <div class="worktime-pub-list">
+      ${pubs.events.map(e=>`<div class="worktime-pub-line"><b>${esc(e.title)}</b><span>${esc(e.source)}</span><span>${e.source==='github'?s.minutesPerGithubPublication:s.minutesPerDrivePublication} min</span></div>`).join('')||'<p class="muted">Aucune publication externe chargée. Lance la mise à jour GitHub ou Drive dans l’onglet Versions.</p>'}
+    </div>
+    <div class="worktime-note" style="margin-top:12px"><b>Piste future :</b> enregistrer automatiquement l’heure de début/fin de session dans le BI pour passer d’une estimation à un journal semi-réel de production.</div>
   </section>`;
 }
 function renderMainView(){
