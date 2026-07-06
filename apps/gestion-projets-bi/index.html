@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>Cockpit Projets BI · V6.4O Correction saisie roadmap</title>
+<title>Cockpit Projets BI · V6.4P Données Sync réel</title>
 <style>
 :root{
   --bg:#030711;--bg2:#06112a;--panel:rgba(7,18,41,.82);--panel2:rgba(9,28,61,.72);
@@ -257,6 +257,32 @@ textarea{resize:vertical;min-height:76px} input:focus,select:focus,textarea:focu
 
 .input-safe-badge{display:inline-flex;gap:6px;align-items:center;border:1px solid rgba(53,243,132,.42);background:rgba(53,243,132,.06);border-radius:999px;padding:6px 9px;font-size:12px;font-weight:950;color:#dfffe9}
 
+
+/* V6.4P - Données / Sync réel & lisible */
+.sync-dashboard{display:grid;gap:12px}
+.sync-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+.sync-card{border:1px solid rgba(80,178,255,.24);background:rgba(5,15,35,.58);border-radius:16px;padding:12px;min-height:104px;position:relative;overflow:hidden}
+.sync-card:after{content:"";position:absolute;right:-34px;top:-34px;width:94px;height:94px;border-radius:50%;background:radial-gradient(circle,rgba(40,234,255,.12),transparent 68%);pointer-events:none}
+.sync-card b{display:block;font-size:22px;color:#f5fbff;margin:3px 0}
+.sync-card small{display:block;color:var(--muted);line-height:1.35}
+.sync-card.ok{border-color:rgba(53,243,132,.38)}
+.sync-card.warn{border-color:rgba(255,195,77,.46)}
+.sync-card.bad{border-color:rgba(255,100,114,.48)}
+.sync-section{border:1px solid rgba(80,178,255,.22);background:rgba(2,8,20,.26);border-radius:18px;padding:14px}
+.sync-section h3{margin:0 0 10px;color:#8efaff}
+.sync-table{width:100%;border-collapse:collapse;font-size:12px}
+.sync-table td,.sync-table th{border-bottom:1px solid rgba(255,255,255,.075);padding:8px;text-align:left;vertical-align:top}
+.sync-table th{color:#8efaff;text-transform:uppercase;font-size:11px;letter-spacing:.04em}
+.sync-status{display:inline-flex;align-items:center;gap:6px;border-radius:999px;padding:5px 8px;border:1px solid rgba(255,255,255,.14);font-size:12px;font-weight:950}
+.sync-status.ok{border-color:rgba(53,243,132,.42);color:#dfffe9;background:rgba(53,243,132,.06)}
+.sync-status.warn{border-color:rgba(255,195,77,.45);color:#ffe2a5;background:rgba(255,195,77,.06)}
+.sync-status.bad{border-color:rgba(255,100,114,.45);color:#ffd5da;background:rgba(255,100,114,.06)}
+.sync-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.sync-code{font-family:ui-monospace,SFMono-Regular,Consolas,monospace;font-size:11px;color:#d8fbff;word-break:break-all}
+.sync-two{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media(max-width:1100px){.sync-grid{grid-template-columns:repeat(2,1fr)}.sync-two{grid-template-columns:1fr}}
+@media(max-width:760px){.sync-grid{grid-template-columns:1fr}}
+
 @media(max-width:1260px){.roadmap-board,.road-summary{grid-template-columns:repeat(2,1fr)}.road-form{grid-template-columns:1fr 1fr}}
 @media(max-width:760px){.roadmap-board,.road-summary,.road-form{grid-template-columns:1fr}}
 
@@ -390,6 +416,32 @@ textarea{resize:vertical;min-height:76px} input:focus,select:focus,textarea:focu
 
 .input-safe-badge{display:inline-flex;gap:6px;align-items:center;border:1px solid rgba(53,243,132,.42);background:rgba(53,243,132,.06);border-radius:999px;padding:6px 9px;font-size:12px;font-weight:950;color:#dfffe9}
 
+
+/* V6.4P - Données / Sync réel & lisible */
+.sync-dashboard{display:grid;gap:12px}
+.sync-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+.sync-card{border:1px solid rgba(80,178,255,.24);background:rgba(5,15,35,.58);border-radius:16px;padding:12px;min-height:104px;position:relative;overflow:hidden}
+.sync-card:after{content:"";position:absolute;right:-34px;top:-34px;width:94px;height:94px;border-radius:50%;background:radial-gradient(circle,rgba(40,234,255,.12),transparent 68%);pointer-events:none}
+.sync-card b{display:block;font-size:22px;color:#f5fbff;margin:3px 0}
+.sync-card small{display:block;color:var(--muted);line-height:1.35}
+.sync-card.ok{border-color:rgba(53,243,132,.38)}
+.sync-card.warn{border-color:rgba(255,195,77,.46)}
+.sync-card.bad{border-color:rgba(255,100,114,.48)}
+.sync-section{border:1px solid rgba(80,178,255,.22);background:rgba(2,8,20,.26);border-radius:18px;padding:14px}
+.sync-section h3{margin:0 0 10px;color:#8efaff}
+.sync-table{width:100%;border-collapse:collapse;font-size:12px}
+.sync-table td,.sync-table th{border-bottom:1px solid rgba(255,255,255,.075);padding:8px;text-align:left;vertical-align:top}
+.sync-table th{color:#8efaff;text-transform:uppercase;font-size:11px;letter-spacing:.04em}
+.sync-status{display:inline-flex;align-items:center;gap:6px;border-radius:999px;padding:5px 8px;border:1px solid rgba(255,255,255,.14);font-size:12px;font-weight:950}
+.sync-status.ok{border-color:rgba(53,243,132,.42);color:#dfffe9;background:rgba(53,243,132,.06)}
+.sync-status.warn{border-color:rgba(255,195,77,.45);color:#ffe2a5;background:rgba(255,195,77,.06)}
+.sync-status.bad{border-color:rgba(255,100,114,.45);color:#ffd5da;background:rgba(255,100,114,.06)}
+.sync-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.sync-code{font-family:ui-monospace,SFMono-Regular,Consolas,monospace;font-size:11px;color:#d8fbff;word-break:break-all}
+.sync-two{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media(max-width:1100px){.sync-grid{grid-template-columns:repeat(2,1fr)}.sync-two{grid-template-columns:1fr}}
+@media(max-width:760px){.sync-grid{grid-template-columns:1fr}}
+
 @media(max-width:1260px){.header,.layout{grid-template-columns:1fr}.kpis{grid-template-columns:repeat(2,1fr)}.info-grid{grid-template-columns:1fr 1fr}}
 @media(max-width:760px){.app{padding:12px}.header,.info-grid,.kpis,.form-grid,.note-form,.note-grid{grid-template-columns:1fr}.quick,.actionbar{justify-content:flex-start}.toplink,.btn{width:100%;justify-content:flex-start}.object-head{grid-template-columns:58px 1fr}.status-zone{grid-column:1/-1}.kpi{grid-template-columns:58px 1fr}.spark{display:none}}
 @media print{body{background:white;color:#111}.quick,.actionbar,.familybar,.sidebar,.btn,.icon-btn,.modal,.toast{display:none!important}.app{max-width:none}.layout{grid-template-columns:1fr}.panel{box-shadow:none;border:1px solid #999;background:white;color:#111}.subcard{background:white}.pill{color:#111}}
@@ -400,7 +452,7 @@ textarea{resize:vertical;min-height:76px} input:focus,select:focus,textarea:focu
   <header class="header">
     <section class="brand">
       <div class="logo">BI</div>
-      <div><h1>Cockpit Projets BI</h1><p class="subtitle">V6.4O · saisie stable · anti re-render</p></div>
+      <div><h1>Cockpit Projets BI</h1><p class="subtitle">V6.4P · données sync réel · diagnostic lisible</p></div>
     </section>
     <nav class="quick">
       <a class="toplink" id="projectGptLink" target="_blank" rel="noopener">
@@ -472,9 +524,9 @@ textarea{resize:vertical;min-height:76px} input:focus,select:focus,textarea:focu
 
 <script>
 'use strict';
-const VERSION='V6.4O-correction-saisie-roadmap';
+const VERSION='V6.4P-donnees-sync-reel';
 const STABLE_KEY='central_bi_project_manager_current';
-const VERSION_KEY='central_bi_project_manager_v64o';
+const VERSION_KEY='central_bi_project_manager_v64p';
 const KEY=STABLE_KEY;
 const MIRROR_KEYS=[VERSION_KEY,'central_bi_project_manager_v61','central_bi_project_manager_v6'];
 const PREVIOUS_KEYS=[VERSION_KEY,'central_bi_project_manager_v61','central_bi_project_manager_v6','central_bi_project_manager_v5','central_bi_project_manager_v4','central_bi_project_manager_v1'];
@@ -1210,6 +1262,125 @@ async function exportRoadmapPrompt(){
   const txt=buildRoadmapPrompt();
   try{await navigator.clipboard.writeText(txt);toast('Prompt roadmap copié')}catch(e){const blob=new Blob([txt],{type:'text/plain;charset=utf-8'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download='PROMPT_ROADMAP_'+selected().name.replace(/[^a-z0-9]+/gi,'_')+'_'+today()+'.txt';a.click();URL.revokeObjectURL(url);toast('Prompt téléchargé')}
 }
+
+function bytesLabel(n){
+  n=Number(n)||0;
+  if(n<1024)return n+' o';
+  if(n<1024*1024)return (n/1024).toFixed(1)+' Ko';
+  return (n/1024/1024).toFixed(2)+' Mo';
+}
+function storageSize(key){
+  try{return (localStorage.getItem(key)||'').length}catch(e){return 0}
+}
+function boolStatus(ok,labelOk,labelBad){
+  return `<span class="sync-status ${ok?'ok':'warn'}">${ok?'●':'●'} ${esc(ok?labelOk:labelBad)}</span>`;
+}
+function driveEndpointMasked(endpoint){
+  if(!endpoint)return 'Non renseigné';
+  const s=String(endpoint);
+  return s.length>46?s.slice(0,32)+'…'+s.slice(-12):s;
+}
+function buildSyncDiagnostics(){
+  const cfg=getDriveConfig();
+  const snaps=getSnapshots();
+  const endpointOk=!!cfg.endpoint;
+  const enabledOk=!!cfg.enabled;
+  const currentLocalSize=storageSize(CURRENT_KEY);
+  const activeSize=storageSize(KEY);
+  const lastSent=cfg.lastSent||'—';
+  const lastMode=cfg.lastMode||'current';
+  const selectedProject=selected();
+  const hasProjects=Array.isArray(state.projects)&&state.projects.length>0;
+  const currentSaved=!!localStorage.getItem(CURRENT_KEY);
+  const lastAuto = typeof lastAutoSnapshotLabel==='function' ? lastAutoSnapshotLabel() : '—';
+  const endpointDisplay=driveEndpointMasked(cfg.endpoint);
+  return {cfg,snaps,endpointOk,enabledOk,currentLocalSize,activeSize,lastSent,lastMode,selectedProject,hasProjects,currentSaved,lastAuto,endpointDisplay};
+}
+function renderRealSyncDashboard(){
+  const d=buildSyncDiagnostics();
+  const currentOk=d.currentSaved && d.currentLocalSize>0;
+  const driveOk=d.endpointOk && d.enabledOk;
+  const snapshotOk=d.snaps.length<=SNAPSHOT_RETENTION_MAX;
+  const selectedName=d.selectedProject?d.selectedProject.name:'—';
+  return `<div class="view-title"><h2>🟢 Données & sync réel</h2><span class="pill ${driveOk?'green':'orange'}">${driveOk?'Drive configuré':'Drive à vérifier'}</span></div>
+  <section class="sync-dashboard">
+    <div class="sync-grid">
+      <div class="sync-card ${d.hasProjects?'ok':'warn'}"><small>Projets réels</small><b>${state.projects.length}</b><small>Source : state.projects</small></div>
+      <div class="sync-card ok"><small>Version BI</small><b>${esc(VERSION.replace('V6.4','6.4'))}</b><small>Source : constante VERSION</small></div>
+      <div class="sync-card ${currentOk?'ok':'warn'}"><small>État courant local</small><b>${bytesLabel(d.currentLocalSize)}</b><small>${currentOk?'CURRENT présent':'CURRENT non encore écrit'}</small></div>
+      <div class="sync-card ${snapshotOk?'ok':'warn'}"><small>Snapshots locaux</small><b>${d.snaps.length} / ${SNAPSHOT_RETENTION_MAX}</b><small>Rétention active</small></div>
+    </div>
+
+    <div class="sync-two">
+      <section class="sync-section">
+        <h3>1. Données locales vérifiables</h3>
+        <table class="sync-table">
+          <tr><th>Élément</th><th>Valeur réelle</th></tr>
+          <tr><td>Clé active</td><td><span class="sync-code">${esc(KEY)}</span></td></tr>
+          <tr><td>Taille clé active</td><td>${bytesLabel(d.activeSize)}</td></tr>
+          <tr><td>Clé état courant</td><td><span class="sync-code">${esc(CURRENT_KEY)}</span></td></tr>
+          <tr><td>Taille état courant</td><td>${bytesLabel(d.currentLocalSize)}</td></tr>
+          <tr><td>Projet sélectionné</td><td>${esc(selectedName)}</td></tr>
+          <tr><td>Dernière maj locale</td><td>${esc(state.updated||'—')}</td></tr>
+        </table>
+      </section>
+
+      <section class="sync-section">
+        <h3>2. Drive Sync réel</h3>
+        <table class="sync-table">
+          <tr><th>Élément</th><th>État</th></tr>
+          <tr><td>Endpoint</td><td>${boolStatus(d.endpointOk,'renseigné','non renseigné')}<br><span class="sync-code">${esc(d.endpointDisplay)}</span></td></tr>
+          <tr><td>Sync activée</td><td>${boolStatus(d.enabledOk,'activée','désactivée')}</td></tr>
+          <tr><td>Dernier statut</td><td>${esc(d.cfg.lastStatus||'—')}</td></tr>
+          <tr><td>Dernier envoi</td><td>${esc(d.lastSent)}</td></tr>
+          <tr><td>Dernier mode</td><td>${esc(d.lastMode)}</td></tr>
+          <tr><td>File courant Drive</td><td><span class="sync-code">${esc(CURRENT_SYNC_FILENAME)}</span></td></tr>
+        </table>
+      </section>
+    </div>
+
+    <section class="sync-section">
+      <h3>3. CURRENT vs SNAPSHOT</h3>
+      <div class="snapshot-rule-grid">
+        <div class="snapshot-rule-card"><b>CURRENT</b><small>Fichier vivant : il se remplace. Bouton : Envoyer état courant.</small></div>
+        <div class="snapshot-rule-card"><b>SNAPSHOT manuel</b><small>Point de restauration demandé volontairement.</small></div>
+        <div class="snapshot-rule-card"><b>SNAPSHOT auto</b><small>Déclenché sur passage en Validation ou Validé, anti-spam 15 min.</small></div>
+      </div>
+      <table class="sync-table" style="margin-top:10px">
+        <tr><th>Info snapshot</th><th>Valeur réelle</th></tr>
+        <tr><td>Nombre local</td><td>${d.snaps.length}</td></tr>
+        <tr><td>Limite</td><td>${SNAPSHOT_RETENTION_MAX}</td></tr>
+        <tr><td>Dernier snapshot local</td><td>${esc(d.snaps[0]?.date||'—')} · ${esc(d.snaps[0]?.action||'')}</td></tr>
+        <tr><td>Dernier snapshot auto Drive</td><td>${esc(d.lastAuto)}</td></tr>
+      </table>
+    </section>
+
+    <section class="sync-section">
+      <h3>4. Actions de test / validation</h3>
+      <p class="muted">Ces boutons agissent réellement sur le stockage local ou l’endpoint Drive configuré. Rien ici n’est simulé.</p>
+      <div class="sync-actions">
+        <button class="mini-btn" onclick="exportJson()">Export JSON local</button>
+        <button class="mini-btn" onclick="exportSnapshot()">Snapshot manuel local</button>
+        <button class="mini-btn" onclick="pruneSnapshots()">Limiter snapshots à ${SNAPSHOT_RETENTION_MAX}</button>
+        <button class="mini-btn" onclick="sendDriveSync('test courant depuis diagnostic',false,'current')">Envoyer CURRENT Drive</button>
+        <button class="mini-btn" onclick="sendDriveSnapshot()">Créer SNAPSHOT Drive</button>
+        <button class="mini-btn" onclick="forceAutoSnapshotDrive('snapshot auto test diagnostic')">Tester snapshot auto</button>
+      </div>
+    </section>
+
+    <section class="sync-section">
+      <h3>5. Diagnostic rapide</h3>
+      <table class="sync-table">
+        <tr><th>Contrôle</th><th>Résultat</th></tr>
+        <tr><td>LocalStorage actif</td><td>${boolStatus(d.activeSize>0,'OK','vide')}</td></tr>
+        <tr><td>CURRENT local</td><td>${boolStatus(currentOk,'OK','à écrire')}</td></tr>
+        <tr><td>Endpoint Drive</td><td>${boolStatus(d.endpointOk,'OK','à configurer')}</td></tr>
+        <tr><td>Mode courant</td><td>${boolStatus(d.lastMode==='current'||d.lastMode==='snapshot','OK','inconnu')}</td></tr>
+        <tr><td>Rétention snapshots</td><td>${boolStatus(snapshotOk,'OK','à purger')}</td></tr>
+      </table>
+    </section>
+  </section>`
+}
 function renderMainView(){
   const p=selected(), total=state.projects.length, active=state.projects.filter(p=>['En cours','Déployé','Validé','À tester'].includes(p.status)).length, avg=Math.round(state.projects.reduce((a,p)=>a+projectReadiness(p),0)/Math.max(1,total));
   let html='';
@@ -1219,21 +1390,8 @@ function renderMainView(){
   else if(activeMain==='roadmap'){html=renderRoadmapPilotable()}
   else if(activeMain==='deploy'){html=`<div class="view-title"><h2>🚀 Déploiement</h2><span class="pill green">GitHub Pages</span></div>${renderPilotageBoard()}<div class="subcard" style="min-height:auto"><p>Publication manuelle conservée : remplacer <b>apps/gestion-projets-bi/index.html</b>.</p><p><a href="${PUBLIC_ROOT}gestion-projets-bi/" target="_blank">Ouvrir la version publiée</a></p></div>`}
   else if(activeMain==='notes'){html=renderNotesModule()}
-  else if(activeMain==='data'){const cfg=getDriveConfig();html=`<div class="view-title"><h2>🟢 Données & sync</h2><span class="pill ${cfg.enabled?'green':'orange'}">${cfg.enabled?'Connecté':'À configurer'}</span></div>
-  <div class="snapshot-rule"><h3>Règle snapshots V6.4N</h3><div class="snapshot-rule-grid">
-    <div class="snapshot-rule-card"><b>État courant</b><small>Sauvegardé à chaque saisie dans un fichier unique CURRENT.</small></div>
-    <div class="snapshot-rule-card"><b>Snapshots</b><small>Auto sur Validation / Validé + manuel.</small></div>
-    <div class="snapshot-rule-card"><b>Rétention</b><small>${SNAPSHOT_RETENTION_MAX} derniers snapshots locaux et Drive via Apps Script V2.</small></div>
-  </div></div>
-  <div class="subcard" style="min-height:auto">
-    <p>Clé active : <b>${KEY}</b></p><p>État courant : <b>${CURRENT_KEY}</b></p><p>Snapshots locaux : <b>${getSnapshots().length} / ${SNAPSHOT_RETENTION_MAX}</b></p><p>Dernière sync : <b>${esc(cfg.lastSent||'—')}</b></p><p>Mode sync : <b>${esc(cfg.lastMode||'current')}</b></p><p>Dernier snapshot auto : <b>${lastAutoSnapshotLabel()}</b></p><span class="auto-snapshot-badge">Snapshot auto : Validation / Validé</span> <span class="input-safe-badge">Saisie protégée V6.4O</span><br><br>
-    <button class="mini-btn" onclick="exportJson()">Export JSON</button>
-    <button class="mini-btn" onclick="exportSnapshot()">Snapshot manuel</button>
-    <button class="mini-btn" onclick="pruneSnapshots()">Limiter à ${SNAPSHOT_RETENTION_MAX}</button>
-    <button class="mini-btn" onclick="sendDriveSync('manuel courant',false,'current')">Envoyer état courant</button>
-    <button class="mini-btn" onclick="sendDriveSnapshot()">Envoyer snapshot Drive</button><button class="mini-btn" onclick="forceAutoSnapshotDrive('snapshot auto test manuel')">Tester snapshot auto Drive</button>
-  </div>`}
-  else if(activeMain==='sources'){html=`<div class="view-title"><h2>🔗 Sources</h2><span class="pill">Drive / GitHub / GPT</span></div><div class="subcard" style="min-height:auto"><pre style="white-space:pre-wrap;color:#cfe6f5">${esc(JSON.stringify(p.sources||{},null,2))}</pre></div>`}
+  else if(activeMain==='data'){html=renderRealSyncDashboard()}
+else if(activeMain==='sources'){html=`<div class="view-title"><h2>🔗 Sources</h2><span class="pill">Drive / GitHub / GPT</span></div><div class="subcard" style="min-height:auto"><pre style="white-space:pre-wrap;color:#cfe6f5">${esc(JSON.stringify(p.sources||{},null,2))}</pre></div>`}
   $('mainView').innerHTML=html
 }
 function renderSidebar(){
