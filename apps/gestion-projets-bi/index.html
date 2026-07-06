@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>Cockpit Projets BI · V6.4S Drive réel modules</title>
+<title>Cockpit Projets BI · V6.4T Avancement estimé</title>
 <style>
 :root{
   --bg:#030711;--bg2:#06112a;--panel:rgba(7,18,41,.82);--panel2:rgba(9,28,61,.72);
@@ -309,6 +309,25 @@ textarea{resize:vertical;min-height:76px} input:focus,select:focus,textarea:focu
 .drive-real-inline{display:flex;gap:7px;flex-wrap:wrap;align-items:center;margin-top:8px}
 .drive-real-inline .pill{font-size:11px}
 
+
+/* V6.4T - Avancement estimé projet */
+.progress-estimate-panel{border:1px solid rgba(40,234,255,.30);background:linear-gradient(135deg,rgba(40,234,255,.065),rgba(180,93,255,.045));border-radius:18px;padding:14px;margin:10px 0}
+.progress-estimate-panel h3{margin:0 0 10px;color:#8efaff}
+.progress-score-big{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.progress-ring{width:118px;height:118px;border-radius:50%;display:grid;place-items:center;background:conic-gradient(rgba(40,234,255,.88) var(--pct),rgba(255,255,255,.08) 0);box-shadow:0 0 22px rgba(40,234,255,.18);position:relative}
+.progress-ring:before{content:"";position:absolute;inset:12px;border-radius:50%;background:rgba(3,8,18,.96);border:1px solid rgba(255,255,255,.10)}
+.progress-ring b{position:relative;font-size:25px;color:#f5fbff}
+.progress-breakdown{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin-top:10px}
+.progress-factor{border:1px solid rgba(255,255,255,.10);background:rgba(2,8,20,.34);border-radius:14px;padding:10px}
+.progress-factor b{display:block;font-size:18px;color:#fff}.progress-factor small{display:block;color:var(--muted);line-height:1.35}
+.progress-bar{height:8px;border-radius:999px;background:rgba(255,255,255,.08);overflow:hidden;margin:7px 0}
+.progress-bar span{display:block;height:100%;width:var(--w);background:linear-gradient(90deg,rgba(40,234,255,.9),rgba(53,243,132,.75))}
+.progress-explain{font-size:12px;color:var(--muted);line-height:1.45;margin-top:9px}
+.progress-mini{border:1px solid rgba(40,234,255,.22);background:rgba(40,234,255,.045);border-radius:13px;padding:9px;margin:8px 0}
+.progress-mini b{font-size:21px;color:#f5fbff}.progress-mini small{display:block;color:var(--muted)}
+@media(max-width:1100px){.progress-breakdown{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:720px){.progress-breakdown{grid-template-columns:1fr}.progress-ring{width:96px;height:96px}}
+
 @media(max-width:1260px){.roadmap-board,.road-summary{grid-template-columns:repeat(2,1fr)}.road-form{grid-template-columns:1fr 1fr}}
 @media(max-width:760px){.roadmap-board,.road-summary,.road-form{grid-template-columns:1fr}}
 
@@ -494,6 +513,25 @@ textarea{resize:vertical;min-height:76px} input:focus,select:focus,textarea:focu
 .drive-real-inline{display:flex;gap:7px;flex-wrap:wrap;align-items:center;margin-top:8px}
 .drive-real-inline .pill{font-size:11px}
 
+
+/* V6.4T - Avancement estimé projet */
+.progress-estimate-panel{border:1px solid rgba(40,234,255,.30);background:linear-gradient(135deg,rgba(40,234,255,.065),rgba(180,93,255,.045));border-radius:18px;padding:14px;margin:10px 0}
+.progress-estimate-panel h3{margin:0 0 10px;color:#8efaff}
+.progress-score-big{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.progress-ring{width:118px;height:118px;border-radius:50%;display:grid;place-items:center;background:conic-gradient(rgba(40,234,255,.88) var(--pct),rgba(255,255,255,.08) 0);box-shadow:0 0 22px rgba(40,234,255,.18);position:relative}
+.progress-ring:before{content:"";position:absolute;inset:12px;border-radius:50%;background:rgba(3,8,18,.96);border:1px solid rgba(255,255,255,.10)}
+.progress-ring b{position:relative;font-size:25px;color:#f5fbff}
+.progress-breakdown{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin-top:10px}
+.progress-factor{border:1px solid rgba(255,255,255,.10);background:rgba(2,8,20,.34);border-radius:14px;padding:10px}
+.progress-factor b{display:block;font-size:18px;color:#fff}.progress-factor small{display:block;color:var(--muted);line-height:1.35}
+.progress-bar{height:8px;border-radius:999px;background:rgba(255,255,255,.08);overflow:hidden;margin:7px 0}
+.progress-bar span{display:block;height:100%;width:var(--w);background:linear-gradient(90deg,rgba(40,234,255,.9),rgba(53,243,132,.75))}
+.progress-explain{font-size:12px;color:var(--muted);line-height:1.45;margin-top:9px}
+.progress-mini{border:1px solid rgba(40,234,255,.22);background:rgba(40,234,255,.045);border-radius:13px;padding:9px;margin:8px 0}
+.progress-mini b{font-size:21px;color:#f5fbff}.progress-mini small{display:block;color:var(--muted)}
+@media(max-width:1100px){.progress-breakdown{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:720px){.progress-breakdown{grid-template-columns:1fr}.progress-ring{width:96px;height:96px}}
+
 @media(max-width:1260px){.header,.layout{grid-template-columns:1fr}.kpis{grid-template-columns:repeat(2,1fr)}.info-grid{grid-template-columns:1fr 1fr}}
 @media(max-width:760px){.app{padding:12px}.header,.info-grid,.kpis,.form-grid,.note-form,.note-grid{grid-template-columns:1fr}.quick,.actionbar{justify-content:flex-start}.toplink,.btn{width:100%;justify-content:flex-start}.object-head{grid-template-columns:58px 1fr}.status-zone{grid-column:1/-1}.kpi{grid-template-columns:58px 1fr}.spark{display:none}}
 @media print{body{background:white;color:#111}.quick,.actionbar,.familybar,.sidebar,.btn,.icon-btn,.modal,.toast{display:none!important}.app{max-width:none}.layout{grid-template-columns:1fr}.panel{box-shadow:none;border:1px solid #999;background:white;color:#111}.subcard{background:white}.pill{color:#111}}
@@ -504,7 +542,7 @@ textarea{resize:vertical;min-height:76px} input:focus,select:focus,textarea:focu
   <header class="header">
     <section class="brand">
       <div class="logo">BI</div>
-      <div><h1>Cockpit Projets BI</h1><p class="subtitle">V6.4S · Drive réel raccordé aux modules</p></div>
+      <div><h1>Cockpit Projets BI</h1><p class="subtitle">V6.4T · avancement estimé projet</p></div>
     </section>
     <nav class="quick">
       <a class="toplink" id="projectGptLink" target="_blank" rel="noopener">
@@ -576,9 +614,9 @@ textarea{resize:vertical;min-height:76px} input:focus,select:focus,textarea:focu
 
 <script>
 'use strict';
-const VERSION='V6.4S-drive-reel-modules';
+const VERSION='V6.4T-avancement-estime-projet';
 const STABLE_KEY='central_bi_project_manager_current';
-const VERSION_KEY='central_bi_project_manager_v64s';
+const VERSION_KEY='central_bi_project_manager_v64t';
 const KEY=STABLE_KEY;
 const MIRROR_KEYS=[VERSION_KEY,'central_bi_project_manager_v61','central_bi_project_manager_v6'];
 const PREVIOUS_KEYS=[VERSION_KEY,'central_bi_project_manager_v61','central_bi_project_manager_v6','central_bi_project_manager_v5','central_bi_project_manager_v4','central_bi_project_manager_v1'];
@@ -1533,13 +1571,118 @@ function renderDriveMiniModule(context='side'){
     <div class="drive-real-inline"><button class="mini-btn" onclick="fetchDriveDiagnostic()">Rafraîchir Drive</button><a class="mini-btn" href="${esc(s.folderUrl)}" target="_blank" rel="noopener">Ouvrir dossier</a></div>
   </div>`;
 }
+
+function clampPct(n){return Math.max(0,Math.min(100,Math.round(Number(n)||0)))}
+function statusScore(status){
+  const s=String(status||'').toLowerCase();
+  if(s.includes('validé')||s.includes('valide'))return 100;
+  if(s.includes('validation'))return 80;
+  if(s.includes('cours'))return 50;
+  if(s.includes('traiter'))return 20;
+  if(s.includes('idée')||s.includes('idee')||s.includes('brouillon'))return 10;
+  return 25;
+}
+function roadStatusScore(status){
+  const s=String(status||'').toLowerCase();
+  if(s.includes('validé')||s.includes('valide'))return 1;
+  if(s.includes('validation'))return .8;
+  if(s.includes('cours'))return .5;
+  return 0;
+}
+function projectRoadBlocks(projectId){
+  if(!Array.isArray(state.roadmap))return [];
+  return state.roadmap.filter(b=>String(b.projectId||b.project||'')===String(projectId)||(!b.projectId&&selected()&&String(b.projectName||'')===String(selected().name||'')));
+}
+function estimateDocumentationScore(p){
+  let score=0, detail=[];
+  const notes=(state.notes||[]).filter(n=>String(n.projectId||'')===String(p.id)||String(n.project||'')===String(p.id)||String(n.projectName||'')===String(p.name));
+  if(notes.length>0){score+=40;detail.push('notes présentes')}
+  const hasText=(String(p.desc||p.description||p.notes||'').trim().length>20);
+  if(hasText){score+=25;detail.push('description renseignée')}
+  const hasLinks=!!(p.driveUrl||p.githubUrl||p.url||p.gptUrl||p.links);
+  if(hasLinks){score+=35;detail.push('liens projet renseignés')}
+  return {score:clampPct(score),detail:detail.length?detail.join(' · '):'peu de documentation détectée'};
+}
+function estimateSyncScore(){
+  const cfg=getDriveConfig();
+  const s=driveRealSummary ? driveRealSummary() : {available:false};
+  let score=0, detail=[];
+  if(cfg.endpoint){score+=20;detail.push('endpoint configuré')}
+  if(cfg.enabled){score+=15;detail.push('sync activée')}
+  if(s.available){
+    if(Number(s.current)===1){score+=30;detail.push('CURRENT Drive OK')}
+    else if(Number(s.current)>1){score+=10;detail.push('doublon CURRENT')}
+    if(Number(s.snapshots)>0){score+=20;detail.push('snapshots Drive présents')}
+    if(!s.duplicate&&!s.overRetention){score+=15;detail.push('aucune alerte Drive')}
+  }else{
+    if((cfg.lastMode||'')==='current'){score+=10;detail.push('dernier mode current local')}
+    detail.push('Drive réel non lu');
+  }
+  return {score:clampPct(score),detail:detail.join(' · ')||'sync non configurée'};
+}
+function estimateProjectProgress(p){
+  if(!p)return null;
+  const blocks=projectRoadBlocks(p.id);
+  let roadScore=0, roadDetail='aucun bloc roadmap lié';
+  if(blocks.length){
+    const total=blocks.reduce((a,b)=>a+roadStatusScore(b.status),0);
+    roadScore=clampPct((total/blocks.length)*100);
+    const valid=blocks.filter(b=>roadStatusScore(b.status)>=1).length;
+    const validation=blocks.filter(b=>String(b.status||'').toLowerCase().includes('validation')).length;
+    roadDetail=`${blocks.length} blocs · ${valid} validés · ${validation} en validation`;
+  }
+  const statScore=clampPct(statusScore(p.status));
+  const sync=estimateSyncScore();
+  const doc=estimateDocumentationScore(p);
+  const final=clampPct(roadScore*.40 + statScore*.25 + sync.score*.20 + doc.score*.15);
+  const manual=Number(p.progress||p.avancement||0);
+  return {
+    final, manual:clampPct(manual),
+    road:{score:roadScore,weight:40,detail:roadDetail},
+    status:{score:statScore,weight:25,detail:p.status||'statut inconnu'},
+    sync:{score:sync.score,weight:20,detail:sync.detail},
+    doc:{score:doc.score,weight:15,detail:doc.detail}
+  };
+}
+function renderProgressEstimatePanel(p,compact=false){
+  const e=estimateProjectProgress(p);
+  if(!e)return '';
+  return `<div class="progress-estimate-panel">
+    <h3>📈 Avancement estimé</h3>
+    <div class="progress-score-big">
+      <div class="progress-ring" style="--pct:${e.final}%"><b>${e.final}%</b></div>
+      <div>
+        <b style="font-size:20px;color:#f5fbff">Score de pilotage calculé</b>
+        <div class="progress-explain">Calcul : 40% roadmap · 25% statut projet · 20% Drive/Sync · 15% documentation/liens.</div>
+        <div class="progress-explain">Taux manuel actuel : <b>${e.manual}%</b>. Le score estimé n’écrase pas la correction manuelle.</div>
+      </div>
+    </div>
+    ${compact?'':`<div class="progress-breakdown">
+      ${renderProgressFactor('Roadmap',e.road.score,e.road.weight,e.road.detail)}
+      ${renderProgressFactor('Statut',e.status.score,e.status.weight,e.status.detail)}
+      ${renderProgressFactor('Drive / Sync',e.sync.score,e.sync.weight,e.sync.detail)}
+      ${renderProgressFactor('Docs / liens',e.doc.score,e.doc.weight,e.doc.detail)}
+    </div>`}
+  </div>`;
+}
+function renderProgressFactor(title,score,weight,detail){
+  score=clampPct(score);
+  return `<div class="progress-factor"><small>${esc(title)} · poids ${weight}%</small><b>${score}%</b><div class="progress-bar" style="--w:${score}%"><span></span></div><small>${esc(detail||'—')}</small></div>`;
+}
+function renderProgressMiniModule(){
+  const p=selected(); const e=estimateProjectProgress(p);
+  if(!e)return '<div class="progress-mini"><small>Aucun projet sélectionné</small></div>';
+  return `<div class="progress-mini"><small>Avancement estimé</small><b>${e.final}%</b><small>${esc(p.name||'Projet')}</small><div class="progress-bar" style="--w:${e.final}%"><span></span></div><small>Manuel : ${e.manual}%</small></div>`;
+}
 function renderDriveDashboardCards(){
+  const p=selected(); const e=estimateProjectProgress(p);
+  const progressCard=e?`<div class="kpi ok"><b>${e.final}%</b><span>Avancement estimé</span><small>${esc(p.name||'Projet')}</small></div>`:'';
   const s=driveRealSummary();
   if(!s.available){
-    return `<div class="kpi warn"><b>—</b><span>Drive réel non lu</span><small><button class="mini-btn" onclick="fetchDriveDiagnostic()">Lire Drive</button></small></div>
+    return progressCard+`<div class="kpi warn"><b>—</b><span>Drive réel non lu</span><small><button class="mini-btn" onclick="fetchDriveDiagnostic()">Lire Drive</button></small></div>
             <div class="kpi warn"><b>—</b><span>Snapshots Drive</span><small>Diagnostic requis</small></div>`;
   }
-  return `<div class="kpi ${s.current===1?'ok':'warn'}"><b>${s.current}</b><span>CURRENT Drive réel</span><small>${esc(s.lastCurrent)}</small></div>
+  return progressCard+`<div class="kpi ${s.current===1?'ok':'warn'}"><b>${s.current}</b><span>CURRENT Drive réel</span><small>${esc(s.lastCurrent)}</small></div>
           <div class="kpi ${s.overRetention?'warn':'ok'}"><b>${s.snapshots}</b><span>SNAPSHOT Drive réel</span><small>${s.overRetention?'Au-dessus limite':'OK'}</small></div>`;
 }
 function renderProjectDriveHint(){
@@ -1568,6 +1711,7 @@ function renderSidebar(){
     ${SPACES.filter(z=>z!=='Tous').map(z=>`<div class="deploy-item"><span>${esc(z)}</span><b>${state.projects.filter(p=>p.space===z).length}</b></div>`).join('')}
     <br><button class="mini-btn" onclick="activeSpace='Tous';renderAll()">Voir tous</button>
   </div></div>
+  <div class="acc open" data-acc="progress"><div class="acc-head"><div>📈</div><div><h3>Avancement</h3><small>Estimé + manuel</small></div><div class="chev">⌄</div></div><div class="accordion-body">${renderProgressMiniModule()}<button class="mini-btn" onclick="activeMain='detail';renderAll()">Voir détail</button></div></div>
   <div class="acc open" data-acc="driveReal"><div class="acc-head"><div>🟢</div><div><h3>Drive réel</h3><small>Lecture Apps Script V3</small></div><div class="chev">⌄</div></div><div class="accordion-body">${renderDriveMiniModule('side')}</div></div>
   <div class="acc" data-acc="data"><div class="acc-head"><div>💾</div><div><h3>Données locales</h3><small>JSON: ${state.projects.length} projets<br>Snapshots locaux: ${snaps.length}</small></div><div class="chev">⌄</div></div><div class="accordion-body"><button class="mini-btn" onclick="exportJson()">Export JSON</button><button class="mini-btn" onclick="exportSnapshot()">Snapshot manuel</button><button class="mini-btn" onclick="pruneSnapshots()">Limiter à 10</button></div></div>
   <div class="acc" data-acc="sync"><div class="acc-head"><div>△</div><div><h3>Drive Sync</h3><small><span class="state">${cfg.enabled?'Connecté':'À configurer'}</span><br>Dernière sync: ${esc(cfg.lastSent?cfg.lastSent.slice(0,16).replace('T',' '):'—')}</small></div><div class="chev">⌄</div></div><div class="accordion-body"><button class="mini-btn" onclick="configureDriveSync()">Configurer</button><button class="mini-btn" onclick="sendDriveSync('manuel courant',false,'current')">État courant</button><button class="mini-btn" onclick="sendDriveSnapshot()">Snapshot Drive</button><button class="mini-btn" onclick="forceAutoSnapshotDrive('snapshot test ruban droit')">Test auto</button></div></div>
