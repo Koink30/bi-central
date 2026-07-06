@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>Cockpit Projets BI · V6.4N Snapshot auto intelligent</title>
+<title>Cockpit Projets BI · V6.4O Correction saisie roadmap</title>
 <style>
 :root{
   --bg:#030711;--bg2:#06112a;--panel:rgba(7,18,41,.82);--panel2:rgba(9,28,61,.72);
@@ -254,6 +254,9 @@ textarea{resize:vertical;min-height:76px} input:focus,select:focus,textarea:focu
 .auto-snapshot-badge{display:inline-flex;align-items:center;gap:6px;border:1px solid rgba(40,234,255,.38);background:rgba(40,234,255,.06);border-radius:999px;padding:6px 9px;font-size:12px;font-weight:950;color:#d8fbff}
 .auto-snapshot-badge.off{border-color:rgba(255,195,77,.45);color:#ffe2a5;background:rgba(255,195,77,.06)}
 
+
+.input-safe-badge{display:inline-flex;gap:6px;align-items:center;border:1px solid rgba(53,243,132,.42);background:rgba(53,243,132,.06);border-radius:999px;padding:6px 9px;font-size:12px;font-weight:950;color:#dfffe9}
+
 @media(max-width:1260px){.roadmap-board,.road-summary{grid-template-columns:repeat(2,1fr)}.road-form{grid-template-columns:1fr 1fr}}
 @media(max-width:760px){.roadmap-board,.road-summary,.road-form{grid-template-columns:1fr}}
 
@@ -384,6 +387,9 @@ textarea{resize:vertical;min-height:76px} input:focus,select:focus,textarea:focu
 .auto-snapshot-badge{display:inline-flex;align-items:center;gap:6px;border:1px solid rgba(40,234,255,.38);background:rgba(40,234,255,.06);border-radius:999px;padding:6px 9px;font-size:12px;font-weight:950;color:#d8fbff}
 .auto-snapshot-badge.off{border-color:rgba(255,195,77,.45);color:#ffe2a5;background:rgba(255,195,77,.06)}
 
+
+.input-safe-badge{display:inline-flex;gap:6px;align-items:center;border:1px solid rgba(53,243,132,.42);background:rgba(53,243,132,.06);border-radius:999px;padding:6px 9px;font-size:12px;font-weight:950;color:#dfffe9}
+
 @media(max-width:1260px){.header,.layout{grid-template-columns:1fr}.kpis{grid-template-columns:repeat(2,1fr)}.info-grid{grid-template-columns:1fr 1fr}}
 @media(max-width:760px){.app{padding:12px}.header,.info-grid,.kpis,.form-grid,.note-form,.note-grid{grid-template-columns:1fr}.quick,.actionbar{justify-content:flex-start}.toplink,.btn{width:100%;justify-content:flex-start}.object-head{grid-template-columns:58px 1fr}.status-zone{grid-column:1/-1}.kpi{grid-template-columns:58px 1fr}.spark{display:none}}
 @media print{body{background:white;color:#111}.quick,.actionbar,.familybar,.sidebar,.btn,.icon-btn,.modal,.toast{display:none!important}.app{max-width:none}.layout{grid-template-columns:1fr}.panel{box-shadow:none;border:1px solid #999;background:white;color:#111}.subcard{background:white}.pill{color:#111}}
@@ -394,7 +400,7 @@ textarea{resize:vertical;min-height:76px} input:focus,select:focus,textarea:focu
   <header class="header">
     <section class="brand">
       <div class="logo">BI</div>
-      <div><h1>Cockpit Projets BI</h1><p class="subtitle">V6.4N · snapshot auto intelligent · courant propre</p></div>
+      <div><h1>Cockpit Projets BI</h1><p class="subtitle">V6.4O · saisie stable · anti re-render</p></div>
     </section>
     <nav class="quick">
       <a class="toplink" id="projectGptLink" target="_blank" rel="noopener">
@@ -466,9 +472,9 @@ textarea{resize:vertical;min-height:76px} input:focus,select:focus,textarea:focu
 
 <script>
 'use strict';
-const VERSION='V6.4N-snapshot-auto-intelligent';
+const VERSION='V6.4O-correction-saisie-roadmap';
 const STABLE_KEY='central_bi_project_manager_current';
-const VERSION_KEY='central_bi_project_manager_v64n';
+const VERSION_KEY='central_bi_project_manager_v64o';
 const KEY=STABLE_KEY;
 const MIRROR_KEYS=[VERSION_KEY,'central_bi_project_manager_v61','central_bi_project_manager_v6'];
 const PREVIOUS_KEYS=[VERSION_KEY,'central_bi_project_manager_v61','central_bi_project_manager_v6','central_bi_project_manager_v5','central_bi_project_manager_v4','central_bi_project_manager_v1'];
@@ -504,6 +510,9 @@ let activeSpace='Tous', activeMain='fiche', activeSide='notes';
 let selectedRoadBlockId='';
 let roadmapFilter='actifs';
 let roadmapShowAll=false;
+let uiDrafts={};
+let uiRestoreFocus=null;
+let suppressRoadScroll=false;
 
 function baseOptions(extra={}){return Object.assign({html:true,autosave:true,json:true,drive:false,ia:false,mobile:false,simple:true,security:false,training:false,pdf:false,versioning:true},extra)}
 function baseSources(extra={}){return Object.assign({driveHtml:'',driveFolder:'',snapshotJson:'',manifestDoc:'',sheetSuivi:'',githubRepo:'',githubPath:'',githubBranch:'main',githubStatus:'En cours',pagesUrl:'',archiveLink:'',lastCompletedStep:'Point de départ Drive',lastStepDate:today(),nextMilestone:'Renseigner sources et snapshots',owner:'Drive',sourceStatus:'À renseigner'},extra)}
@@ -614,8 +623,7 @@ async function sendDriveSync(action='manual',silent=false,mode='current'){
   try{
     await fetch(cfg.endpoint,{method:'POST',mode:'no-cors',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(payload)});
     setDriveConfig({lastSent:now(),lastStatus:mode==='snapshot'?'Snapshot envoyé':'État courant envoyé',lastAction:action,lastMode:mode,queued:false,enabled:true});
-    if(!silent)toast(mode==='snapshot'?'Snapshot envoyé vers Drive':'État courant envoyé vers Drive');
-    renderAll()
+    if(!silent){toast(mode==='snapshot'?'Snapshot envoyé vers Drive':'État courant envoyé vers Drive');safeRenderAll()}
   }catch(e){setDriveConfig({lastStatus:'Erreur envoi',lastAction:action,queued:false});if(!silent)toast('Erreur Drive Sync')}
 }
 function sendDriveSnapshot(){const snap=createSnapshotManual();sendDriveSync('snapshot manuel drive',false,'snapshot')}
@@ -664,7 +672,7 @@ function updateProjectField(field,value){
   persist('fiche projet modifiée');
   if(field==='status' && value!==beforeStatus)autoSnapshotStatusTransition('projet',p.name,value);
   toast('Fiche projet mise à jour');
-  renderAll();
+  safeRenderAll();
 }
 function renderZonePills(){
   return `<div class="zone-pills">${SPACES.map(z=>`<button class="zone-pill ${activeSpace===z?'active':''}" onclick="activeSpace='${esc(z)}';renderAll()">${esc(z)} <small>${z==='Tous'?state.projects.length:state.projects.filter(p=>p.space===z).length}</small></button>`).join('')}</div>`
@@ -809,7 +817,7 @@ function renderNoteTableRow(p,n,i){
     <td><button class="mini-btn" onclick="openLinkedRoadmap('${esc(n.roadmapId||'')}')">Voir bloc</button><button class="mini-btn" onclick="deleteNote(${i})">×</button></td>
   </tr>`
 }
-function updateNoteField(i,field,value){const p=selected();if(!p.notes||!p.notes[i])return;p.notes[i][field]=value;p.notes[i].updated=nowFr();persist('table note modifiée');renderAll()}
+function updateNoteField(i,field,value){const p=selected();if(!p.notes||!p.notes[i])return;p.notes[i][field]=value;p.notes[i].updated=nowFr();persist('table note modifiée');safeRenderAll()}
 function openLinkedRoadmap(id){if(!id){toast('Note sans lien roadmap');return}activeMain='roadmap';renderAll();setTimeout(()=>{const el=document.querySelector(`[data-road-id="${CSS.escape(id)}"]`);if(el){el.scrollIntoView({behavior:'smooth',block:'center'});el.style.boxShadow='0 0 30px rgba(53,243,132,.45)';setTimeout(()=>el.style.boxShadow='',1600)}},120)}
 function notesToRoadmapBlocks(){
   const p=selected();ensureRoadmap(p);
@@ -880,7 +888,7 @@ function renderRoadTableRow(p,b,i){
     <td><button class="mini-btn" onclick="selectRoadBlock('${esc(b.id)}')">Fiche</button><button class="mini-btn" onclick="activeMain='notes';renderAll()">Notes</button><button class="mini-btn" onclick="deleteRoadBlock('${esc(b.id)}')">×</button></td>
   </tr>`
 }
-function updateRoadField(id,field,value){const b=findRoadBlock(id);if(!b)return;const beforeStatus=b.status;b[field]=value;b.updated=nowFr();persist('table roadmap modifiée');if(field==='status' && value!==beforeStatus)autoSnapshotStatusTransition('bloc roadmap',b.title,value);renderAll()}
+function updateRoadField(id,field,value){const b=findRoadBlock(id);if(!b)return;const beforeStatus=b.status;b[field]=value;b.updated=nowFr();persist('table roadmap modifiée');if(field==='status' && value!==beforeStatus)autoSnapshotStatusTransition('bloc roadmap',b.title,value);safeRenderAll()}
 
 function getSelectedRoadBlock(p){
   ensureRoadmap(p);
@@ -888,7 +896,13 @@ function getSelectedRoadBlock(p){
   if(!b && p.roadmapBlocks && p.roadmapBlocks[0]){b=p.roadmapBlocks[0];selectedRoadBlockId=b.id}
   return b;
 }
-function selectRoadBlock(id){selectedRoadBlockId=id;activeMain='roadmap';renderAll();setTimeout(()=>{document.querySelector('.road-simple-sheet')?.scrollIntoView({behavior:'smooth',block:'start'})},60)}
+function selectRoadBlock(id){
+  const wasTyping=isFormLike(document.activeElement);
+  selectedRoadBlockId=id;activeMain='roadmap';
+  if(wasTyping){safeRenderAll();return}
+  renderAll();
+  if(!suppressRoadScroll)setTimeout(()=>{document.querySelector('.road-simple-sheet')?.scrollIntoView({behavior:'smooth',block:'nearest'})},60);
+}
 function renderRoadBlockSheet(p){
   const b=getSelectedRoadBlock(p);
   if(!b)return `<div class="block-sheet"><p class="muted">Sélectionne ou crée un bloc roadmap pour ouvrir sa fiche.</p></div>`;
@@ -1212,7 +1226,7 @@ function renderMainView(){
     <div class="snapshot-rule-card"><b>Rétention</b><small>${SNAPSHOT_RETENTION_MAX} derniers snapshots locaux et Drive via Apps Script V2.</small></div>
   </div></div>
   <div class="subcard" style="min-height:auto">
-    <p>Clé active : <b>${KEY}</b></p><p>État courant : <b>${CURRENT_KEY}</b></p><p>Snapshots locaux : <b>${getSnapshots().length} / ${SNAPSHOT_RETENTION_MAX}</b></p><p>Dernière sync : <b>${esc(cfg.lastSent||'—')}</b></p><p>Mode sync : <b>${esc(cfg.lastMode||'current')}</b></p><p>Dernier snapshot auto : <b>${lastAutoSnapshotLabel()}</b></p><span class="auto-snapshot-badge">Snapshot auto : Validation / Validé</span><br><br>
+    <p>Clé active : <b>${KEY}</b></p><p>État courant : <b>${CURRENT_KEY}</b></p><p>Snapshots locaux : <b>${getSnapshots().length} / ${SNAPSHOT_RETENTION_MAX}</b></p><p>Dernière sync : <b>${esc(cfg.lastSent||'—')}</b></p><p>Mode sync : <b>${esc(cfg.lastMode||'current')}</b></p><p>Dernier snapshot auto : <b>${lastAutoSnapshotLabel()}</b></p><span class="auto-snapshot-badge">Snapshot auto : Validation / Validé</span> <span class="input-safe-badge">Saisie protégée V6.4O</span><br><br>
     <button class="mini-btn" onclick="exportJson()">Export JSON</button>
     <button class="mini-btn" onclick="exportSnapshot()">Snapshot manuel</button>
     <button class="mini-btn" onclick="pruneSnapshots()">Limiter à ${SNAPSHOT_RETENTION_MAX}</button>
@@ -1250,8 +1264,71 @@ function addNote(){const p=selected();const title=prompt('Titre de la note','Nou
 function openModal(){$('projectModal').classList.add('show')} function closeModal(){$('projectModal').classList.remove('show')}
 function createProject(){const name=$('mName').value.trim();if(!name){toast('Nom obligatoire');return}const p={id:uid(),name,space:$('mSpace').value,icon:$('mIcon').value.trim()||'🧩',type:$('mType').value,client:$('mClient').value.trim(),phase:$('mPhase').value,status:$('mStatus').value,progress:Math.max(0,Math.min(100,+$('mProgress').value||0)),priority:'Moyenne',due:$('mDue').value,goal:$('mGoal').value.trim(),nextAction:$('mNext').value.trim(),stack:'HTML autonome, JSON',tags:[],options:baseOptions(),blockers:[],links:[],sources:baseSources({githubStatus:'Non relié',lastCompletedStep:'Projet créé dans le cockpit',lastStepDate:today(),nextMilestone:'Définir dossier Drive et fichier maître'}),versions:[{name:'V0',type:'Création',date:today(),text:'Projet créé dans le cockpit.'}],notes:[]};state.projects.unshift(p);state.selectedId=p.id;activeSpace=p.space;closeModal();persist('création projet');toast('Projet créé');renderAll()}
 function toast(msg){const t=$('toast');t.textContent=msg;t.classList.add('show');clearTimeout(window.__toast);window.__toast=setTimeout(()=>t.classList.remove('show'),2300)}
+
+function isFormLike(el){
+  return el && ['INPUT','TEXTAREA','SELECT'].includes(el.tagName);
+}
+function captureUiDrafts(){
+  try{
+    uiDrafts={};
+    document.querySelectorAll('input[id],textarea[id],select[id]').forEach(el=>{
+      uiDrafts[el.id]=el.value;
+    });
+    const a=document.activeElement;
+    if(isFormLike(a) && a.id){
+      uiRestoreFocus={id:a.id,start:a.selectionStart||0,end:a.selectionEnd||0};
+    }else{
+      uiRestoreFocus=null;
+    }
+  }catch(e){}
+}
+function restoreUiDrafts(){
+  try{
+    Object.entries(uiDrafts||{}).forEach(([id,val])=>{
+      const el=document.getElementById(id);
+      if(el && el.value!==val)el.value=val;
+    });
+    if(uiRestoreFocus && uiRestoreFocus.id){
+      const el=document.getElementById(uiRestoreFocus.id);
+      if(el){
+        el.focus({preventScroll:true});
+        if(typeof el.setSelectionRange==='function'){
+          const len=String(el.value||'').length;
+          const s=Math.min(uiRestoreFocus.start,len), e=Math.min(uiRestoreFocus.end,len);
+          el.setSelectionRange(s,e);
+        }
+      }
+    }
+  }catch(e){}
+}
+function safeRenderAll(){
+  captureUiDrafts();
+  renderAll();
+  setTimeout(restoreUiDrafts,0);
+}
+function scheduleSoftRender(){
+  if(isFormLike(document.activeElement)){
+    captureUiDrafts();
+    setTimeout(()=>{ if(!isFormLike(document.activeElement)) renderAll(); },250);
+  }else{
+    renderAll();
+  }
+}
 function renderAll(){renderQuickLinks();renderCentralTabs();renderList();renderDetail();renderMainView();renderSidebar();renderKpis();}
 document.addEventListener('DOMContentLoaded',()=>{initSelect('phaseFilter',PHASES,true);initSelect('statusFilter',STATUSES,true);initSelect('mSpace',SPACES.filter(x=>x!=='Tous'));initSelect('mType',TYPES);initSelect('mPhase',PHASES);initSelect('mStatus',STATUSES);$('search').oninput=renderList;$('phaseFilter').onchange=renderList;$('statusFilter').onchange=renderList;$('newBtn').onclick=openModal;$('newBtn2').onclick=openModal;$('closeModal').onclick=closeModal;$('projectModal').onclick=e=>{if(e.target===$('projectModal'))closeModal()};$('createBtn').onclick=createProject;$('exportBtn').onclick=exportJson;$('snapshotBtn').onclick=exportSnapshot;$('manifestBtn').onclick=exportManifest;$('driveSyncBtn').onclick=configureDriveSync;$('importFile').onchange=e=>{if(e.target.files[0])importJson(e.target.files[0]);e.target.value=''};$('resetBtn').onclick=resetDemo;renderAll();if(!localStorage.getItem(KEY)||recoveryMeta.source!==KEY){persist('reprise automatique depuis '+recoveryMeta.source);toast('Reprise automatique active')}});
+
+document.addEventListener('input',function(ev){
+  if(isFormLike(ev.target) && ev.target.id){
+    uiDrafts[ev.target.id]=ev.target.value;
+  }
+},true);
+document.addEventListener('click',function(ev){
+  if(isFormLike(ev.target)){
+    suppressRoadScroll=true;
+    setTimeout(()=>suppressRoadScroll=false,250);
+  }
+},true);
+
 </script>
 </body>
 </html>
