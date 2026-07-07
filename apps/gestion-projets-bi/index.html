@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>Cockpit Projets BI · V6.6A Déploiement sous-projet</title>
+<title>Cockpit Projets BI · V6.6B Déploiement fiche ruban</title>
 <style>
 :root{
   --bg:#030711;--bg2:#06112a;--panel:rgba(7,18,41,.82);--panel2:rgba(9,28,61,.72);
@@ -1066,7 +1066,7 @@ textarea{resize:vertical;min-height:76px} input:focus,select:focus,textarea:focu
   <header class="header">
     <section class="brand">
       <div class="logo">BI</div>
-      <div><h1>Cockpit Projets BI</h1><p class="subtitle">V6.6A · Déploiement sous-projet</p></div>
+      <div><h1>Cockpit Projets BI</h1><p class="subtitle">V6.6B · Déploiement + fiche ruban</p></div>
     </section>
     <nav class="quick">
       <a class="toplink" id="projectGptLink" target="_blank" rel="noopener">
@@ -1138,9 +1138,9 @@ textarea{resize:vertical;min-height:76px} input:focus,select:focus,textarea:focu
 
 <script>
 'use strict';
-const VERSION='V6.6A-deploiement-sous-projet';
+const VERSION='V6.6B-deploiement-fiche-ruban';
 const STABLE_KEY='central_bi_project_manager_current';
-const VERSION_KEY='central_bi_project_manager_v66a';
+const VERSION_KEY='central_bi_project_manager_v66b';
 const KEY=STABLE_KEY;
 const MIRROR_KEYS=[VERSION_KEY,'central_bi_project_manager_v61','central_bi_project_manager_v6'];
 const PREVIOUS_KEYS=[VERSION_KEY,'central_bi_project_manager_v61','central_bi_project_manager_v6','central_bi_project_manager_v5','central_bi_project_manager_v4','central_bi_project_manager_v1'];
@@ -3476,8 +3476,75 @@ function deployIndexHtmlPreview(){const {s,tpl}=deployDerived();return `<!doctyp
 </body>
 </html>`}
 function copyDeployText(kind){const txt=kind==='roadmap'?deployRoadmapBlock():kind==='manifest'?deployManifest():kind==='readme'?deployReadme():kind==='tree'?deployFolderTree():deployIndexHtmlPreview();navigator.clipboard?.writeText(txt);toast('Copié')}
-function renderDeploymentModule(){const {s,tpl,slug,appPath,url,driveRoot}=deployDerived();return `<div class="view-title"><h2>🚀 Déploiement sous-projet</h2><span class="pill green">V6.6A concept opérationnel</span></div>
-<section class="deploy-hero"><h2>Créer un nouveau BI depuis le BI Central</h2><p>Ce module prépare la fiche sous-projet, la structure Drive, l’emplacement GitHub, le pack V0 et les blocs roadmap. Aucun push GitHub automatique pour l’instant : on reste en conceptualisation fiable.</p></section>
+
+function createProjectFromDeployment(){
+  const {s,tpl,slug,appPath,url,driveRoot}=deployDerived();
+  const exists=state.projects.find(p=>String(p.id)===slug || slugifyProjectName(p.name)===slug);
+  if(exists){
+    state.selectedId=exists.id;
+    activeMain='fiche';
+    toast('Fiche projet déjà existante');
+    renderAll();
+    return;
+  }
+  const p={
+    id:slug,
+    name:s.name,
+    icon:tpl.icon,
+    space:s.category==='Client'?'Pro Clients':(s.category==='Le Merlet'?'Pro Merlet':(s.category==='Perso'?'Perso':'Pro Clients')),
+    type:'Sous-projet BI',
+    client:s.client,
+    phase:'Initialisation',
+    status:'À tester',
+    progress:8,
+    priority:'Haute',
+    due:'',
+    goal:s.description,
+    nextAction:'Générer le pack V0 puis tester le prototype initial.',
+    stack:'HTML autonome, BI Central, Drive théorique, GitHub Pages /apps/',
+    tags:['sous-projet','déploiement',tpl.id,slug],
+    options:typeof baseOptions==='function'?baseOptions({drive:true,github:true,ia:false,mobile:true,security:false,pdf:true,training:false}):{},
+    sources:typeof baseSources==='function'?baseSources({
+      driveFolder:'',
+      githubRepo:typeof GITHUB_REPO!=='undefined'?GITHUB_REPO:'Koink30/bi-central',
+      githubPath:appPath,
+      githubBranch:'main',
+      githubStatus:'Prévu',
+      pagesUrl:url,
+      lastCompletedStep:'Fiche sous-projet créée depuis module Déploiement',
+      lastStepDate:today(),
+      nextMilestone:'Créer index.html V0 et pack livrable',
+      owner:'BI Central',
+      sourceStatus:'Préparation'
+    }):{githubPath:appPath,pagesUrl:url},
+    links:[
+      {id:uid(),type:'GitHub',title:'Chemin GitHub prévu',url:'https://github.com/Koink30/bi-central/tree/main/'+appPath,note:'Sous-dossier prévu pour le sous-projet',icon:'⚫',logoUrl:'',logoDataUrl:'',created:nowFr(),updated:nowFr()},
+      {id:uid(),type:'BI publié',title:'URL BI prévue',url:url,note:'URL cible GitHub Pages après publication',icon:'🌐',logoUrl:'',logoDataUrl:'',created:nowFr(),updated:nowFr()},
+      {id:uid(),type:'Drive',title:'Drive théorique',url:'',note:driveRoot,icon:'🗂️',logoUrl:'',logoDataUrl:'',created:nowFr(),updated:nowFr()}
+    ],
+    roadmapBlocks:[
+      {id:uid(),title:'Déploiement V0.1 — Prototype initial',type:'Initialisation',status:'À valider',priority:'Haute',text:deployRoadmapBlock(),created:nowFr(),updated:nowFr()},
+      {id:uid(),title:'Préparer structure Drive',type:'Action',status:'À faire',priority:'Moyenne',text:deployFolderTree(),created:nowFr(),updated:nowFr()},
+      {id:uid(),title:'Créer index.html V0',type:'Action',status:'À faire',priority:'Haute',text:deployIndexHtmlPreview(),created:nowFr(),updated:nowFr()}
+    ],
+    notes:[
+      {id:uid(),title:'README initial',type:'Note',status:'À traiter',text:deployReadme(),date:nowFr(),created:nowFr(),selected:false}
+    ],
+    versions:[
+      {id:uid(),version:'V0.1',title:'Prototype initial prévu',date:nowFr(),text:'Fiche sous-projet créée depuis le module Déploiement du BI Central.'}
+    ]
+  };
+  state.projects.push(p);
+  state.selectedId=p.id;
+  activeSpace=p.space||'Tous';
+  activeMain='fiche';
+  persist('création sous-projet '+s.name);
+  toast('Fiche sous-projet créée dans le ruban gauche');
+  renderAll();
+}
+
+function renderDeploymentModule(){const {s,tpl,slug,appPath,url,driveRoot}=deployDerived();return `<div class="view-title"><h2>🚀 Déploiement sous-projet</h2><span class="pill green">V6.6B fiche ruban</span></div>
+<section class="deploy-hero"><h2>Créer un nouveau BI depuis le BI Central</h2><p>Ce module prépare la fiche sous-projet, la structure Drive, l’emplacement GitHub, le pack V0 et les blocs roadmap. Aucun push GitHub automatique pour l’instant : on reste en conceptualisation fiable.</p><div class="deploy-actions"><button class="mini-btn" onclick="createProjectFromDeployment()">➕ Créer la fiche projet dans le ruban gauche</button><button class="mini-btn" onclick="copyDeployText('roadmap')">Copier roadmap V0</button></div></section>
 <div class="deploy-summary-grid"><div class="deploy-mini"><small>Slug projet</small><b>${esc(slug)}</b></div><div class="deploy-mini"><small>Chemin GitHub</small><b>${esc(appPath)}</b></div><div class="deploy-mini"><small>Template</small><b>${esc(tpl.name)}</b></div><div class="deploy-mini"><small>Version départ</small><b>V0.1</b></div></div>
 <div class="deploy-grid">
 <section class="deploy-card"><h3>1. Nouveau sous-projet</h3><div class="deploy-form">
@@ -3594,7 +3661,8 @@ function renderMainView(){
   else if(activeMain==='dashboard'){html=`<div class="view-title"><h2>📊 Dashboard</h2><span class="pill">${active}/${total} actifs</span></div>${renderPilotageBoard()}<div class="subcard" style="min-height:auto"><h3>Portefeuille</h3><p class="muted">Maturité moyenne ${avg}% · Drive Sync ${getDriveConfig().enabled?'connecté':'à configurer'} · snapshots ${getSnapshots().length}.</p></div>${renderDriveDashboardCards()}`}
   else if(activeMain==='active'){html=`<div class="view-title"><h2>🟢 Mode actif</h2><span class="pill green">${esc(p.status)}</span></div>${renderPilotageBoard()}<div class="subcard" style="min-height:auto"><p>Dernière reprise : <b>${esc(recoveryMeta.source)}</b>. Drive Sync : <b>${esc(getDriveConfig().lastStatus)}</b>.</p><button class="mini-btn" onclick="sendDriveSync('manuel courant',false,'current')">☁ Envoyer maintenant</button><button class="mini-btn" onclick="exportManifest()">▤ Manifest global</button></div>`}
   else if(activeMain==='roadmap'){html=renderRoadmapPilotable()}
-  else if(activeMain==='deploy'){html=`<div class="view-title"><h2>🚀 Déploiement</h2><span class="pill green">GitHub Pages</span></div>${renderPilotageBoard()}<div class="subcard" style="min-height:auto"><p>Publication manuelle conservée : remplacer <b>apps/gestion-projets-bi/index.html</b>.</p><p><a href="${PUBLIC_ROOT}gestion-projets-bi/" target="_blank">Ouvrir la version publiée</a></p></div>`}
+  else if(activeMain==='deployment'){html=renderDeploymentModule()}
+  else if(activeMain==='deploy'){html=renderDeploymentModule()}
   else if(activeMain==='notes'){html=renderNotesModule()}
   else if(activeMain==='data'){html=renderRealSyncDashboard()}
 else if(activeMain==='sources'){html=renderLinksWorkspace()}
