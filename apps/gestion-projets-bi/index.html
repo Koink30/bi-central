@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>Cockpit Projets BI · V6.5G Historique GitHub étendu</title>
+<title>Cockpit Projets BI · V6.5G1 Workflows récents visibles</title>
 <style>
 :root{
   --bg:#030711;--bg2:#06112a;--panel:rgba(7,18,41,.82);--panel2:rgba(9,28,61,.72);
@@ -545,6 +545,19 @@ textarea{resize:vertical;min-height:76px} input:focus,select:focus,textarea:focu
 .github-run-row{display:grid;grid-template-columns:96px 1fr 116px 90px;gap:8px;align-items:center;border:1px solid rgba(255,255,255,.08);background:rgba(2,8,20,.25);border-radius:12px;padding:8px;font-size:11px;margin-bottom:6px}
 .version-count-correction{border:1px solid rgba(53,243,132,.28);background:rgba(53,243,132,.045);border-radius:14px;padding:10px;margin:10px 0;color:#dfffe9;font-size:12px}
 
+
+/* V6.5G1 - workflows récents visibles */
+.workflow-latest-panel{border:1px solid rgba(53,243,132,.30);background:rgba(53,243,132,.045);border-radius:18px;padding:13px;margin:12px 0}
+.workflow-latest-panel h3{margin:0 0 10px;color:#dfffe9}
+.workflow-latest-list{display:grid;gap:7px;max-height:360px;overflow:auto}
+.workflow-latest-row{display:grid;grid-template-columns:92px 1fr 136px 96px;gap:8px;align-items:center;border:1px solid rgba(255,255,255,.08);background:rgba(2,8,20,.25);border-radius:12px;padding:8px;font-size:11px}
+.workflow-latest-row b{color:#fff}
+.workflow-latest-row small{color:var(--muted)}
+.workflow-latest-row .ok{color:#dfffe9}
+.workflow-latest-row .bad{color:#ffc8cd}
+.workflow-latest-row .run{color:#ffe2a5}
+@media(max-width:900px){.workflow-latest-row{grid-template-columns:80px 1fr}.workflow-latest-row span:nth-child(3),.workflow-latest-row span:nth-child(4){display:none}}
+
 @media(max-width:1260px){.roadmap-board,.road-summary{grid-template-columns:repeat(2,1fr)}.road-form{grid-template-columns:1fr 1fr}}
 @media(max-width:760px){.roadmap-board,.road-summary,.road-form{grid-template-columns:1fr}}
 
@@ -966,6 +979,19 @@ textarea{resize:vertical;min-height:76px} input:focus,select:focus,textarea:focu
 .github-run-row{display:grid;grid-template-columns:96px 1fr 116px 90px;gap:8px;align-items:center;border:1px solid rgba(255,255,255,.08);background:rgba(2,8,20,.25);border-radius:12px;padding:8px;font-size:11px;margin-bottom:6px}
 .version-count-correction{border:1px solid rgba(53,243,132,.28);background:rgba(53,243,132,.045);border-radius:14px;padding:10px;margin:10px 0;color:#dfffe9;font-size:12px}
 
+
+/* V6.5G1 - workflows récents visibles */
+.workflow-latest-panel{border:1px solid rgba(53,243,132,.30);background:rgba(53,243,132,.045);border-radius:18px;padding:13px;margin:12px 0}
+.workflow-latest-panel h3{margin:0 0 10px;color:#dfffe9}
+.workflow-latest-list{display:grid;gap:7px;max-height:360px;overflow:auto}
+.workflow-latest-row{display:grid;grid-template-columns:92px 1fr 136px 96px;gap:8px;align-items:center;border:1px solid rgba(255,255,255,.08);background:rgba(2,8,20,.25);border-radius:12px;padding:8px;font-size:11px}
+.workflow-latest-row b{color:#fff}
+.workflow-latest-row small{color:var(--muted)}
+.workflow-latest-row .ok{color:#dfffe9}
+.workflow-latest-row .bad{color:#ffc8cd}
+.workflow-latest-row .run{color:#ffe2a5}
+@media(max-width:900px){.workflow-latest-row{grid-template-columns:80px 1fr}.workflow-latest-row span:nth-child(3),.workflow-latest-row span:nth-child(4){display:none}}
+
 @media(max-width:1260px){.header,.layout{grid-template-columns:1fr}.kpis{grid-template-columns:repeat(2,1fr)}.info-grid{grid-template-columns:1fr 1fr}}
 @media(max-width:760px){.app{padding:12px}.header,.info-grid,.kpis,.form-grid,.note-form,.note-grid{grid-template-columns:1fr}.quick,.actionbar{justify-content:flex-start}.toplink,.btn{width:100%;justify-content:flex-start}.object-head{grid-template-columns:58px 1fr}.status-zone{grid-column:1/-1}.kpi{grid-template-columns:58px 1fr}.spark{display:none}}
 @media print{body{background:white;color:#111}.quick,.actionbar,.familybar,.sidebar,.btn,.icon-btn,.modal,.toast{display:none!important}.app{max-width:none}.layout{grid-template-columns:1fr}.panel{box-shadow:none;border:1px solid #999;background:white;color:#111}.subcard{background:white}.pill{color:#111}}
@@ -976,7 +1002,7 @@ textarea{resize:vertical;min-height:76px} input:focus,select:focus,textarea:focu
   <header class="header">
     <section class="brand">
       <div class="logo">BI</div>
-      <div><h1>Cockpit Projets BI</h1><p class="subtitle">V6.5G · historique GitHub étendu</p></div>
+      <div><h1>Cockpit Projets BI</h1><p class="subtitle">V6.5G1 · workflows récents visibles</p></div>
     </section>
     <nav class="quick">
       <a class="toplink" id="projectGptLink" target="_blank" rel="noopener">
@@ -1048,9 +1074,9 @@ textarea{resize:vertical;min-height:76px} input:focus,select:focus,textarea:focu
 
 <script>
 'use strict';
-const VERSION='V6.5G-historique-github-etendu';
+const VERSION='V6.5G1-workflows-recents-visibles';
 const STABLE_KEY='central_bi_project_manager_current';
-const VERSION_KEY='central_bi_project_manager_v65g';
+const VERSION_KEY='central_bi_project_manager_v65g1';
 const KEY=STABLE_KEY;
 const MIRROR_KEYS=[VERSION_KEY,'central_bi_project_manager_v61','central_bi_project_manager_v6'];
 const PREVIOUS_KEYS=[VERSION_KEY,'central_bi_project_manager_v61','central_bi_project_manager_v6','central_bi_project_manager_v5','central_bi_project_manager_v4','central_bi_project_manager_v1'];
@@ -2811,7 +2837,7 @@ async function fetchGitHubCommitsPaged(slug,path='',maxPages=6){
 async function fetchGitHubWorkflowRuns(slug,maxPages=3){
   const all=[];
   for(let page=1; page<=maxPages; page++){
-    const url=`https://api.github.com/repos/${slug}/actions/runs?per_page=100&page=${page}`;
+    const url=`https://api.github.com/repos/${slug}/actions/runs?per_page=100&page=${page}&_=${Date.now()}`;
     const data=await fetchGitHubJson(url);
     const runs=data.workflow_runs||[];
     if(!runs.length)break;
@@ -2836,13 +2862,36 @@ function buildRunVersionItems(runs){
     version:detectVersionFromRun(r),
     title:r.display_title||r.name||'Workflow run',
     name:r.name||'workflow',
-    date:r.created_at||r.run_started_at||'',
+    date:r.created_at||r.run_started_at||r.updated_at||'',
+    updated:r.updated_at||'',
     conclusion:r.conclusion||r.status||'',
     branch:r.head_branch||'',
     sha:String(r.head_sha||'').slice(0,7),
     url:r.html_url||'',
     event:r.event||''
-  }));
+  })).sort((a,b)=>String(b.date||b.updated||'').localeCompare(String(a.date||a.updated||'')));
+}
+function workflowStatusClass(r){
+  const s=String(r.conclusion||'').toLowerCase();
+  if(s==='success')return 'ok';
+  if(s==='failure'||s==='cancelled'||s==='timed_out')return 'bad';
+  return 'run';
+}
+function renderLatestWorkflowRuns(){
+  const runs=(externalVersionHistory.githubRuns||[]).slice().sort((a,b)=>String(b.date||b.updated||'').localeCompare(String(a.date||a.updated||'')));
+  return `<section class="workflow-latest-panel">
+    <div class="view-title"><h3>Derniers workflows GitHub</h3><span class="pill green">${runs.length} run(s) chargé(s)</span></div>
+    <p class="muted">Affichage brut des derniers workflow runs, même si aucun numéro de version n’est détecté. C’est ici qu’il faut vérifier les derniers déploiements GitHub.</p>
+    <div class="workflow-latest-list">
+      ${runs.slice(0,50).map(r=>`<div class="workflow-latest-row">
+        <span class="version-source-chip">${esc(r.version||'—')}</span>
+        <div><b>${esc(r.title||'Workflow')}</b><br><small>${esc(r.name||'workflow')} · ${esc(r.branch||'')} · ${esc(r.sha||'')}</small></div>
+        <span>${esc(r.date?String(r.date).slice(0,16).replace('T',' '):'date ?')}</span>
+        <span class="${workflowStatusClass(r)}">${esc(r.conclusion||'—')}</span>
+        ${r.url?`<a class="link-mini" href="${esc(r.url)}" target="_blank" rel="noopener">ouvrir</a>`:''}
+      </div>`).join('')||'<div class="muted">Aucun workflow run chargé. Clique sur “Mettre à jour GitHub”.</div>'}
+    </div>
+  </section>`;
 }
 async function fetchGitHubVersionHistory(){
   const p=selected();
@@ -2912,9 +2961,9 @@ async function fetchGitHubVersionHistory(){
     externalVersionHistory.scan.runs=runs.length;
     externalVersionHistory.scan.pages=Math.ceil(list.length/100);
     const unique=uniqueGithubVersions().length;
-    externalVersionHistory.status=`GitHub étendu OK · ${unique} version(s) · ${details.length} commit(s) · ${runs.length} workflow(s)`;
+    externalVersionHistory.status=`GitHub étendu OK · workflows visibles · ${unique} version(s) · ${details.length} commit(s) · ${runs.length} workflow(s)`;
     externalVersionHistory.updated=nowFr();
-    toast('Historique GitHub étendu chargé');
+    toast('Historique GitHub + workflows chargé');
     renderAll();
   }catch(e){
     externalVersionHistory.status='Erreur GitHub : '+e.message;
@@ -3041,6 +3090,7 @@ function renderExternalVersionHistory(){
     <p class="muted">GitHub est lu comme un historique de versions publiées : le BI détecte les numéros V6.x dans les messages de commit, noms de fichiers et workflow runs.</p>
     <div class="version-count-correction"><b>Comptage corrigé :</b> ${uniqueGithubVersions().length} version(s) unique(s) détectée(s), à partir de ${(externalVersionHistory.github||[]).length} commits détaillés et ${(externalVersionHistory.githubRuns||[]).length} workflow runs. Le chiffre est donc basé sur les versions uniques, pas sur le nombre de commits.</div>
     <div class="github-scan-note">Scan étendu : jusqu’à 600 commits et 300 workflow runs publics. L’historique Actions GitHub peut rester incomplet ou approximatif selon les suppressions de runs, limites API ou changements de workflow.</div>
+    ${renderLatestWorkflowRuns()}
     <h3>Versions publiées détectées sur GitHub</h3>
     <div class="github-version-board">
       ${versions.map(v=>renderGithubVersionCard(v,g.groups[v])).join('') || '<div class="github-version-empty">Aucune version GitHub détectée. Vérifie que les commits contiennent un numéro de version du type V6.5D ou que les fichiers contiennent V6_5D.</div>'}
