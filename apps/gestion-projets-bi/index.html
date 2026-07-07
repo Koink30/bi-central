@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>Cockpit Projets BI · V6.6B Déploiement fiche ruban</title>
+<title>Cockpit Projets BI · V6.6C Déploiement modal configurateur</title>
 <style>
 :root{
   --bg:#030711;--bg2:#06112a;--panel:rgba(7,18,41,.82);--panel2:rgba(9,28,61,.72);
@@ -590,6 +590,25 @@ textarea{resize:vertical;min-height:76px} input:focus,select:focus,textarea:focu
 .deploy-summary-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin:12px 0}.deploy-mini{border:1px solid rgba(255,255,255,.10);background:rgba(2,8,20,.31);border-radius:14px;padding:10px}.deploy-mini small{display:block;color:var(--muted);font-size:11px}.deploy-mini b{display:block;color:#fff;font-size:18px;margin-top:4px}.path-badge{display:inline-block;border:1px solid rgba(40,234,255,.24);background:rgba(40,234,255,.055);border-radius:999px;padding:4px 8px;color:#d8fbff;font-size:11px;margin:3px}
 @media(max-width:1100px){.deploy-grid{grid-template-columns:1fr}.pipeline{grid-template-columns:1fr 1fr}.deploy-summary-grid{grid-template-columns:1fr 1fr}}@media(max-width:720px){.deploy-form{grid-template-columns:1fr}.template-grid{grid-template-columns:1fr}.pipeline{grid-template-columns:1fr}}
 
+
+/* V6.6C - création en modale + configurateur projet */
+.deploy-modal-backdrop{position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,.72);backdrop-filter:blur(10px);display:none;align-items:center;justify-content:center;padding:24px}
+.deploy-modal-backdrop.open{display:flex}
+.deploy-modal{width:min(1180px,96vw);max-height:92vh;overflow:auto;border:1px solid rgba(40,234,255,.35);background:radial-gradient(circle at 15% 0%,rgba(40,234,255,.16),transparent 34%),radial-gradient(circle at 90% 20%,rgba(180,93,255,.14),transparent 38%),rgba(5,11,28,.96);border-radius:24px;padding:16px;box-shadow:0 0 60px rgba(40,234,255,.18)}
+.deploy-modal-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px}
+.deploy-modal-head h2{margin:0;color:#fff}.deploy-modal-head p{margin:4px 0 0;color:var(--muted);font-size:12px}
+.left-create-btn{width:100%;margin:8px 0 10px;border:1px solid rgba(40,234,255,.34);background:linear-gradient(135deg,rgba(40,234,255,.14),rgba(180,93,255,.10));color:#eaffff;border-radius:14px;padding:10px 9px;font-weight:800;cursor:pointer;box-shadow:0 0 18px rgba(40,234,255,.09)}
+.left-create-btn:hover{border-color:rgba(53,243,132,.48);box-shadow:0 0 24px rgba(53,243,132,.12)}
+.config-panel{border:1px solid rgba(80,178,255,.24);background:rgba(5,15,35,.55);border-radius:18px;padding:13px;margin-bottom:12px}
+.config-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.config-grid .full{grid-column:1/-1}.config-grid label{display:block;color:var(--muted);font-size:11px;margin-bottom:4px}.config-grid input,.config-grid select,.config-grid textarea{width:100%;box-sizing:border-box}.config-grid textarea{min-height:70px}
+.config-pipeline{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:8px;margin-top:10px}
+.config-step{border:1px solid rgba(255,255,255,.10);background:rgba(2,8,20,.31);border-radius:13px;padding:9px;font-size:11px;min-height:72px}
+.config-step b{display:block;color:#fff}.config-step small{color:var(--muted)}.config-step.ok{border-color:rgba(53,243,132,.35);background:rgba(53,243,132,.045)}.config-step.warn{border-color:rgba(255,195,77,.30);background:rgba(255,195,77,.035)}
+.config-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+@media(max-width:1050px){.config-grid{grid-template-columns:1fr 1fr}.config-pipeline{grid-template-columns:1fr 1fr 1fr}}
+@media(max-width:720px){.config-grid{grid-template-columns:1fr}.config-pipeline{grid-template-columns:1fr 1fr}.deploy-modal{padding:12px}}
+
 @media(max-width:1260px){.roadmap-board,.road-summary{grid-template-columns:repeat(2,1fr)}.road-form{grid-template-columns:1fr 1fr}}
 @media(max-width:760px){.roadmap-board,.road-summary,.road-form{grid-template-columns:1fr}}
 
@@ -1056,6 +1075,25 @@ textarea{resize:vertical;min-height:76px} input:focus,select:focus,textarea:focu
 .deploy-summary-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin:12px 0}.deploy-mini{border:1px solid rgba(255,255,255,.10);background:rgba(2,8,20,.31);border-radius:14px;padding:10px}.deploy-mini small{display:block;color:var(--muted);font-size:11px}.deploy-mini b{display:block;color:#fff;font-size:18px;margin-top:4px}.path-badge{display:inline-block;border:1px solid rgba(40,234,255,.24);background:rgba(40,234,255,.055);border-radius:999px;padding:4px 8px;color:#d8fbff;font-size:11px;margin:3px}
 @media(max-width:1100px){.deploy-grid{grid-template-columns:1fr}.pipeline{grid-template-columns:1fr 1fr}.deploy-summary-grid{grid-template-columns:1fr 1fr}}@media(max-width:720px){.deploy-form{grid-template-columns:1fr}.template-grid{grid-template-columns:1fr}.pipeline{grid-template-columns:1fr}}
 
+
+/* V6.6C - création en modale + configurateur projet */
+.deploy-modal-backdrop{position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,.72);backdrop-filter:blur(10px);display:none;align-items:center;justify-content:center;padding:24px}
+.deploy-modal-backdrop.open{display:flex}
+.deploy-modal{width:min(1180px,96vw);max-height:92vh;overflow:auto;border:1px solid rgba(40,234,255,.35);background:radial-gradient(circle at 15% 0%,rgba(40,234,255,.16),transparent 34%),radial-gradient(circle at 90% 20%,rgba(180,93,255,.14),transparent 38%),rgba(5,11,28,.96);border-radius:24px;padding:16px;box-shadow:0 0 60px rgba(40,234,255,.18)}
+.deploy-modal-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px}
+.deploy-modal-head h2{margin:0;color:#fff}.deploy-modal-head p{margin:4px 0 0;color:var(--muted);font-size:12px}
+.left-create-btn{width:100%;margin:8px 0 10px;border:1px solid rgba(40,234,255,.34);background:linear-gradient(135deg,rgba(40,234,255,.14),rgba(180,93,255,.10));color:#eaffff;border-radius:14px;padding:10px 9px;font-weight:800;cursor:pointer;box-shadow:0 0 18px rgba(40,234,255,.09)}
+.left-create-btn:hover{border-color:rgba(53,243,132,.48);box-shadow:0 0 24px rgba(53,243,132,.12)}
+.config-panel{border:1px solid rgba(80,178,255,.24);background:rgba(5,15,35,.55);border-radius:18px;padding:13px;margin-bottom:12px}
+.config-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.config-grid .full{grid-column:1/-1}.config-grid label{display:block;color:var(--muted);font-size:11px;margin-bottom:4px}.config-grid input,.config-grid select,.config-grid textarea{width:100%;box-sizing:border-box}.config-grid textarea{min-height:70px}
+.config-pipeline{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:8px;margin-top:10px}
+.config-step{border:1px solid rgba(255,255,255,.10);background:rgba(2,8,20,.31);border-radius:13px;padding:9px;font-size:11px;min-height:72px}
+.config-step b{display:block;color:#fff}.config-step small{color:var(--muted)}.config-step.ok{border-color:rgba(53,243,132,.35);background:rgba(53,243,132,.045)}.config-step.warn{border-color:rgba(255,195,77,.30);background:rgba(255,195,77,.035)}
+.config-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+@media(max-width:1050px){.config-grid{grid-template-columns:1fr 1fr}.config-pipeline{grid-template-columns:1fr 1fr 1fr}}
+@media(max-width:720px){.config-grid{grid-template-columns:1fr}.config-pipeline{grid-template-columns:1fr 1fr}.deploy-modal{padding:12px}}
+
 @media(max-width:1260px){.header,.layout{grid-template-columns:1fr}.kpis{grid-template-columns:repeat(2,1fr)}.info-grid{grid-template-columns:1fr 1fr}}
 @media(max-width:760px){.app{padding:12px}.header,.info-grid,.kpis,.form-grid,.note-form,.note-grid{grid-template-columns:1fr}.quick,.actionbar{justify-content:flex-start}.toplink,.btn{width:100%;justify-content:flex-start}.object-head{grid-template-columns:58px 1fr}.status-zone{grid-column:1/-1}.kpi{grid-template-columns:58px 1fr}.spark{display:none}}
 @media print{body{background:white;color:#111}.quick,.actionbar,.familybar,.sidebar,.btn,.icon-btn,.modal,.toast{display:none!important}.app{max-width:none}.layout{grid-template-columns:1fr}.panel{box-shadow:none;border:1px solid #999;background:white;color:#111}.subcard{background:white}.pill{color:#111}}
@@ -1066,7 +1104,7 @@ textarea{resize:vertical;min-height:76px} input:focus,select:focus,textarea:focu
   <header class="header">
     <section class="brand">
       <div class="logo">BI</div>
-      <div><h1>Cockpit Projets BI</h1><p class="subtitle">V6.6B · Déploiement + fiche ruban</p></div>
+      <div><h1>Cockpit Projets BI</h1><p class="subtitle">V6.6C · Modal création + configurateur</p></div>
     </section>
     <nav class="quick">
       <a class="toplink" id="projectGptLink" target="_blank" rel="noopener">
@@ -1100,6 +1138,7 @@ textarea{resize:vertical;min-height:76px} input:focus,select:focus,textarea:focu
       <div class="panel-title"><h2>Liste des projets</h2><div class="project-tools"><button class="icon-btn" title="Filtre">⚗</button><button class="icon-btn" title="Recherche">⌕</button></div></div>
       <div class="filters"><input id="search" placeholder="Rechercher projet, client, tag..."><select id="phaseFilter"></select><select id="statusFilter"></select></div>
       <div class="list" id="projectList"></div>
+      <button class="left-create-btn" onclick="openDeployCreator()">➕ Nouveau sous-projet</button>
       <button class="btn" style="width:100%;margin-top:10px" id="newBtn2">＋ Nouveau projet</button>
     </aside>
 
@@ -1138,9 +1177,9 @@ textarea{resize:vertical;min-height:76px} input:focus,select:focus,textarea:focu
 
 <script>
 'use strict';
-const VERSION='V6.6B-deploiement-fiche-ruban';
+const VERSION='V6.6C-deploiement-modal-configurateur';
 const STABLE_KEY='central_bi_project_manager_current';
-const VERSION_KEY='central_bi_project_manager_v66b';
+const VERSION_KEY='central_bi_project_manager_v66c';
 const KEY=STABLE_KEY;
 const MIRROR_KEYS=[VERSION_KEY,'central_bi_project_manager_v61','central_bi_project_manager_v6'];
 const PREVIOUS_KEYS=[VERSION_KEY,'central_bi_project_manager_v61','central_bi_project_manager_v6','central_bi_project_manager_v5','central_bi_project_manager_v4','central_bi_project_manager_v1'];
@@ -3473,9 +3512,110 @@ function deployIndexHtmlPreview(){const {s,tpl}=deployDerived();return `<!doctyp
   <p>${s.description}</p>
   <nav>${tpl.tabs.map(x=>`<button>${x}</button>`).join(' ')}</nav>
   <main><h2>Prototype initial</h2><p>BI généré depuis BI Central · V0.1</p></main>
+<div id="deployCreatorRoot"></div>
 </body>
 </html>`}
 function copyDeployText(kind){const txt=kind==='roadmap'?deployRoadmapBlock():kind==='manifest'?deployManifest():kind==='readme'?deployReadme():kind==='tree'?deployFolderTree():deployIndexHtmlPreview();navigator.clipboard?.writeText(txt);toast('Copié')}
+
+
+let deployCreatorOpen=false;
+function openDeployCreator(){deployCreatorOpen=true;renderAll()}
+function closeDeployCreator(){deployCreatorOpen=false;renderAll()}
+function renderDeployCreatorModal(){
+  return `<div class="deploy-modal-backdrop ${deployCreatorOpen?'open':''}" onclick="if(event.target===this)closeDeployCreator()">
+    <div class="deploy-modal">
+      <div class="deploy-modal-head">
+        <div><h2>➕ Nouveau sous-projet BI</h2><p>Création rapide depuis le BI Central : fiche ruban, template, structure cible et roadmap V0.</p></div>
+        <button class="mini-btn" onclick="closeDeployCreator()">Fermer</button>
+      </div>
+      ${renderDeploymentCreatorContent()}
+    </div>
+  </div>`;
+}
+function selectedDeployDerived(){
+  const p=selected();
+  const name=p?.name||'Projet BI';
+  const slug=slugifyProjectName(name);
+  const appPath=p?.sources?.githubPath || `apps/${slug}/`;
+  const url=p?.sources?.pagesUrl || `https://koink30.github.io/bi-central/${appPath}`;
+  const drive=p?.sources?.driveFolder || p?.deployConfig?.driveRoot || `BI_${slug.toUpperCase()}`;
+  return {p,name,slug,appPath,url,drive};
+}
+function updateProjectDeployField(field,value){
+  const p=selected(); if(!p)return;
+  p.sources=p.sources||{}; p.deployConfig=p.deployConfig||{};
+  if(field.startsWith('sources.')) p.sources[field.split('.')[1]]=value;
+  else p.deployConfig[field]=value;
+  p.updated=nowFr();
+  persist('configuration déploiement '+(p.name||'projet'));
+  renderAll();
+}
+function renderDeploymentModule(){
+  const {p,name,slug,appPath,url,drive}=selectedDeployDerived();
+  const cfg=p.deployConfig||{};
+  const mode=cfg.deliveryMode||'GitHub Pages / ZIP';
+  const stage=cfg.stage||'Préparation';
+  const checklist=[
+    ['Brief',!!p.goal],
+    ['Drive',!!(p.sources?.driveFolder||cfg.driveRoot)],
+    ['GitHub',!!(p.sources?.githubPath||p.sources?.githubRepo)],
+    ['V0',!!(p.versions||[]).length],
+    ['Test',stage==='Testé'||stage==='Livré'],
+    ['Livraison',stage==='Livré']
+  ];
+  return `<div class="view-title"><h2>🚀 Déploiement du projet</h2><span class="pill green">configurateur fiche active</span></div>
+  <section class="deploy-hero">
+    <h2>${esc(name)}</h2>
+    <p>Ici on configure le déploiement du BI sélectionné : chemins Drive/GitHub, URL cible, mode de livraison et pipeline. La création d’un nouveau sous-projet se fait via le bouton du ruban gauche.</p>
+    <div class="deploy-actions"><button class="mini-btn" onclick="openDeployCreator()">➕ Nouveau sous-projet</button></div>
+  </section>
+  <section class="config-panel">
+    <h3>Configuration déploiement</h3>
+    <div class="config-grid">
+      <div><label>Slug projet</label><input value="${esc(slug)}" readonly></div>
+      <div><label>Mode livraison</label><select onchange="updateProjectDeployField('deliveryMode',this.value)">${['GitHub Pages / ZIP','ZIP local','Drive uniquement','Démo privée','Repo dédié plus tard'].map(x=>`<option ${mode===x?'selected':''}>${x}</option>`).join('')}</select></div>
+      <div><label>État pipeline</label><select onchange="updateProjectDeployField('stage',this.value)">${['Préparation','V0 à générer','Test local','Publié','Testé','Livré'].map(x=>`<option ${stage===x?'selected':''}>${x}</option>`).join('')}</select></div>
+      <div class="full"><label>Chemin GitHub cible</label><input value="${esc(appPath)}" onchange="updateProjectDeployField('sources.githubPath',this.value)"></div>
+      <div class="full"><label>URL publique cible</label><input value="${esc(url)}" onchange="updateProjectDeployField('sources.pagesUrl',this.value)"></div>
+      <div class="full"><label>Dossier Drive / racine projet</label><input value="${esc(drive)}" onchange="updateProjectDeployField('sources.driveFolder',this.value)"></div>
+      <div class="full"><label>Note de livraison</label><textarea onchange="updateProjectDeployField('deliveryNote',this.value)">${esc(cfg.deliveryNote||'')}</textarea></div>
+    </div>
+  </section>
+  <section class="config-panel">
+    <h3>Pipeline du projet sélectionné</h3>
+    <div class="config-pipeline">${checklist.map(x=>`<div class="config-step ${x[1]?'ok':'warn'}"><b>${x[1]?'🟢':'🟡'} ${x[0]}</b><small>${x[1]?'OK':'À compléter'}</small></div>`).join('')}</div>
+    <div class="config-actions">
+      <button class="mini-btn" onclick="updateProjectDeployField('stage','V0 à générer')">Marquer V0</button>
+      <button class="mini-btn" onclick="updateProjectDeployField('stage','Test local')">Marquer test</button>
+      <button class="mini-btn" onclick="updateProjectDeployField('stage','Livré')">Marquer livré</button>
+    </div>
+  </section>
+  <div class="deploy-grid">
+    <section class="deploy-card"><h3>Structure cible projet</h3><pre class="deploy-output">${esc(`Drive :
+${drive}/
+  00_ADMIN/
+  01_BRIEF_CLIENT/
+  02_DONNEES/
+  03_HTML_BI/
+  04_EXPORTS/
+  05_LIVRABLES/
+  06_ARCHIVES/
+  99_NOTES_DEV/
+
+GitHub :
+bi-central/
+  ${appPath}
+    index.html
+    manifest.json
+    roadmap.json
+    data-demo.json
+    README.md
+
+URL :
+${url}`)}</pre></section>
+    <section class="deploy-card"><h3>Résumé déploiement</h3><pre class="deploy-output">${esc(JSON.stringify({projet:name,slug,mode,stage,githubPath:appPath,url,drive,versionActive:(p.versions||[])[0]?.version||p.version||'à définir'},null,2))}</pre></section>
+  </div>`;
+}
 
 function createProjectFromDeployment(){
   const {s,tpl,slug,appPath,url,driveRoot}=deployDerived();
@@ -3540,10 +3680,11 @@ function createProjectFromDeployment(){
   activeMain='fiche';
   persist('création sous-projet '+s.name);
   toast('Fiche sous-projet créée dans le ruban gauche');
+  deployCreatorOpen=false;
   renderAll();
 }
 
-function renderDeploymentModule(){const {s,tpl,slug,appPath,url,driveRoot}=deployDerived();return `<div class="view-title"><h2>🚀 Déploiement sous-projet</h2><span class="pill green">V6.6B fiche ruban</span></div>
+function renderDeploymentCreatorContent(){const {s,tpl,slug,appPath,url,driveRoot}=deployDerived();return `<div class="view-title"><h2>🚀 Déploiement sous-projet</h2><span class="pill green">V6.6B fiche ruban</span></div>
 <section class="deploy-hero"><h2>Créer un nouveau BI depuis le BI Central</h2><p>Ce module prépare la fiche sous-projet, la structure Drive, l’emplacement GitHub, le pack V0 et les blocs roadmap. Aucun push GitHub automatique pour l’instant : on reste en conceptualisation fiable.</p><div class="deploy-actions"><button class="mini-btn" onclick="createProjectFromDeployment()">➕ Créer la fiche projet dans le ruban gauche</button><button class="mini-btn" onclick="copyDeployText('roadmap')">Copier roadmap V0</button></div></section>
 <div class="deploy-summary-grid"><div class="deploy-mini"><small>Slug projet</small><b>${esc(slug)}</b></div><div class="deploy-mini"><small>Chemin GitHub</small><b>${esc(appPath)}</b></div><div class="deploy-mini"><small>Template</small><b>${esc(tpl.name)}</b></div><div class="deploy-mini"><small>Version départ</small><b>V0.1</b></div></div>
 <div class="deploy-grid">
@@ -3738,6 +3879,7 @@ function scheduleSoftRender(){
   }
 }
 function renderAll(){renderQuickLinks();renderCentralTabs();renderList();renderDetail();renderMainView();renderSidebar();renderKpis();
+  const dcr=$('deployCreatorRoot'); if(dcr)dcr.innerHTML=renderDeployCreatorModal();
   setTimeout(initRightDragDrop,0);
 }
 document.addEventListener('DOMContentLoaded',()=>{initSelect('phaseFilter',PHASES,true);initSelect('statusFilter',STATUSES,true);initSelect('mSpace',SPACES.filter(x=>x!=='Tous'));initSelect('mType',TYPES);initSelect('mPhase',PHASES);initSelect('mStatus',STATUSES);$('search').oninput=renderList;$('phaseFilter').onchange=renderList;$('statusFilter').onchange=renderList;$('newBtn').onclick=openModal;$('newBtn2').onclick=openModal;$('closeModal').onclick=closeModal;$('projectModal').onclick=e=>{if(e.target===$('projectModal'))closeModal()};$('createBtn').onclick=createProject;$('exportBtn').onclick=exportJson;$('snapshotBtn').onclick=exportSnapshot;$('manifestBtn').onclick=exportManifest;$('driveSyncBtn').onclick=configureDriveSync;$('importFile').onchange=e=>{if(e.target.files[0])importJson(e.target.files[0]);e.target.value=''};$('resetBtn').onclick=resetDemo;renderAll();if(!localStorage.getItem(KEY)||recoveryMeta.source!==KEY){persist('reprise automatique depuis '+recoveryMeta.source);toast('Reprise automatique active')}});
@@ -3755,5 +3897,6 @@ document.addEventListener('click',function(ev){
 },true);
 
 </script>
+<div id="deployCreatorRoot"></div>
 </body>
 </html>
