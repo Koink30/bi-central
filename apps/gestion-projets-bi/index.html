@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>Cockpit Projets BI · V6.7H Ouverture stable + Supprimé</title>
+<title>Cockpit Projets BI · V6.7I Onglet Sous-projets</title>
 <style>
 :root{
   --bg:#030711;--bg2:#06112a;--panel:rgba(7,18,41,.82);--panel2:rgba(9,28,61,.72);
@@ -701,6 +701,67 @@ body.show-deleted .deleted-project-card{display:block!important}
 #deletedToggleBtn.active{background:rgba(255,80,80,.15);box-shadow:0 0 16px rgba(255,80,80,.12)}
 .deleted-pill{display:inline-flex;align-items:center;gap:4px;border:1px solid rgba(255,110,110,.36);background:rgba(255,80,80,.07);color:#ffd1d1;border-radius:999px;padding:3px 7px;font-size:10px;margin-top:5px}
 
+
+/* V6.7I - Onglet Sous-projets + ruban parents uniquement */
+.bi-subobject-stair{display:none!important}
+.parent-subcount-chip{
+  display:inline-flex;align-items:center;gap:4px;
+  border:1px solid rgba(255,195,77,.34);
+  background:rgba(255,195,77,.065);
+  color:#ffe8ad;border-radius:999px;
+  padding:3px 7px;font-size:10px;margin-top:5px
+}
+.subpilot-hero{
+  border:1px solid rgba(40,234,255,.24);
+  background:radial-gradient(circle at 8% 0%,rgba(40,234,255,.12),transparent 35%),rgba(5,15,35,.52);
+  border-radius:20px;padding:14px;margin-bottom:12px
+}
+.subpilot-hero h2{margin:0 0 6px;color:#fff}
+.subpilot-hero p{margin:0;color:var(--muted);font-size:12px;line-height:1.45}
+.subpilot-map{
+  position:relative;
+  display:grid;
+  grid-template-columns:1fr 1.2fr;
+  gap:18px;
+  align-items:start;
+  margin-top:12px
+}
+.subpilot-parent{
+  position:relative;
+  border:1px solid rgba(40,234,255,.34);
+  background:linear-gradient(135deg,rgba(40,234,255,.10),rgba(180,93,255,.06));
+  border-radius:20px;padding:14px;box-shadow:0 0 24px rgba(40,234,255,.08)
+}
+.subpilot-parent h3,.subpilot-card h3{margin:0 0 6px;color:#fff}
+.subpilot-parent small,.subpilot-card small{color:var(--muted)}
+.subpilot-children{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:12px;
+  position:relative
+}
+.subpilot-card{
+  position:relative;
+  border:1px solid rgba(255,195,77,.28);
+  background:linear-gradient(135deg,rgba(255,195,77,.055),rgba(40,234,255,.035));
+  border-radius:18px;padding:12px;cursor:pointer;min-height:125px
+}
+.subpilot-card:before{
+  content:"";position:absolute;left:-18px;top:34px;width:18px;height:2px;
+  background:rgba(255,195,77,.55);box-shadow:0 0 10px rgba(255,195,77,.18)
+}
+.subpilot-card:hover{border-color:rgba(53,243,132,.38);box-shadow:0 0 18px rgba(53,243,132,.10)}
+.subpilot-empty{
+  border:1px dashed rgba(255,255,255,.18);
+  background:rgba(255,255,255,.035);
+  border-radius:18px;padding:18px;color:var(--muted);text-align:center
+}
+.subpilot-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.subpilot-kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin:12px 0}
+.subpilot-kpi{border:1px solid rgba(255,255,255,.10);background:rgba(2,8,20,.32);border-radius:14px;padding:10px}
+.subpilot-kpi b{display:block;color:#fff;font-size:18px}.subpilot-kpi small{color:var(--muted);font-size:10px}
+@media(max-width:1050px){.subpilot-map{grid-template-columns:1fr}.subpilot-children{grid-template-columns:1fr}.subpilot-card:before{display:none}.subpilot-kpis{grid-template-columns:1fr 1fr}}
+
 @media(max-width:1260px){.roadmap-board,.road-summary{grid-template-columns:repeat(2,1fr)}.road-form{grid-template-columns:1fr 1fr}}
 @media(max-width:760px){.roadmap-board,.road-summary,.road-form{grid-template-columns:1fr}}
 
@@ -1278,6 +1339,67 @@ body.show-deleted .deleted-project-card{display:block!important}
 #deletedToggleBtn.active{background:rgba(255,80,80,.15);box-shadow:0 0 16px rgba(255,80,80,.12)}
 .deleted-pill{display:inline-flex;align-items:center;gap:4px;border:1px solid rgba(255,110,110,.36);background:rgba(255,80,80,.07);color:#ffd1d1;border-radius:999px;padding:3px 7px;font-size:10px;margin-top:5px}
 
+
+/* V6.7I - Onglet Sous-projets + ruban parents uniquement */
+.bi-subobject-stair{display:none!important}
+.parent-subcount-chip{
+  display:inline-flex;align-items:center;gap:4px;
+  border:1px solid rgba(255,195,77,.34);
+  background:rgba(255,195,77,.065);
+  color:#ffe8ad;border-radius:999px;
+  padding:3px 7px;font-size:10px;margin-top:5px
+}
+.subpilot-hero{
+  border:1px solid rgba(40,234,255,.24);
+  background:radial-gradient(circle at 8% 0%,rgba(40,234,255,.12),transparent 35%),rgba(5,15,35,.52);
+  border-radius:20px;padding:14px;margin-bottom:12px
+}
+.subpilot-hero h2{margin:0 0 6px;color:#fff}
+.subpilot-hero p{margin:0;color:var(--muted);font-size:12px;line-height:1.45}
+.subpilot-map{
+  position:relative;
+  display:grid;
+  grid-template-columns:1fr 1.2fr;
+  gap:18px;
+  align-items:start;
+  margin-top:12px
+}
+.subpilot-parent{
+  position:relative;
+  border:1px solid rgba(40,234,255,.34);
+  background:linear-gradient(135deg,rgba(40,234,255,.10),rgba(180,93,255,.06));
+  border-radius:20px;padding:14px;box-shadow:0 0 24px rgba(40,234,255,.08)
+}
+.subpilot-parent h3,.subpilot-card h3{margin:0 0 6px;color:#fff}
+.subpilot-parent small,.subpilot-card small{color:var(--muted)}
+.subpilot-children{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:12px;
+  position:relative
+}
+.subpilot-card{
+  position:relative;
+  border:1px solid rgba(255,195,77,.28);
+  background:linear-gradient(135deg,rgba(255,195,77,.055),rgba(40,234,255,.035));
+  border-radius:18px;padding:12px;cursor:pointer;min-height:125px
+}
+.subpilot-card:before{
+  content:"";position:absolute;left:-18px;top:34px;width:18px;height:2px;
+  background:rgba(255,195,77,.55);box-shadow:0 0 10px rgba(255,195,77,.18)
+}
+.subpilot-card:hover{border-color:rgba(53,243,132,.38);box-shadow:0 0 18px rgba(53,243,132,.10)}
+.subpilot-empty{
+  border:1px dashed rgba(255,255,255,.18);
+  background:rgba(255,255,255,.035);
+  border-radius:18px;padding:18px;color:var(--muted);text-align:center
+}
+.subpilot-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.subpilot-kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin:12px 0}
+.subpilot-kpi{border:1px solid rgba(255,255,255,.10);background:rgba(2,8,20,.32);border-radius:14px;padding:10px}
+.subpilot-kpi b{display:block;color:#fff;font-size:18px}.subpilot-kpi small{color:var(--muted);font-size:10px}
+@media(max-width:1050px){.subpilot-map{grid-template-columns:1fr}.subpilot-children{grid-template-columns:1fr}.subpilot-card:before{display:none}.subpilot-kpis{grid-template-columns:1fr 1fr}}
+
 @media(max-width:1260px){.header,.layout{grid-template-columns:1fr}.kpis{grid-template-columns:repeat(2,1fr)}.info-grid{grid-template-columns:1fr 1fr}}
 @media(max-width:760px){.app{padding:12px}.header,.info-grid,.kpis,.form-grid,.note-form,.note-grid{grid-template-columns:1fr}.quick,.actionbar{justify-content:flex-start}.toplink,.btn{width:100%;justify-content:flex-start}.object-head{grid-template-columns:58px 1fr}.status-zone{grid-column:1/-1}.kpi{grid-template-columns:58px 1fr}.spark{display:none}}
 @media print{body{background:white;color:#111}.quick,.actionbar,.familybar,.sidebar,.btn,.icon-btn,.modal,.toast{display:none!important}.app{max-width:none}.layout{grid-template-columns:1fr}.panel{box-shadow:none;border:1px solid #999;background:white;color:#111}.subcard{background:white}.pill{color:#111}}
@@ -1288,7 +1410,7 @@ body.show-deleted .deleted-project-card{display:block!important}
   <header class="header">
     <section class="brand">
       <div class="logo">BI</div>
-      <div><h1>Cockpit Projets BI</h1><p class="subtitle">V6.7H · Ouverture stable + Supprimé</p></div>
+      <div><h1>Cockpit Projets BI</h1><p class="subtitle">V6.7I · Onglet Sous-projets</p></div>
     </section>
     <nav class="quick">
       <a class="toplink" id="projectGptLink" target="_blank" rel="noopener">
@@ -1361,9 +1483,9 @@ body.show-deleted .deleted-project-card{display:block!important}
 
 <script>
 'use strict';
-const VERSION='V6.7H-ouverture-stable-supprime';
+const VERSION='V6.7I-onglet-sous-projets-pilotage';
 const STABLE_KEY='central_bi_project_manager_current';
-const VERSION_KEY='central_bi_project_manager_v67h';
+const VERSION_KEY='central_bi_project_manager_v67i';
 const KEY=STABLE_KEY;
 const MIRROR_KEYS=[VERSION_KEY,'central_bi_project_manager_v61','central_bi_project_manager_v6'];
 const PREVIOUS_KEYS=[VERSION_KEY,'central_bi_project_manager_v61','central_bi_project_manager_v6','central_bi_project_manager_v5','central_bi_project_manager_v4','central_bi_project_manager_v1'];
@@ -1623,6 +1745,7 @@ function renderPilotageBoard(){
 function renderCentralTabs(){
   const tabs=[
     ['fiche','🧩 Synthèse'],
+    ['subprojects','🧬 Sous-projets'],
     ['roadmap','📈 Roadmap simple'],
     ['progress','📊 Avancement'],
     ['versionsTimeline','🕒 Versions'],
@@ -4165,6 +4288,7 @@ function renderMainView(){
   else if(activeMain==='notes'){html=renderNotesModule()}
   else if(activeMain==='data'){html=renderRealSyncDashboard()}
 else if(activeMain==='sources'){html=renderLinksWorkspace()}
+  if(activeMain==='subprojects')html=renderSubprojectsPilotTab();
   $('mainView').innerHTML=html
 }
 function renderSidebar(){
@@ -4550,6 +4674,118 @@ function afterStableRenderV67H(){
   decorateDeletedToggle();
 }
 
+
+function isSubBi(p){
+  return !!(p && (p.parentId || p.kind==='subobject' || p.kind==='subproject'));
+}
+function parentBiOf(p){
+  return state.projects.find(x=>x.id===p.parentId)||null;
+}
+function childrenBiOf(id){
+  return state.projects.filter(x=>x.parentId===id && !isProjectDeleted(x));
+}
+function selectedBiParent(){
+  const p=selected();
+  return isSubBi(p) ? (parentBiOf(p)||p) : p;
+}
+function decorateParentSubCounts(){
+  try{
+    const root=document.getElementById('projectList');
+    if(!root)return;
+    root.querySelectorAll('.parent-subcount-chip').forEach(x=>x.remove());
+
+    state.projects.filter(p=>!isSubBi(p) && !isProjectDeleted(p)).forEach(p=>{
+      const n=childrenBiOf(p.id).length;
+      if(!n)return;
+      const cards=[...root.querySelectorAll('.card,.project-card,.project-item,.item,.subcard,[onclick]')];
+      const card=cards.find(el=>(el.textContent||'').includes(p.name||''));
+      if(!card)return;
+      const chip=document.createElement('span');
+      chip.className='parent-subcount-chip';
+      chip.textContent=`🧩 ${n} sous-projet${n>1?'s':''}`;
+      const target=card.querySelector('h3,b,.title,.card-title')?.parentElement || card;
+      target.appendChild(chip);
+    });
+  }catch(e){console.warn('subcount ignoré',e)}
+}
+function openSubprojectCreatorForSelected(){
+  const parent=selectedBiParent();
+  openCreateBiModal('subobject');
+  const s=getCreateBiState();
+  s.mode='subobject';
+  s.parentId=parent?.id||'';
+  s.name='Nouveau sous-projet BI';
+  localStorage.setItem(CREATE_BI_KEY,JSON.stringify(s));
+  createBiOpen=true;
+  renderAll();
+}
+function subProjectStatusCounts(children){
+  return {
+    total:children.length,
+    test:children.filter(x=>String(x.status||'').toLowerCase().includes('test')).length,
+    ok:children.filter(x=>['Publié','Livré','Validé','Terminé'].includes(x.status)).length,
+    risk:children.filter(x=>['Bloqué','À revoir','Risque'].includes(x.status)).length
+  };
+}
+function renderSubprojectsPilotTab(){
+  const parent=selectedBiParent();
+  if(!parent)return '<p class="muted">Aucun projet sélectionné.</p>';
+  const children=childrenBiOf(parent.id);
+  const counts=subProjectStatusCounts(children);
+  const isChild=isSubBi(selected());
+  return `<div class="view-title"><h2>🧬 Sous-projets</h2><span class="pill green">${children.length} lié(s)</span></div>
+  ${isChild?`<div class="parent-link-panel"><b>Vue parent :</b> ce sous-projet est rattaché à ${esc(parent.name)}. <button class="mini-btn" onclick="state.selectedId='${parent.id}';activeMain='subprojects';renderAll()">Ouvrir le parent</button></div>`:''}
+  <section class="subpilot-hero">
+    <h2>${esc(parent.name)}</h2>
+    <p>Pilotage des sous-projets liés au BI parent. Les sous-projets ne sont plus affichés comme projets séparés dans le ruban gauche : ils sont pilotés ici.</p>
+    <div class="subpilot-actions">
+      <button class="mini-btn" onclick="openSubprojectCreatorForSelected()">➕ Créer un sous-projet</button>
+      <button class="mini-btn" onclick="activeMain='deployment';renderAll()">Configurer déploiement parent</button>
+    </div>
+  </section>
+  <div class="subpilot-kpis">
+    <div class="subpilot-kpi"><b>${counts.total}</b><small>Sous-projets</small></div>
+    <div class="subpilot-kpi"><b>${counts.test}</b><small>À tester</small></div>
+    <div class="subpilot-kpi"><b>${counts.ok}</b><small>OK / livrés</small></div>
+    <div class="subpilot-kpi"><b>${counts.risk}</b><small>À risque</small></div>
+  </div>
+  <section class="subpilot-map">
+    <div class="subpilot-parent">
+      <h3>${esc(parent.icon||'🧠')} ${esc(parent.name)}</h3>
+      <small>Projet BI parent</small>
+      <p class="muted">${esc(parent.goal||parent.nextAction||'Projet parent')}</p>
+      <div class="meta"><span class="pill"><span class="dot ${statusColor(parent.status)}"></span>${esc(parent.status||'')}</span><span class="pill">${projectReadiness(parent)}%</span></div>
+    </div>
+    <div class="subpilot-children">
+      ${children.length?children.map(c=>`<div class="subpilot-card" onclick="state.selectedId='${c.id}';activeMain='fiche';renderAll()">
+        <h3>${esc(c.icon||'🧩')} ${esc(c.name)}</h3>
+        <small>Sous-projet BI</small>
+        <p>${esc(c.goal||c.nextAction||'Sous-projet')}</p>
+        <div class="meta"><span class="pill"><span class="dot ${statusColor(c.status)}"></span>${esc(c.status||'')}</span><span class="pill">${projectReadiness(c)}%</span></div>
+        <small>GitHub : ${esc(c.sources?.githubPath||'à définir')}</small>
+      </div>`).join(''):`<div class="subpilot-empty">
+        Aucun sous-projet pour ce BI.<br><br>
+        <button class="mini-btn" onclick="openSubprojectCreatorForSelected()">➕ Créer le premier sous-projet</button>
+      </div>`}
+    </div>
+  </section>`;
+}
+function hideSubprojectsFromLeftRuban(){
+  try{
+    const root=document.getElementById('projectList');
+    if(!root)return;
+    state.projects.filter(p=>isSubBi(p) && !isProjectDeleted(p)).forEach(p=>{
+      const cards=[...root.querySelectorAll('.card,.project-card,.project-item,.item,.subcard,[onclick]')];
+      const card=cards.find(el=>(el.textContent||'').includes(p.name||''));
+      if(card)card.style.display='none';
+    });
+  }catch(e){console.warn('hide subprojects ignoré',e)}
+}
+function afterSubprojectsPilotV67I(){
+  hideSubprojectsFromLeftRuban();
+  decorateParentSubCounts();
+}
+
 function renderAll(){
   ensureStartupSelection();
 renderQuickLinks();renderCentralTabs();renderList();renderDetail();renderMainView();renderSidebar();renderKpis();
@@ -4562,6 +4798,8 @@ renderQuickLinks();renderCentralTabs();renderList();renderDetail();renderMainVie
   setTimeout(decorateTrashControls,0);
 
   setTimeout(afterStableRenderV67H,0);
+
+  setTimeout(afterSubprojectsPilotV67I,0);
 }
 document.addEventListener('DOMContentLoaded',()=>{initSelect('phaseFilter',PHASES,true);initSelect('statusFilter',STATUSES,true);initSelect('mSpace',SPACES.filter(x=>x!=='Tous'));initSelect('mType',TYPES);initSelect('mPhase',PHASES);initSelect('mStatus',STATUSES);$('search').oninput=renderList;$('phaseFilter').onchange=renderList;$('statusFilter').onchange=renderList;$('newBtn').onclick=openModal;$('newBtn2').onclick=openModal;$('closeModal').onclick=closeModal;$('projectModal').onclick=e=>{if(e.target===$('projectModal'))closeModal()};$('createBtn').onclick=createProject;$('exportBtn').onclick=exportJson;$('snapshotBtn').onclick=exportSnapshot;$('manifestBtn').onclick=exportManifest;$('driveSyncBtn').onclick=configureDriveSync;$('importFile').onchange=e=>{if(e.target.files[0])importJson(e.target.files[0]);e.target.value=''};$('resetBtn').onclick=resetDemo;renderAll();if(!localStorage.getItem(KEY)||recoveryMeta.source!==KEY){persist('reprise automatique depuis '+recoveryMeta.source);toast('Reprise automatique active')}});
 
@@ -4579,6 +4817,8 @@ document.addEventListener('click',function(ev){
 
 
 window.addEventListener('load',()=>setTimeout(()=>{try{renderAll();afterStableRenderV67H()}catch(e){console.error(e)}},50));
+
+window.addEventListener('load',()=>setTimeout(afterSubprojectsPilotV67I,80));
 </script>
 <div id="deployCreatorRoot"></div>
 <div id="createBiModalRoot"></div>
