@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>Cockpit Projets BI · V6.5G3 GitHub cache + Temps démo</title>
+<title>Cockpit Projets BI · V6.6A Déploiement sous-projet</title>
 <style>
 :root{
   --bg:#030711;--bg2:#06112a;--panel:rgba(7,18,41,.82);--panel2:rgba(9,28,61,.72);
@@ -578,6 +578,18 @@ textarea{resize:vertical;min-height:76px} input:focus,select:focus,textarea:focu
 .time-event-row b{color:#f5fbff}
 @media(max-width:900px){.worktime-grid{grid-template-columns:1fr 1fr}.time-event-row{grid-template-columns:98px 1fr}.time-event-row span:nth-child(2),.time-event-row span:nth-child(4){display:none}}
 
+
+/* V6.6A - Déploiement sous-projet */
+.deploy-hero{border:1px solid rgba(40,234,255,.28);background:radial-gradient(circle at 20% 0%,rgba(40,234,255,.13),transparent 34%),radial-gradient(circle at 80% 20%,rgba(180,93,255,.12),transparent 38%),rgba(5,15,35,.58);border-radius:22px;padding:16px;margin-bottom:14px;box-shadow:0 0 28px rgba(40,234,255,.08)}
+.deploy-hero h2{margin:0 0 8px;font-size:26px;color:#f5fbff}.deploy-hero p{margin:0;color:var(--muted);line-height:1.45}
+.deploy-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:12px}.deploy-card{border:1px solid rgba(255,255,255,.10);background:rgba(2,8,20,.34);border-radius:18px;padding:13px}.deploy-card h3{margin:0 0 10px;color:#fff}
+.deploy-form{display:grid;grid-template-columns:1fr 1fr;gap:10px}.deploy-form .full{grid-column:1/-1}.deploy-form label{display:block;color:var(--muted);font-size:11px;margin-bottom:4px}.deploy-form input,.deploy-form select,.deploy-form textarea{width:100%;box-sizing:border-box}.deploy-form textarea{min-height:76px}
+.template-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.template-tile{cursor:pointer;border:1px solid rgba(255,255,255,.10);background:rgba(255,255,255,.045);border-radius:15px;padding:10px;transition:.18s}.template-tile:hover,.template-tile.active{border-color:rgba(40,234,255,.48);box-shadow:0 0 18px rgba(40,234,255,.13);transform:translateY(-1px)}.template-tile b{display:block;color:#fff}.template-tile small{display:block;color:var(--muted);margin-top:4px;line-height:1.35}
+.pipeline{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:8px;margin-top:10px}.pipeline-step{position:relative;border:1px solid rgba(255,255,255,.10);background:rgba(2,8,20,.34);border-radius:14px;padding:10px;min-height:82px}.pipeline-step b{display:block;color:#fff;font-size:12px}.pipeline-step small{display:block;color:var(--muted);font-size:10px;margin-top:4px}.pipeline-step.done{border-color:rgba(53,243,132,.34);background:rgba(53,243,132,.045)}.pipeline-step.todo{border-color:rgba(255,195,77,.24);background:rgba(255,195,77,.035)}
+.deploy-output{font-family:ui-monospace,Consolas,monospace;font-size:11px;white-space:pre-wrap;color:#dff8ff;background:rgba(0,0,0,.22);border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:10px;max-height:360px;overflow:auto}.deploy-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.deploy-summary-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin:12px 0}.deploy-mini{border:1px solid rgba(255,255,255,.10);background:rgba(2,8,20,.31);border-radius:14px;padding:10px}.deploy-mini small{display:block;color:var(--muted);font-size:11px}.deploy-mini b{display:block;color:#fff;font-size:18px;margin-top:4px}.path-badge{display:inline-block;border:1px solid rgba(40,234,255,.24);background:rgba(40,234,255,.055);border-radius:999px;padding:4px 8px;color:#d8fbff;font-size:11px;margin:3px}
+@media(max-width:1100px){.deploy-grid{grid-template-columns:1fr}.pipeline{grid-template-columns:1fr 1fr}.deploy-summary-grid{grid-template-columns:1fr 1fr}}@media(max-width:720px){.deploy-form{grid-template-columns:1fr}.template-grid{grid-template-columns:1fr}.pipeline{grid-template-columns:1fr}}
+
 @media(max-width:1260px){.roadmap-board,.road-summary{grid-template-columns:repeat(2,1fr)}.road-form{grid-template-columns:1fr 1fr}}
 @media(max-width:760px){.roadmap-board,.road-summary,.road-form{grid-template-columns:1fr}}
 
@@ -1032,6 +1044,18 @@ textarea{resize:vertical;min-height:76px} input:focus,select:focus,textarea:focu
 .time-event-row b{color:#f5fbff}
 @media(max-width:900px){.worktime-grid{grid-template-columns:1fr 1fr}.time-event-row{grid-template-columns:98px 1fr}.time-event-row span:nth-child(2),.time-event-row span:nth-child(4){display:none}}
 
+
+/* V6.6A - Déploiement sous-projet */
+.deploy-hero{border:1px solid rgba(40,234,255,.28);background:radial-gradient(circle at 20% 0%,rgba(40,234,255,.13),transparent 34%),radial-gradient(circle at 80% 20%,rgba(180,93,255,.12),transparent 38%),rgba(5,15,35,.58);border-radius:22px;padding:16px;margin-bottom:14px;box-shadow:0 0 28px rgba(40,234,255,.08)}
+.deploy-hero h2{margin:0 0 8px;font-size:26px;color:#f5fbff}.deploy-hero p{margin:0;color:var(--muted);line-height:1.45}
+.deploy-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:12px}.deploy-card{border:1px solid rgba(255,255,255,.10);background:rgba(2,8,20,.34);border-radius:18px;padding:13px}.deploy-card h3{margin:0 0 10px;color:#fff}
+.deploy-form{display:grid;grid-template-columns:1fr 1fr;gap:10px}.deploy-form .full{grid-column:1/-1}.deploy-form label{display:block;color:var(--muted);font-size:11px;margin-bottom:4px}.deploy-form input,.deploy-form select,.deploy-form textarea{width:100%;box-sizing:border-box}.deploy-form textarea{min-height:76px}
+.template-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.template-tile{cursor:pointer;border:1px solid rgba(255,255,255,.10);background:rgba(255,255,255,.045);border-radius:15px;padding:10px;transition:.18s}.template-tile:hover,.template-tile.active{border-color:rgba(40,234,255,.48);box-shadow:0 0 18px rgba(40,234,255,.13);transform:translateY(-1px)}.template-tile b{display:block;color:#fff}.template-tile small{display:block;color:var(--muted);margin-top:4px;line-height:1.35}
+.pipeline{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:8px;margin-top:10px}.pipeline-step{position:relative;border:1px solid rgba(255,255,255,.10);background:rgba(2,8,20,.34);border-radius:14px;padding:10px;min-height:82px}.pipeline-step b{display:block;color:#fff;font-size:12px}.pipeline-step small{display:block;color:var(--muted);font-size:10px;margin-top:4px}.pipeline-step.done{border-color:rgba(53,243,132,.34);background:rgba(53,243,132,.045)}.pipeline-step.todo{border-color:rgba(255,195,77,.24);background:rgba(255,195,77,.035)}
+.deploy-output{font-family:ui-monospace,Consolas,monospace;font-size:11px;white-space:pre-wrap;color:#dff8ff;background:rgba(0,0,0,.22);border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:10px;max-height:360px;overflow:auto}.deploy-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.deploy-summary-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin:12px 0}.deploy-mini{border:1px solid rgba(255,255,255,.10);background:rgba(2,8,20,.31);border-radius:14px;padding:10px}.deploy-mini small{display:block;color:var(--muted);font-size:11px}.deploy-mini b{display:block;color:#fff;font-size:18px;margin-top:4px}.path-badge{display:inline-block;border:1px solid rgba(40,234,255,.24);background:rgba(40,234,255,.055);border-radius:999px;padding:4px 8px;color:#d8fbff;font-size:11px;margin:3px}
+@media(max-width:1100px){.deploy-grid{grid-template-columns:1fr}.pipeline{grid-template-columns:1fr 1fr}.deploy-summary-grid{grid-template-columns:1fr 1fr}}@media(max-width:720px){.deploy-form{grid-template-columns:1fr}.template-grid{grid-template-columns:1fr}.pipeline{grid-template-columns:1fr}}
+
 @media(max-width:1260px){.header,.layout{grid-template-columns:1fr}.kpis{grid-template-columns:repeat(2,1fr)}.info-grid{grid-template-columns:1fr 1fr}}
 @media(max-width:760px){.app{padding:12px}.header,.info-grid,.kpis,.form-grid,.note-form,.note-grid{grid-template-columns:1fr}.quick,.actionbar{justify-content:flex-start}.toplink,.btn{width:100%;justify-content:flex-start}.object-head{grid-template-columns:58px 1fr}.status-zone{grid-column:1/-1}.kpi{grid-template-columns:58px 1fr}.spark{display:none}}
 @media print{body{background:white;color:#111}.quick,.actionbar,.familybar,.sidebar,.btn,.icon-btn,.modal,.toast{display:none!important}.app{max-width:none}.layout{grid-template-columns:1fr}.panel{box-shadow:none;border:1px solid #999;background:white;color:#111}.subcard{background:white}.pill{color:#111}}
@@ -1042,7 +1066,7 @@ textarea{resize:vertical;min-height:76px} input:focus,select:focus,textarea:focu
   <header class="header">
     <section class="brand">
       <div class="logo">BI</div>
-      <div><h1>Cockpit Projets BI</h1><p class="subtitle">V6.5G3 · GitHub cache · Temps travail démo</p></div>
+      <div><h1>Cockpit Projets BI</h1><p class="subtitle">V6.6A · Déploiement sous-projet</p></div>
     </section>
     <nav class="quick">
       <a class="toplink" id="projectGptLink" target="_blank" rel="noopener">
@@ -1114,9 +1138,9 @@ textarea{resize:vertical;min-height:76px} input:focus,select:focus,textarea:focu
 
 <script>
 'use strict';
-const VERSION='V6.5G3-github-cache-temps-demo';
+const VERSION='V6.6A-deploiement-sous-projet';
 const STABLE_KEY='central_bi_project_manager_current';
-const VERSION_KEY='central_bi_project_manager_v65g3';
+const VERSION_KEY='central_bi_project_manager_v66a';
 const KEY=STABLE_KEY;
 const MIRROR_KEYS=[VERSION_KEY,'central_bi_project_manager_v61','central_bi_project_manager_v6'];
 const PREVIOUS_KEYS=[VERSION_KEY,'central_bi_project_manager_v61','central_bi_project_manager_v6','central_bi_project_manager_v5','central_bi_project_manager_v4','central_bi_project_manager_v1'];
@@ -1383,7 +1407,8 @@ function renderCentralTabs(){
     ['sources','🔗 Liens'],
     ['data','🟢 Données & sync'],
     ['active','🟢 Mode actif'],
-    ['worktime','⏱ Temps BI']
+    ['worktime','⏱ Temps BI'],
+      ['deployment','🚀 Déploiement']
   ];
   $('centralTabs').innerHTML=tabs.map(t=>`<button class="central-tab ${activeMain===t[0]?'active':''}" data-central="${t[0]}">${t[1]}</button>`).join('');
   document.querySelectorAll('[data-central]').forEach(b=>b.onclick=()=>{activeMain=b.dataset.central;renderAll()});
@@ -3364,6 +3389,115 @@ function renderSessionTimeline(sessions){
     </div>`;
   }).join('');
 }
+
+const DEPLOY_KEY='bi_central_deploy_subproject_v66a';
+const DEPLOY_TEMPLATES=[
+{id:'client-simple',icon:'🧩',name:'Client simple',desc:'BI léger : accueil, suivi, livrables, liens.',tabs:['Accueil','Suivi','Données','Livraison']},
+{id:'commerce',icon:'🛒',name:'Commerce',desc:'Produits, commandes, étiquettes, marge, stock simple.',tabs:['Dashboard','Produits','Commandes','Étiquettes','Caisse']},
+{id:'prestation',icon:'🌿',name:'Prestation / massage',desc:'Clients, rendez-vous, offres, planning, notes.',tabs:['Accueil','Clients','Planning','Prestations','Suivi']},
+{id:'location',icon:'🏡',name:'Location premium',desc:'Réservations, biens, prestations, planning, prix.',tabs:['Planning','Réservations','Biens','Prestations','Facturation']},
+{id:'association',icon:'🏕️',name:'Association',desc:'Activités, inscriptions, paiements, stats, documents.',tabs:['Activités','Inscriptions','Paiements','Stats','Documents']},
+{id:'ia-tools',icon:'🤖',name:'Navigateur IA',desc:'Cartographie IA, outils, usages, risques, lexique.',tabs:['IA','Outils','Lexique','Usages','Risques']},
+{id:'pilotage',icon:'📊',name:'Pilotage interne',desc:'Tâches, versions, roadmap, notes, liens, temps.',tabs:['Synthèse','Roadmap','Versions','Notes','Liens','Temps']},
+{id:'custom',icon:'✨',name:'Libre / prototype',desc:'Base vide pour concept rapide.',tabs:['Accueil','Notes','Données','Livraison']}
+];
+function slugifyProjectName(s){return String(s||'nouveau-projet').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'').slice(0,60)||'nouveau-projet'}
+function defaultDeployState(){return {name:'Nouveau BI client',client:'Client / interne',category:'Client',template:'client-simple',complexity:'Standard',delivery:'GitHub Pages / ZIP',description:'Prototype initial généré depuis le BI Central.',drive:true,github:true,public:true}}
+function getDeployState(){try{return Object.assign(defaultDeployState(),JSON.parse(localStorage.getItem(DEPLOY_KEY)||'{}'))}catch(e){return defaultDeployState()}}
+function setDeployField(k,v){const s=getDeployState();s[k]=v;localStorage.setItem(DEPLOY_KEY,JSON.stringify(s));renderAll()}
+function deployTemplate(){const s=getDeployState();return DEPLOY_TEMPLATES.find(t=>t.id===s.template)||DEPLOY_TEMPLATES[0]}
+function deployDerived(){const s=getDeployState(),tpl=deployTemplate(),slug=slugifyProjectName(s.name),clientSlug=slugifyProjectName(s.client),appPath=`apps/${slug}/`,url=`https://koink30.github.io/bi-central/${appPath}`,driveRoot=`BI_${clientSlug.toUpperCase()}_${slug.toUpperCase()}`;return {s,tpl,slug,clientSlug,appPath,url,driveRoot}}
+function deploymentPipelineSteps(){return [['Brief','Client + besoin + objectif'],['Template','Choix modèle BI'],['Drive','Structure projet'],['GitHub','/apps/nom-projet/'],['V0 HTML','Prototype initial'],['Test','Ouverture navigateur'],['Livraison','URL + ZIP + README']]}
+function deployReadme(){const {s,tpl,appPath,url,driveRoot}=deployDerived();return `# ${s.name}
+
+Type : ${s.category}
+Client : ${s.client}
+Template : ${tpl.name}
+Complexité : ${s.complexity}
+
+## Description
+${s.description}
+
+## Structure GitHub
+${appPath}
+- index.html
+- manifest.json
+- roadmap.json
+- data-demo.json
+- README.md
+
+## URL cible
+${url}
+
+## Drive cible
+${driveRoot}
+
+## Version initiale
+V0.1 — Prototype initial généré depuis le BI Central.`}
+function deployManifest(){const {s,tpl,slug,appPath,url,driveRoot}=deployDerived();return JSON.stringify({app:s.name,slug,client:s.client,category:s.category,template:tpl.id,template_name:tpl.name,version:'V0.1-prototype-initial',created_from:'BI Central V6.6A',github_path:appPath,public_url:url,drive_root:driveRoot,tabs:tpl.tabs,status:'prototype',roadmap_current:'Initialisation du sous-projet'},null,2)}
+function deployRoadmapBlock(){const {s,tpl,appPath,url,driveRoot}=deployDerived();return `Titre : Déploiement V0.1 — Prototype initial ${s.name}
+Type : Initialisation
+Statut : À valider
+Priorité : Haute
+
+Texte :
+Création du sous-projet BI "${s.name}" depuis le BI Central. Template utilisé : ${tpl.name}. Structure prévue : Drive ${driveRoot}, GitHub ${appPath}, première version index.html V0.1, manifest.json, roadmap.json, data-demo.json et README.md.
+
+Liens prévus :
+- URL BI : ${url}
+- Chemin GitHub : ${appPath}
+- Dossier Drive : ${driveRoot}`}
+function deployFolderTree(){const {driveRoot,appPath}=deployDerived();return `${driveRoot}/
+  00_ADMIN/
+  01_BRIEF_CLIENT/
+  02_DONNEES/
+  03_HTML_BI/
+  04_EXPORTS/
+  05_LIVRABLES/
+  06_ARCHIVES/
+  99_NOTES_DEV/
+
+GitHub :
+bi-central/
+  ${appPath}
+    index.html
+    manifest.json
+    roadmap.json
+    data-demo.json
+    README.md`}
+function deployIndexHtmlPreview(){const {s,tpl}=deployDerived();return `<!doctype html>
+<html lang="fr">
+<head><meta charset="utf-8"><title>${s.name} · V0.1</title></head>
+<body>
+  <h1>${tpl.icon} ${s.name}</h1>
+  <p>${s.description}</p>
+  <nav>${tpl.tabs.map(x=>`<button>${x}</button>`).join(' ')}</nav>
+  <main><h2>Prototype initial</h2><p>BI généré depuis BI Central · V0.1</p></main>
+</body>
+</html>`}
+function copyDeployText(kind){const txt=kind==='roadmap'?deployRoadmapBlock():kind==='manifest'?deployManifest():kind==='readme'?deployReadme():kind==='tree'?deployFolderTree():deployIndexHtmlPreview();navigator.clipboard?.writeText(txt);toast('Copié')}
+function renderDeploymentModule(){const {s,tpl,slug,appPath,url,driveRoot}=deployDerived();return `<div class="view-title"><h2>🚀 Déploiement sous-projet</h2><span class="pill green">V6.6A concept opérationnel</span></div>
+<section class="deploy-hero"><h2>Créer un nouveau BI depuis le BI Central</h2><p>Ce module prépare la fiche sous-projet, la structure Drive, l’emplacement GitHub, le pack V0 et les blocs roadmap. Aucun push GitHub automatique pour l’instant : on reste en conceptualisation fiable.</p></section>
+<div class="deploy-summary-grid"><div class="deploy-mini"><small>Slug projet</small><b>${esc(slug)}</b></div><div class="deploy-mini"><small>Chemin GitHub</small><b>${esc(appPath)}</b></div><div class="deploy-mini"><small>Template</small><b>${esc(tpl.name)}</b></div><div class="deploy-mini"><small>Version départ</small><b>V0.1</b></div></div>
+<div class="deploy-grid">
+<section class="deploy-card"><h3>1. Nouveau sous-projet</h3><div class="deploy-form">
+<div><label>Nom du projet</label><input value="${esc(s.name)}" onchange="setDeployField('name',this.value)"></div>
+<div><label>Client / usage</label><input value="${esc(s.client)}" onchange="setDeployField('client',this.value)"></div>
+<div><label>Catégorie</label><select onchange="setDeployField('category',this.value)">${['Client','Interne','Le Merlet','Perso','Prototype','Démo commerciale'].map(x=>`<option ${s.category===x?'selected':''}>${x}</option>`).join('')}</select></div>
+<div><label>Complexité</label><select onchange="setDeployField('complexity',this.value)">${['Découverte','Standard','Confort','Premium','Prototype rapide'].map(x=>`<option ${s.complexity===x?'selected':''}>${x}</option>`).join('')}</select></div>
+<div><label>Livraison</label><select onchange="setDeployField('delivery',this.value)">${['GitHub Pages / ZIP','ZIP local','Drive uniquement','Démo privée','Repo dédié plus tard'].map(x=>`<option ${s.delivery===x?'selected':''}>${x}</option>`).join('')}</select></div>
+<div><label>Publication publique</label><select onchange="setDeployField('public',this.value==='true')"><option value="true" ${s.public?'selected':''}>Oui</option><option value="false" ${!s.public?'selected':''}>Non</option></select></div>
+<div class="full"><label>Description courte</label><textarea onchange="setDeployField('description',this.value)">${esc(s.description)}</textarea></div>
+</div></section>
+<section class="deploy-card"><h3>2. Template de départ</h3><div class="template-grid">${DEPLOY_TEMPLATES.map(t=>`<div class="template-tile ${s.template===t.id?'active':''}" onclick="setDeployField('template','${t.id}')"><b>${t.icon} ${esc(t.name)}</b><small>${esc(t.desc)}</small></div>`).join('')}</div></section>
+</div>
+<section class="deploy-card" style="margin-top:12px"><h3>3. Pipeline de déploiement</h3><div class="pipeline">${deploymentPipelineSteps().map((x,i)=>`<div class="pipeline-step ${i<2?'done':'todo'}"><b>${i<2?'🟢':'🟡'} ${x[0]}</b><small>${x[1]}</small></div>`).join('')}</div></section>
+<div class="deploy-grid" style="margin-top:12px">
+<section class="deploy-card"><h3>4. Structure cible</h3><div><span class="path-badge">Drive : ${esc(driveRoot)}</span><span class="path-badge">GitHub : ${esc(appPath)}</span><span class="path-badge">URL : ${esc(url)}</span></div><pre class="deploy-output">${esc(deployFolderTree())}</pre><div class="deploy-actions"><button class="mini-btn" onclick="copyDeployText('tree')">Copier structure</button></div></section>
+<section class="deploy-card"><h3>5. Pack V0 théorique</h3><pre class="deploy-output">${esc(deployManifest())}</pre><div class="deploy-actions"><button class="mini-btn" onclick="copyDeployText('manifest')">Copier manifest</button><button class="mini-btn" onclick="copyDeployText('readme')">Copier README</button><button class="mini-btn" onclick="copyDeployText('html')">Copier index V0</button></div></section>
+</div>
+<section class="deploy-card" style="margin-top:12px"><h3>6. Bloc roadmap prêt à saisir</h3><pre class="deploy-output">${esc(deployRoadmapBlock())}</pre><div class="deploy-actions"><button class="mini-btn" onclick="copyDeployText('roadmap')">Copier bloc roadmap</button><button class="mini-btn" onclick="toast('Étape suivante : génération ZIP projet V0')">Étape suivante</button></div></section>`}
+
 function renderWorkTimeDemo(){
   const events=collectWorkEventsDemo();
   const sessions=buildBiSessions(events,90);
