@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>Cockpit Projets BI · V6.5J Retour GitHub précédent</title>
+<title>Cockpit Projets BI · V6.5K GitHub sobre stable</title>
 <style>
 :root{
   --bg:#030711;--bg2:#06112a;--panel:rgba(7,18,41,.82);--panel2:rgba(9,28,61,.72);
@@ -574,6 +574,11 @@ textarea{resize:vertical;min-height:76px} input:focus,select:focus,textarea:focu
 /* V6.5J - rollback GitHub précédent */
 .github-rollback-note{border:1px solid rgba(53,243,132,.30);background:rgba(53,243,132,.045);border-radius:14px;padding:10px;margin:10px 0;color:#dfffe9;font-size:12px;line-height:1.45}
 
+
+/* V6.5K - GitHub sobre stable */
+.github-stable-note{border:1px solid rgba(53,243,132,.32);background:rgba(53,243,132,.045);border-radius:14px;padding:10px;margin:10px 0;color:#dfffe9;font-size:12px;line-height:1.45}
+.github-soft-error{border:1px solid rgba(255,195,77,.32);background:rgba(255,195,77,.045);border-radius:14px;padding:10px;margin:10px 0;color:#ffe8ad;font-size:12px;line-height:1.45}
+
 @media(max-width:1260px){.roadmap-board,.road-summary{grid-template-columns:repeat(2,1fr)}.road-form{grid-template-columns:1fr 1fr}}
 @media(max-width:760px){.roadmap-board,.road-summary,.road-form{grid-template-columns:1fr}}
 
@@ -1024,6 +1029,11 @@ textarea{resize:vertical;min-height:76px} input:focus,select:focus,textarea:focu
 /* V6.5J - rollback GitHub précédent */
 .github-rollback-note{border:1px solid rgba(53,243,132,.30);background:rgba(53,243,132,.045);border-radius:14px;padding:10px;margin:10px 0;color:#dfffe9;font-size:12px;line-height:1.45}
 
+
+/* V6.5K - GitHub sobre stable */
+.github-stable-note{border:1px solid rgba(53,243,132,.32);background:rgba(53,243,132,.045);border-radius:14px;padding:10px;margin:10px 0;color:#dfffe9;font-size:12px;line-height:1.45}
+.github-soft-error{border:1px solid rgba(255,195,77,.32);background:rgba(255,195,77,.045);border-radius:14px;padding:10px;margin:10px 0;color:#ffe8ad;font-size:12px;line-height:1.45}
+
 @media(max-width:1260px){.header,.layout{grid-template-columns:1fr}.kpis{grid-template-columns:repeat(2,1fr)}.info-grid{grid-template-columns:1fr 1fr}}
 @media(max-width:760px){.app{padding:12px}.header,.info-grid,.kpis,.form-grid,.note-form,.note-grid{grid-template-columns:1fr}.quick,.actionbar{justify-content:flex-start}.toplink,.btn{width:100%;justify-content:flex-start}.object-head{grid-template-columns:58px 1fr}.status-zone{grid-column:1/-1}.kpi{grid-template-columns:58px 1fr}.spark{display:none}}
 @media print{body{background:white;color:#111}.quick,.actionbar,.familybar,.sidebar,.btn,.icon-btn,.modal,.toast{display:none!important}.app{max-width:none}.layout{grid-template-columns:1fr}.panel{box-shadow:none;border:1px solid #999;background:white;color:#111}.subcard{background:white}.pill{color:#111}}
@@ -1034,7 +1044,7 @@ textarea{resize:vertical;min-height:76px} input:focus,select:focus,textarea:focu
   <header class="header">
     <section class="brand">
       <div class="logo">BI</div>
-      <div><h1>Cockpit Projets BI</h1><p class="subtitle">V6.5J · retour GitHub précédent</p></div>
+      <div><h1>Cockpit Projets BI</h1><p class="subtitle">V6.5K · GitHub sobre stable</p></div>
     </section>
     <nav class="quick">
       <a class="toplink" id="projectGptLink" target="_blank" rel="noopener">
@@ -1106,9 +1116,9 @@ textarea{resize:vertical;min-height:76px} input:focus,select:focus,textarea:focu
 
 <script>
 'use strict';
-const VERSION='V6.5J-retour-github-precedent';
+const VERSION='V6.5K-github-sobre-stable';
 const STABLE_KEY='central_bi_project_manager_current';
-const VERSION_KEY='central_bi_project_manager_v65j';
+const VERSION_KEY='central_bi_project_manager_v65k';
 const KEY=STABLE_KEY;
 const MIRROR_KEYS=[VERSION_KEY,'central_bi_project_manager_v61','central_bi_project_manager_v6'];
 const PREVIOUS_KEYS=[VERSION_KEY,'central_bi_project_manager_v61','central_bi_project_manager_v6','central_bi_project_manager_v5','central_bi_project_manager_v4','central_bi_project_manager_v1'];
@@ -1143,7 +1153,7 @@ let recoveryMeta={source:'seed',reason:'données de démonstration',date:now(),v
 let activeSpace='Tous', activeMain='fiche', activeSide='notes';
 let selectedRoadBlockId='';
 let selectedLinkId='';
-let externalVersionHistory={github:[],githubRuns:[],drive:[],status:'',updated:'',scan:{commits:0,runs:0,pages:0,warnings:[]}};
+let externalVersionHistory={github:[],githubRuns:[],drive:[],status:'',updated:'',lastError:'',resolvedRepo:'',scan:{commits:0,runs:0,pages:0,warnings:[]}};
 let roadmapFilter='actifs';
 let roadmapShowAll=false;
 let uiDrafts={};
@@ -2819,64 +2829,66 @@ function renderProgressTab(){
   return `<div class="view-title"><h2>📊 Avancement</h2><span class="pill">calcul détaillé</span></div>${renderProgressEstimatePanel(p)}`;
 }
 
+
 function githubRepoSlugFromProject(p){
   const links=ensureProjectLinks(p);
-  const gh=(links.find(l=>String(l.type||'')==='GitHub' && l.url)?.url) || p.githubUrl || p.sources?.githubRepo || '';
-  const s=String(gh||'').trim();
-  if(!s)return '';
-  let m=s.match(/github\.com\/([^\/\s]+)\/([^\/\s#?]+)/i);
-  if(m)return `${m[1]}/${m[2].replace(/\.git$/,'')}`;
-  m=s.match(/^([^\/\s]+)\/([^\/\s]+)$/);
-  if(m)return `${m[1]}/${m[2].replace(/\.git$/,'')}`;
+  const candidates=[
+    links.find(l=>String(l.type||'')==='GitHub' && l.url)?.url,
+    links.find(l=>String(l.type||'')==='BI publié' && l.url)?.url,
+    p.githubUrl,
+    p.sources?.githubRepo,
+    p.sources?.pagesUrl,
+    p.url,
+    p.biUrl
+  ].filter(Boolean).map(x=>String(x).trim());
+
+  for(const s of candidates){
+    let m=s.match(/github\.com\/([^\/\s#?]+)\/([^\/\s#?]+)/i);
+    if(m)return `${m[1]}/${m[2].replace(/\.git$/,'')}`;
+    m=s.match(/^([^\/\s#?]+)\/([^\/\s#?]+)$/);
+    if(m && !s.includes('http'))return `${m[1]}/${m[2].replace(/\.git$/,'')}`;
+  }
+  for(const s of candidates){
+    const m=s.match(/https?:\/\/([^\.\/]+)\.github\.io\/([^\/#?]+)/i);
+    if(m)return `${m[1]}/${m[2]}`;
+  }
+  if(String(p.id||'')==='central' || /cockpit|projets bi|central/i.test(String(p.name||'')))return 'Koink30/bi-central';
   return '';
 }
-
-function detectVersionFromText(txt){
-  const s=String(txt||'');
-  const m=s.match(/\bV?\d+(?:\.\d+)*[A-Z]?\b/i) || s.match(/\bV\d+[_\.\-]\d+[A-Z]?\b/i);
-  if(!m)return '';
-  let v=m[0].replace(/_/g,'.').replace(/-/g,'.');
-  if(!/^V/i.test(v))v='V'+v;
-  return v.toUpperCase();
-}
-function cleanCommitDescription(msg){
-  const lines=String(msg||'').split('\n').map(x=>x.trim()).filter(Boolean);
-  if(lines.length<=1)return '';
-  return lines.slice(1).join('\n').slice(0,900);
-}
-function versionFromFilename(name){
-  const s=String(name||'');
-  const m=s.match(/V\d+(?:[_\.\-]\d+)*[A-Z]?/i);
-  return m ? m[0].replace(/_/g,'.').replace(/-/g,'.').toUpperCase() : '';
-}
-
 async function fetchGitHubJson(url){
   const res=await fetch(url,{headers:{'Accept':'application/vnd.github+json'}});
-  if(!res.ok)throw new Error('GitHub '+res.status);
+  if(!res.ok){
+    let detail='';
+    try{const j=await res.json(); detail=j.message?` · ${j.message}`:''}catch(e){}
+    throw new Error(`GitHub ${res.status}${detail}`);
+  }
   return await res.json();
 }
-async function fetchGitHubCommitsPaged(slug,path='',maxPages=6){
-  const all=[];
-  for(let page=1; page<=maxPages; page++){
-    const url=`https://api.github.com/repos/${slug}/commits?per_page=100&page=${page}${path?`&path=${encodeURIComponent(path)}`:''}`;
-    const data=await fetchGitHubJson(url);
-    if(!Array.isArray(data) || !data.length)break;
-    all.push(...data);
-    if(data.length<100)break;
-  }
-  return all;
+function simpleCommitToDetail(c){
+  const msg=c.commit?.message||'Commit';
+  return {
+    sha:String(c.sha||'').slice(0,7),
+    fullSha:c.sha||'',
+    version:detectVersionFromText(msg),
+    title:msg.split('\n')[0]||'Commit',
+    description:cleanCommitDescription(msg),
+    text:msg,
+    date:c.commit?.committer?.date||c.commit?.author?.date||'',
+    author:c.commit?.author?.name||'',
+    url:c.html_url||'',
+    stats:{},
+    files:[]
+  };
 }
-async function fetchGitHubWorkflowRuns(slug,maxPages=3){
-  const all=[];
-  for(let page=1; page<=maxPages; page++){
-    const url=`https://api.github.com/repos/${slug}/actions/runs?per_page=100&page=${page}`;
-    const data=await fetchGitHubJson(url);
-    const runs=data.workflow_runs||[];
-    if(!runs.length)break;
-    all.push(...runs);
-    if(runs.length<100)break;
-  }
-  return all;
+async function fetchGitHubCommitsPaged(slug,path='',maxPages=1){
+  const url=`https://api.github.com/repos/${slug}/commits?per_page=100${path?`&path=${encodeURIComponent(path)}`:''}`;
+  const data=await fetchGitHubJson(url);
+  return Array.isArray(data)?data:[];
+}
+async function fetchGitHubWorkflowRuns(slug,maxPages=1){
+  const url=`https://api.github.com/repos/${slug}/actions/runs?per_page=50`;
+  const data=await fetchGitHubJson(url);
+  return data.workflow_runs||[];
 }
 function detectVersionFromRun(run){
   return detectVersionFromText([
@@ -2902,80 +2914,45 @@ function buildRunVersionItems(runs){
     event:r.event||''
   }));
 }
+
 async function fetchGitHubVersionHistory(){
   const p=selected();
   const slug=githubRepoSlugFromProject(p);
-  if(!slug){toast('Lien GitHub non renseigné');return}
-  externalVersionHistory.status='Scan GitHub étendu...';
-  externalVersionHistory.scan={commits:0,runs:0,pages:0,warnings:[]};
+  if(!slug){
+    externalVersionHistory.lastError='Aucun repo GitHub détecté. Mets un lien GitHub ou un lien GitHub Pages dans l’onglet Liens.';
+    externalVersionHistory.status='GitHub non configuré';
+    renderAll();
+    return;
+  }
+  externalVersionHistory.resolvedRepo=slug;
+  externalVersionHistory.status='Lecture GitHub sobre...';
+  externalVersionHistory.lastError='';
+  externalVersionHistory.scan={commits:0,runs:0,pages:1,warnings:[]};
   renderAll();
+
   try{
     const path=p.sources?.githubPath||'';
-    const list=await fetchGitHubCommitsPaged(slug,path,6);
-    const runs=await fetchGitHubWorkflowRuns(slug,3).catch(e=>{
-      externalVersionHistory.scan.warnings.push('Workflows non lisibles : '+e.message);
-      return [];
-    });
-    const details=[];
-    for(const c of list.slice(0,120)){
-      try{
-        const d=await fetchGitHubJson(c.url);
-        const files=(d.files||[]).map(f=>({
-          filename:f.filename||'',
-          status:f.status||'modified',
-          additions:f.additions||0,
-          deletions:f.deletions||0,
-          changes:f.changes||0,
-          patch:(f.patch||'').slice(0,600)
-        }));
-        const msg=d.commit?.message||c.commit?.message||'';
-        let version=detectVersionFromText(msg);
-        if(!version){
-          const fileVersion=files.map(f=>versionFromFilename(f.filename)).find(Boolean);
-          if(fileVersion)version=fileVersion;
-        }
-        details.push({
-          sha:String(d.sha||c.sha||'').slice(0,7),
-          fullSha:d.sha||c.sha||'',
-          version,
-          title:msg.split('\n')[0]||'Commit',
-          description:cleanCommitDescription(msg),
-          text:msg,
-          date:d.commit?.committer?.date||d.commit?.author?.date||c.commit?.committer?.date||'',
-          author:d.commit?.author?.name||c.commit?.author?.name||'',
-          url:d.html_url||c.html_url||'',
-          stats:d.stats||{},
-          files
-        });
-      }catch(inner){
-        const msg=c.commit?.message||'Commit';
-        details.push({
-          sha:String(c.sha||'').slice(0,7),
-          fullSha:c.sha||'',
-          version:detectVersionFromText(msg),
-          title:msg.split('\n')[0]||'Commit',
-          description:cleanCommitDescription(msg),
-          text:msg,
-          date:c.commit?.committer?.date||c.commit?.author?.date||'',
-          author:c.commit?.author?.name||'',
-          url:c.html_url||'',
-          stats:{},
-          files:[]
-        });
-      }
+    const commits=await fetchGitHubCommitsPaged(slug,path,1);
+    externalVersionHistory.github=commits.map(simpleCommitToDetail);
+    externalVersionHistory.scan.commits=externalVersionHistory.github.length;
+
+    try{
+      const runs=await fetchGitHubWorkflowRuns(slug,1);
+      externalVersionHistory.githubRuns=buildRunVersionItems(runs);
+      externalVersionHistory.scan.runs=externalVersionHistory.githubRuns.length;
+    }catch(workflowErr){
+      externalVersionHistory.githubRuns=[];
+      externalVersionHistory.scan.warnings.push('Workflows ignorés : '+String(workflowErr.message||workflowErr));
     }
-    externalVersionHistory.github=details;
-    externalVersionHistory.githubRuns=buildRunVersionItems(runs);
-    externalVersionHistory.scan.commits=list.length;
-    externalVersionHistory.scan.runs=runs.length;
-    externalVersionHistory.scan.pages=Math.ceil(list.length/100);
+
     const unique=uniqueGithubVersions().length;
-    externalVersionHistory.status=`GitHub étendu OK · ${unique} version(s) · ${details.length} commit(s) · ${runs.length} workflow(s)`;
+    externalVersionHistory.status=`GitHub OK · ${unique} version(s) · ${externalVersionHistory.github.length} commit(s)`;
     externalVersionHistory.updated=nowFr();
-    toast('Historique GitHub étendu chargé');
+    toast('GitHub chargé en mode sobre');
     renderAll();
   }catch(e){
-    externalVersionHistory.status='Erreur GitHub : '+e.message;
+    externalVersionHistory.lastError=String(e.message||e);
+    externalVersionHistory.status='Erreur GitHub';
     toast('Erreur GitHub');
     renderAll();
   }
@@ -3092,13 +3069,13 @@ function renderExternalVersionHistory(){
   return `<section class="external-version-panel">
     <div class="view-title"><h3>Historique externe détaillé</h3><span class="pill">${esc(externalVersionHistory.status||'non chargé')}</span></div>
     <div class="version-tools">
-      <button class="mini-btn" onclick="fetchGitHubVersionHistory()">⚫ Interroger GitHub en détail</button>
+      <button class="mini-btn" onclick="fetchGitHubVersionHistory()">⚫ Mettre à jour GitHub</button>
       <button class="mini-btn" onclick="loadDriveVersionHistoryFromDiagnostic()">🟢 Reprendre Drive diagnostic</button>
       <button class="mini-btn" onclick="activeMain='data';renderAll()">Ouvrir Données / sync</button>
     </div>
     <p class="muted">GitHub est lu comme un historique de versions publiées : le BI détecte les numéros V6.x dans les messages de commit, noms de fichiers et workflow runs.</p>
     <div class="version-count-correction"><b>Comptage corrigé :</b> ${uniqueGithubVersions().length} version(s) unique(s) détectée(s), à partir de ${(externalVersionHistory.github||[]).length} commits détaillés et ${(externalVersionHistory.githubRuns||[]).length} workflow runs. Le chiffre est donc basé sur les versions uniques, pas sur le nombre de commits.</div>
-    <div class="github-scan-note">Scan étendu : jusqu’à 600 commits et 300 workflow runs publics. L’historique Actions GitHub peut rester incomplet ou approximatif selon les suppressions de runs, limites API ou changements de workflow.</div>
+    <div class="github-scan-note">Mode sobre : 1 appel commits + 1 appel workflow optionnel. Pas de spam API GitHub. L’historique Actions GitHub peut rester incomplet ou approximatif selon les suppressions de runs, limites API ou changements de workflow.</div>
     <h3>Versions publiées détectées sur GitHub</h3>
     <div class="github-version-board">
       ${versions.map(v=>renderGithubVersionCard(v,g.groups[v])).join('') || '<div class="github-version-empty">Aucune version GitHub détectée. Vérifie que les commits contiennent un numéro de version du type V6.5D ou que les fichiers contiennent V6_5D.</div>'}
