@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>Cockpit Projets BI · V6.6C Déploiement modal configurateur</title>
+<title>Cockpit Projets BI · V6.7A Hiérarchie Projets / Sous-projets</title>
 <style>
 :root{
   --bg:#030711;--bg2:#06112a;--panel:rgba(7,18,41,.82);--panel2:rgba(9,28,61,.72);
@@ -591,7 +591,7 @@ textarea{resize:vertical;min-height:76px} input:focus,select:focus,textarea:focu
 @media(max-width:1100px){.deploy-grid{grid-template-columns:1fr}.pipeline{grid-template-columns:1fr 1fr}.deploy-summary-grid{grid-template-columns:1fr 1fr}}@media(max-width:720px){.deploy-form{grid-template-columns:1fr}.template-grid{grid-template-columns:1fr}.pipeline{grid-template-columns:1fr}}
 
 
-/* V6.6C - création en modale + configurateur projet */
+/* V6.7A - création en modale + configurateur projet */
 .deploy-modal-backdrop{position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,.72);backdrop-filter:blur(10px);display:none;align-items:center;justify-content:center;padding:24px}
 .deploy-modal-backdrop.open{display:flex}
 .deploy-modal{width:min(1180px,96vw);max-height:92vh;overflow:auto;border:1px solid rgba(40,234,255,.35);background:radial-gradient(circle at 15% 0%,rgba(40,234,255,.16),transparent 34%),radial-gradient(circle at 90% 20%,rgba(180,93,255,.14),transparent 38%),rgba(5,11,28,.96);border-radius:24px;padding:16px;box-shadow:0 0 60px rgba(40,234,255,.18)}
@@ -608,6 +608,40 @@ textarea{resize:vertical;min-height:76px} input:focus,select:focus,textarea:focu
 .config-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
 @media(max-width:1050px){.config-grid{grid-template-columns:1fr 1fr}.config-pipeline{grid-template-columns:1fr 1fr 1fr}}
 @media(max-width:720px){.config-grid{grid-template-columns:1fr}.config-pipeline{grid-template-columns:1fr 1fr}.deploy-modal{padding:12px}}
+
+
+/* V6.7A - Pack V0 téléchargeable */
+.pack-panel{border:1px solid rgba(53,243,132,.30);background:rgba(53,243,132,.045);border-radius:18px;padding:13px;margin-top:12px}
+.pack-panel h3{margin:0 0 8px;color:#dfffe9}
+.pack-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px;margin-top:10px}
+.pack-file{border:1px solid rgba(255,255,255,.10);background:rgba(2,8,20,.32);border-radius:14px;padding:10px;min-height:86px}
+.pack-file b{display:block;color:#fff;font-size:12px}.pack-file small{display:block;color:var(--muted);font-size:10px;margin:5px 0 8px;line-height:1.3}
+.pack-file button{width:100%}
+.pack-warning{border:1px solid rgba(255,195,77,.32);background:rgba(255,195,77,.045);border-radius:14px;padding:10px;color:#ffe8ad;font-size:12px;line-height:1.45;margin-top:10px}
+@media(max-width:1100px){.pack-grid{grid-template-columns:1fr 1fr 1fr}}@media(max-width:720px){.pack-grid{grid-template-columns:1fr}}
+
+
+/* V6.7A - Hiérarchie Projets / Sous-projets */
+.left-hierarchy-actions{display:grid;grid-template-columns:1fr;gap:7px;margin:8px 0 10px}
+.left-create-btn.secondary{background:linear-gradient(135deg,rgba(255,195,77,.12),rgba(180,93,255,.10));border-color:rgba(255,195,77,.32)}
+.tree-parent{border:1px solid rgba(255,255,255,.10);background:rgba(2,8,20,.30);border-radius:16px;margin:8px 0;overflow:hidden}
+.tree-parent-head{display:grid;grid-template-columns:34px 1fr 34px;gap:8px;align-items:center;padding:9px;cursor:pointer}
+.tree-parent-head.active{background:rgba(40,234,255,.065)}
+.tree-parent-head h3{margin:0;font-size:13px;color:#fff}.tree-parent-head small{display:block;color:var(--muted);font-size:10px;margin-top:2px}
+.tree-children{display:grid;gap:5px;padding:0 8px 8px 22px}
+.tree-child{display:grid;grid-template-columns:28px 1fr;gap:7px;align-items:center;border:1px solid rgba(255,255,255,.075);background:rgba(255,255,255,.035);border-radius:12px;padding:7px;cursor:pointer}
+.tree-child.active{border-color:rgba(53,243,132,.38);background:rgba(53,243,132,.055)}
+.tree-child h4{margin:0;font-size:12px;color:#fff}.tree-child small{display:block;color:var(--muted);font-size:10px;margin-top:2px}
+.kind-badge{display:inline-flex;align-items:center;gap:4px;border:1px solid rgba(40,234,255,.24);background:rgba(40,234,255,.055);border-radius:999px;padding:3px 7px;color:#d8fbff;font-size:10px;margin-top:4px}
+.kind-badge.sub{border-color:rgba(255,195,77,.26);background:rgba(255,195,77,.045);color:#ffe8ad}
+.subproject-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-top:10px}
+.subproject-card{border:1px solid rgba(255,255,255,.10);background:rgba(2,8,20,.34);border-radius:16px;padding:12px;cursor:pointer;transition:.15s}
+.subproject-card:hover{border-color:rgba(40,234,255,.42);transform:translateY(-1px);box-shadow:0 0 18px rgba(40,234,255,.10)}
+.subproject-card h3{margin:0 0 6px;color:#fff}.subproject-card p{margin:6px 0;color:var(--muted);font-size:12px;line-height:1.35}
+.parent-link-panel{border:1px solid rgba(180,93,255,.26);background:rgba(180,93,255,.045);border-radius:16px;padding:12px;margin:10px 0;color:#ead7ff}
+.hierarchy-path{display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin:8px 0}
+.hierarchy-chip{border:1px solid rgba(255,255,255,.11);background:rgba(255,255,255,.045);border-radius:999px;padding:5px 8px;color:#eef;font-size:11px}
+@media(max-width:1000px){.subproject-grid{grid-template-columns:1fr 1fr}}@media(max-width:720px){.subproject-grid{grid-template-columns:1fr}}
 
 @media(max-width:1260px){.roadmap-board,.road-summary{grid-template-columns:repeat(2,1fr)}.road-form{grid-template-columns:1fr 1fr}}
 @media(max-width:760px){.roadmap-board,.road-summary,.road-form{grid-template-columns:1fr}}
@@ -1076,7 +1110,7 @@ textarea{resize:vertical;min-height:76px} input:focus,select:focus,textarea:focu
 @media(max-width:1100px){.deploy-grid{grid-template-columns:1fr}.pipeline{grid-template-columns:1fr 1fr}.deploy-summary-grid{grid-template-columns:1fr 1fr}}@media(max-width:720px){.deploy-form{grid-template-columns:1fr}.template-grid{grid-template-columns:1fr}.pipeline{grid-template-columns:1fr}}
 
 
-/* V6.6C - création en modale + configurateur projet */
+/* V6.7A - création en modale + configurateur projet */
 .deploy-modal-backdrop{position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,.72);backdrop-filter:blur(10px);display:none;align-items:center;justify-content:center;padding:24px}
 .deploy-modal-backdrop.open{display:flex}
 .deploy-modal{width:min(1180px,96vw);max-height:92vh;overflow:auto;border:1px solid rgba(40,234,255,.35);background:radial-gradient(circle at 15% 0%,rgba(40,234,255,.16),transparent 34%),radial-gradient(circle at 90% 20%,rgba(180,93,255,.14),transparent 38%),rgba(5,11,28,.96);border-radius:24px;padding:16px;box-shadow:0 0 60px rgba(40,234,255,.18)}
@@ -1094,6 +1128,40 @@ textarea{resize:vertical;min-height:76px} input:focus,select:focus,textarea:focu
 @media(max-width:1050px){.config-grid{grid-template-columns:1fr 1fr}.config-pipeline{grid-template-columns:1fr 1fr 1fr}}
 @media(max-width:720px){.config-grid{grid-template-columns:1fr}.config-pipeline{grid-template-columns:1fr 1fr}.deploy-modal{padding:12px}}
 
+
+/* V6.7A - Pack V0 téléchargeable */
+.pack-panel{border:1px solid rgba(53,243,132,.30);background:rgba(53,243,132,.045);border-radius:18px;padding:13px;margin-top:12px}
+.pack-panel h3{margin:0 0 8px;color:#dfffe9}
+.pack-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px;margin-top:10px}
+.pack-file{border:1px solid rgba(255,255,255,.10);background:rgba(2,8,20,.32);border-radius:14px;padding:10px;min-height:86px}
+.pack-file b{display:block;color:#fff;font-size:12px}.pack-file small{display:block;color:var(--muted);font-size:10px;margin:5px 0 8px;line-height:1.3}
+.pack-file button{width:100%}
+.pack-warning{border:1px solid rgba(255,195,77,.32);background:rgba(255,195,77,.045);border-radius:14px;padding:10px;color:#ffe8ad;font-size:12px;line-height:1.45;margin-top:10px}
+@media(max-width:1100px){.pack-grid{grid-template-columns:1fr 1fr 1fr}}@media(max-width:720px){.pack-grid{grid-template-columns:1fr}}
+
+
+/* V6.7A - Hiérarchie Projets / Sous-projets */
+.left-hierarchy-actions{display:grid;grid-template-columns:1fr;gap:7px;margin:8px 0 10px}
+.left-create-btn.secondary{background:linear-gradient(135deg,rgba(255,195,77,.12),rgba(180,93,255,.10));border-color:rgba(255,195,77,.32)}
+.tree-parent{border:1px solid rgba(255,255,255,.10);background:rgba(2,8,20,.30);border-radius:16px;margin:8px 0;overflow:hidden}
+.tree-parent-head{display:grid;grid-template-columns:34px 1fr 34px;gap:8px;align-items:center;padding:9px;cursor:pointer}
+.tree-parent-head.active{background:rgba(40,234,255,.065)}
+.tree-parent-head h3{margin:0;font-size:13px;color:#fff}.tree-parent-head small{display:block;color:var(--muted);font-size:10px;margin-top:2px}
+.tree-children{display:grid;gap:5px;padding:0 8px 8px 22px}
+.tree-child{display:grid;grid-template-columns:28px 1fr;gap:7px;align-items:center;border:1px solid rgba(255,255,255,.075);background:rgba(255,255,255,.035);border-radius:12px;padding:7px;cursor:pointer}
+.tree-child.active{border-color:rgba(53,243,132,.38);background:rgba(53,243,132,.055)}
+.tree-child h4{margin:0;font-size:12px;color:#fff}.tree-child small{display:block;color:var(--muted);font-size:10px;margin-top:2px}
+.kind-badge{display:inline-flex;align-items:center;gap:4px;border:1px solid rgba(40,234,255,.24);background:rgba(40,234,255,.055);border-radius:999px;padding:3px 7px;color:#d8fbff;font-size:10px;margin-top:4px}
+.kind-badge.sub{border-color:rgba(255,195,77,.26);background:rgba(255,195,77,.045);color:#ffe8ad}
+.subproject-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-top:10px}
+.subproject-card{border:1px solid rgba(255,255,255,.10);background:rgba(2,8,20,.34);border-radius:16px;padding:12px;cursor:pointer;transition:.15s}
+.subproject-card:hover{border-color:rgba(40,234,255,.42);transform:translateY(-1px);box-shadow:0 0 18px rgba(40,234,255,.10)}
+.subproject-card h3{margin:0 0 6px;color:#fff}.subproject-card p{margin:6px 0;color:var(--muted);font-size:12px;line-height:1.35}
+.parent-link-panel{border:1px solid rgba(180,93,255,.26);background:rgba(180,93,255,.045);border-radius:16px;padding:12px;margin:10px 0;color:#ead7ff}
+.hierarchy-path{display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin:8px 0}
+.hierarchy-chip{border:1px solid rgba(255,255,255,.11);background:rgba(255,255,255,.045);border-radius:999px;padding:5px 8px;color:#eef;font-size:11px}
+@media(max-width:1000px){.subproject-grid{grid-template-columns:1fr 1fr}}@media(max-width:720px){.subproject-grid{grid-template-columns:1fr}}
+
 @media(max-width:1260px){.header,.layout{grid-template-columns:1fr}.kpis{grid-template-columns:repeat(2,1fr)}.info-grid{grid-template-columns:1fr 1fr}}
 @media(max-width:760px){.app{padding:12px}.header,.info-grid,.kpis,.form-grid,.note-form,.note-grid{grid-template-columns:1fr}.quick,.actionbar{justify-content:flex-start}.toplink,.btn{width:100%;justify-content:flex-start}.object-head{grid-template-columns:58px 1fr}.status-zone{grid-column:1/-1}.kpi{grid-template-columns:58px 1fr}.spark{display:none}}
 @media print{body{background:white;color:#111}.quick,.actionbar,.familybar,.sidebar,.btn,.icon-btn,.modal,.toast{display:none!important}.app{max-width:none}.layout{grid-template-columns:1fr}.panel{box-shadow:none;border:1px solid #999;background:white;color:#111}.subcard{background:white}.pill{color:#111}}
@@ -1104,7 +1172,7 @@ textarea{resize:vertical;min-height:76px} input:focus,select:focus,textarea:focu
   <header class="header">
     <section class="brand">
       <div class="logo">BI</div>
-      <div><h1>Cockpit Projets BI</h1><p class="subtitle">V6.6C · Modal création + configurateur</p></div>
+      <div><h1>Cockpit Projets BI</h1><p class="subtitle">V6.7A · Hiérarchie Projets / Sous-projets</p></div>
     </section>
     <nav class="quick">
       <a class="toplink" id="projectGptLink" target="_blank" rel="noopener">
@@ -1177,9 +1245,9 @@ textarea{resize:vertical;min-height:76px} input:focus,select:focus,textarea:focu
 
 <script>
 'use strict';
-const VERSION='V6.6C-deploiement-modal-configurateur';
+const VERSION='V6.7A-hierarchie-projets-sous-projets';
 const STABLE_KEY='central_bi_project_manager_current';
-const VERSION_KEY='central_bi_project_manager_v66c';
+const VERSION_KEY='central_bi_project_manager_v67a';
 const KEY=STABLE_KEY;
 const MIRROR_KEYS=[VERSION_KEY,'central_bi_project_manager_v61','central_bi_project_manager_v6'];
 const PREVIOUS_KEYS=[VERSION_KEY,'central_bi_project_manager_v61','central_bi_project_manager_v6','central_bi_project_manager_v5','central_bi_project_manager_v4','central_bi_project_manager_v1'];
@@ -1384,14 +1452,71 @@ function updateProjectField(field,value){
   toast('Fiche projet mise à jour');
   safeRenderAll();
 }
+
+function projectKind(p){return p.kind || (p.parentId?'subproject':'parent')}
+function isParentProject(p){return projectKind(p)==='parent'}
+function isSubProject(p){return projectKind(p)==='subproject'}
+function parentOf(p){return state.projects.find(x=>x.id===p.parentId)||null}
+function childrenOf(parentId){return state.projects.filter(x=>x.parentId===parentId)}
+function projectSlug(p){return slugifyProjectName(p?.name||p?.id||'projet')}
+function normalizedProject(p){
+  if(!p.kind)p.kind=p.parentId?'subproject':'parent';
+  if(p.kind==='parent')p.parentId=null;
+  return p;
+}
+function ensureHierarchyModel(){
+  state.projects.forEach(normalizedProject);
+}
+function openDeployCreator(kind='parent'){
+  const s=getDeployState();
+  s.kind=kind;
+  if(kind==='subproject'){
+    const sel=selected();
+    s.parentId=(sel && isParentProject(sel))?sel.id:(sel?.parentId||state.projects.find(isParentProject)?.id||'');
+  }else{
+    s.parentId='';
+  }
+  localStorage.setItem(DEPLOY_KEY,JSON.stringify(s));
+  deployCreatorOpen=true;
+  renderAll();
+}
+function selectProjectById(id,tab='fiche'){
+  state.selectedId=id;
+  activeMain=tab;
+  persist('navigation hiérarchie');
+  renderAll();
+}
+function hierarchyPath(p){
+  if(!p)return '';
+  const parent=parentOf(p);
+  if(parent){
+    return `<div class="hierarchy-path"><span class="hierarchy-chip">🧠 ${esc(parent.name)}</span><span>→</span><span class="hierarchy-chip">🧩 ${esc(p.name)}</span></div>`;
+  }
+  return `<div class="hierarchy-path"><span class="hierarchy-chip">🧠 ${esc(p.name)}</span><span class="hierarchy-chip">${childrenOf(p.id).length} sous-projet(s)</span></div>`;
+}
+
 function renderZonePills(){
   return `<div class="zone-pills">${SPACES.map(z=>`<button class="zone-pill ${activeSpace===z?'active':''}" onclick="activeSpace='${esc(z)}';renderAll()">${esc(z)} <small>${z==='Tous'?state.projects.length:state.projects.filter(p=>p.space===z).length}</small></button>`).join('')}</div>`
 }
 function renderList(){
+  ensureHierarchyModel();
   const q=($('search')?.value||'').toLowerCase(), phase=$('phaseFilter')?.value||'Tous', status=$('statusFilter')?.value||'Tous';
-  let list=state.projects.filter(p=>(activeSpace==='Tous'||p.space===activeSpace)&&(phase==='Tous'||p.phase===phase)&&(status==='Tous'||p.status===status)&&[p.name,p.client,p.type,p.goal,(p.tags||[]).join(' ')].join(' ').toLowerCase().includes(q));
-  $('projectList').innerHTML=renderZonePills()+ (list.map(p=>`<div class="card ${p.id===state.selectedId?'active':''}" data-id="${p.id}"><div class="card-ico">${esc(p.icon)}</div><div><h3>${esc(p.name)}</h3><div class="meta"><span class="pill"><span class="dot ${statusColor(p.status)}"></span>${esc(p.status)}</span><span class="pill ${zoneTagClass(p.space)}">${esc(p.space)}</span></div></div><div style="opacity:.65">☆</div></div>`).join('')||'<p class="muted">Aucun projet.</p>');
-  document.querySelectorAll('.card[data-id]').forEach(c=>c.onclick=()=>{state.selectedId=c.dataset.id;persist('sélection projet');renderAll()})
+  const match=p=>(activeSpace==='Tous'||p.space===activeSpace)&&(phase==='Tous'||p.phase===phase)&&(status==='Tous'||p.status===status)&&[p.name,p.client,p.type,p.goal,(p.tags||[]).join(' ')].join(' ').toLowerCase().includes(q);
+  const parents=state.projects.filter(p=>isParentProject(p)&&match(p));
+  const orphanSubs=state.projects.filter(p=>isSubProject(p)&&!parentOf(p)&&match(p));
+  const parentHtml=parents.map(parent=>{
+    const kids=childrenOf(parent.id).filter(k=>match(k)||q===''||[parent.name,parent.client].join(' ').toLowerCase().includes(q));
+    return `<div class="tree-parent">
+      <div class="tree-parent-head ${parent.id===state.selectedId?'active':''}" onclick="selectProjectById('${parent.id}')">
+        <div class="card-ico">${esc(parent.icon||'🧠')}</div>
+        <div><h3>${esc(parent.name)}</h3><small>${esc(parent.status||'')} · ${kids.length} sous-projet(s)</small><span class="kind-badge">Projet BI</span></div>
+        <div style="opacity:.65">${kids.length?'▾':'☆'}</div>
+      </div>
+      ${kids.length?`<div class="tree-children">${kids.map(k=>`<div class="tree-child ${k.id===state.selectedId?'active':''}" onclick="event.stopPropagation();selectProjectById('${k.id}')"><div>${esc(k.icon||'🧩')}</div><div><h4>${esc(k.name)}</h4><small>${esc(k.status||'')} · ${esc(k.phase||'')}</small><span class="kind-badge sub">Sous-projet</span></div></div>`).join('')}</div>`:''}
+    </div>`;
+  }).join('');
+  const orphanHtml=orphanSubs.length?`<div class="subcard" style="min-height:auto"><h3>Sous-projets sans parent</h3>${orphanSubs.map(k=>`<div class="tree-child ${k.id===state.selectedId?'active':''}" onclick="selectProjectById('${k.id}')"><div>${esc(k.icon||'🧩')}</div><div><h4>${esc(k.name)}</h4><small>${esc(k.status||'')}</small></div></div>`).join('')}</div>`:'';
+  $('projectList').innerHTML=renderZonePills()+`<div class="left-hierarchy-actions"><button class="left-create-btn" onclick="openDeployCreator('parent')">➕ Nouveau projet BI</button><button class="left-create-btn secondary" onclick="openDeployCreator('subproject')">🧩 Nouveau sous-projet BI</button></div>`+(parentHtml||'<p class="muted">Aucun projet.</p>')+orphanHtml;
 }
 function zoneTagClass(space){
   const s=String(space||'').replace(/\s+/g,'').toLowerCase();
@@ -1439,6 +1564,7 @@ function renderPilotageBoard(){
 function renderCentralTabs(){
   const tabs=[
     ['fiche','🧩 Synthèse'],
+    ['subprojects','🧬 Sous-projets'],
     ['roadmap','📈 Roadmap simple'],
     ['progress','📊 Avancement'],
     ['versionsTimeline','🕒 Versions'],
@@ -3445,7 +3571,18 @@ function defaultDeployState(){return {name:'Nouveau BI client',client:'Client / 
 function getDeployState(){try{return Object.assign(defaultDeployState(),JSON.parse(localStorage.getItem(DEPLOY_KEY)||'{}'))}catch(e){return defaultDeployState()}}
 function setDeployField(k,v){const s=getDeployState();s[k]=v;localStorage.setItem(DEPLOY_KEY,JSON.stringify(s));renderAll()}
 function deployTemplate(){const s=getDeployState();return DEPLOY_TEMPLATES.find(t=>t.id===s.template)||DEPLOY_TEMPLATES[0]}
-function deployDerived(){const s=getDeployState(),tpl=deployTemplate(),slug=slugifyProjectName(s.name),clientSlug=slugifyProjectName(s.client),appPath=`apps/${slug}/`,url=`https://koink30.github.io/bi-central/${appPath}`,driveRoot=`BI_${clientSlug.toUpperCase()}_${slug.toUpperCase()}`;return {s,tpl,slug,clientSlug,appPath,url,driveRoot}}
+function deployDerived(){
+  const s=getDeployState(), tpl=deployTemplate();
+  const slug=slugifyProjectName(s.name);
+  const parent=state.projects.find(p=>p.id===s.parentId)||null;
+  const parentSlug=parent?projectSlug(parent):slugifyProjectName(s.client);
+  const clientSlug=slugifyProjectName(s.client);
+  const isSub=s.kind==='subproject';
+  const appPath=isSub ? `apps/${parentSlug}/modules/${slug}/` : `apps/${slug}/`;
+  const url=`https://koink30.github.io/bi-central/${appPath}`;
+  const driveRoot=isSub ? `BI_${parentSlug.toUpperCase()}/03_HTML_BI/modules/${slug}/` : `BI_${clientSlug.toUpperCase()}_${slug.toUpperCase()}`;
+  return {s,tpl,slug,clientSlug,parent,parentSlug,isSub,appPath,url,driveRoot};
+}
 function deploymentPipelineSteps(){return [['Brief','Client + besoin + objectif'],['Template','Choix modèle BI'],['Drive','Structure projet'],['GitHub','/apps/nom-projet/'],['V0 HTML','Prototype initial'],['Test','Ouverture navigateur'],['Livraison','URL + ZIP + README']]}
 function deployReadme(){const {s,tpl,appPath,url,driveRoot}=deployDerived();return `# ${s.name}
 
@@ -3521,6 +3658,176 @@ function copyDeployText(kind){const txt=kind==='roadmap'?deployRoadmapBlock():ki
 let deployCreatorOpen=false;
 function openDeployCreator(){deployCreatorOpen=true;renderAll()}
 function closeDeployCreator(){deployCreatorOpen=false;renderAll()}
+
+function downloadTextFile(filename,content,mime='text/plain'){
+  const blob=new Blob([content],{type:mime+';charset=utf-8'});
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download=filename;
+  document.body.appendChild(a);
+  a.click();
+  setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},500);
+}
+function deployDataDemo(){
+  const {s,tpl,slug}=deployDerived();
+  return JSON.stringify({
+    project:s.name,
+    slug,
+    template:tpl.id,
+    generated_from:'BI Central V6.7A',
+    demo:true,
+    items:[
+      {id:1,type:'tache',title:'Valider le brief',status:'à faire',priority:'haute'},
+      {id:2,type:'version',title:'Créer V0.1',status:'à faire',priority:'haute'},
+      {id:3,type:'livraison',title:'Tester index.html localement',status:'à faire',priority:'moyenne'}
+    ]
+  },null,2);
+}
+function deployRoadmapJson(){
+  const {s,tpl,slug,appPath,url,driveRoot}=deployDerived();
+  return JSON.stringify({
+    project:s.name,
+    slug,
+    version:'V0.1',
+    blocks:[
+      {title:'Déploiement V0.1 — Prototype initial',type:'Initialisation',status:'À valider',priority:'Haute',text:deployRoadmapBlock()},
+      {title:'Préparer structure Drive',type:'Action',status:'À faire',priority:'Moyenne',text:driveRoot},
+      {title:'Préparer publication GitHub Pages',type:'Action',status:'À faire',priority:'Moyenne',text:appPath+' → '+url},
+      {title:'Tester le prototype local',type:'Test',status:'À faire',priority:'Haute',text:'Ouvrir index.html et valider navigation, lisibilité, données démo.'}
+    ]
+  },null,2);
+}
+function downloadDeployFile(kind){
+  const {slug}=deployDerived();
+  if(kind==='index')downloadTextFile('index.html',deployIndexHtmlPreview(),'text/html');
+  if(kind==='manifest')downloadTextFile('manifest.json',deployManifest(),'application/json');
+  if(kind==='roadmap')downloadTextFile('roadmap.json',deployRoadmapJson(),'application/json');
+  if(kind==='readme')downloadTextFile('README.md',deployReadme(),'text/markdown');
+  if(kind==='data')downloadTextFile('data-demo.json',deployDataDemo(),'application/json');
+  toast('Fichier généré');
+}
+function projectPackDerived(){
+  const p=selected();
+  const name=p?.name||'Projet BI';
+  const slug=slugifyProjectName(name);
+  const appPath=p?.sources?.githubPath || `apps/${slug}/`;
+  const url=p?.sources?.pagesUrl || `https://koink30.github.io/bi-central/${appPath}`;
+  const drive=p?.sources?.driveFolder || p?.deployConfig?.driveRoot || `BI_${slug.toUpperCase()}`;
+  return {p,name,slug,appPath,url,drive};
+}
+function projectManifestText(){
+  const {p,name,slug,appPath,url,drive}=projectPackDerived();
+  return JSON.stringify({
+    app:name,
+    slug,
+    version:(p.versions||[])[0]?.version||p.version||'V0.1',
+    generated_from:'BI Central V6.7A',
+    category:p.space||p.type||'Projet BI',
+    status:p.status||'À tester',
+    progress:p.progress||0,
+    github_path:appPath,
+    public_url:url,
+    drive_root:drive,
+    goal:p.goal||'',
+    next_action:p.nextAction||'',
+    tags:p.tags||[]
+  },null,2);
+}
+function projectReadmeText(){
+  const {p,name,appPath,url,drive}=projectPackDerived();
+  return `# ${name}
+
+Statut : ${p.status||'À tester'}
+Phase : ${p.phase||'Initialisation'}
+
+## Objectif
+${p.goal||''}
+
+## Prochaine action
+${p.nextAction||''}
+
+## Déploiement
+GitHub : ${appPath}
+URL : ${url}
+Drive : ${drive}
+
+## Notes
+Généré depuis BI Central V6.7A.`;
+}
+function projectRoadmapText(){
+  const {p,name}=projectPackDerived();
+  const blocks=(p.roadmapBlocks||[]).map(b=>({
+    title:b.title,
+    type:b.type,
+    status:b.status,
+    priority:b.priority,
+    text:b.text,
+    updated:b.updated||b.created||''
+  }));
+  return JSON.stringify({project:name,blocks},null,2);
+}
+function projectIndexPreview(){
+  const {p,name}=projectPackDerived();
+  return `<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>${name}</title>
+<style>
+body{font-family:Arial,sans-serif;background:#07111f;color:#eef;padding:32px}
+.card{border:1px solid #24445f;border-radius:18px;padding:18px;background:#0d1b2e;margin:12px 0}
+button{border:1px solid #36eaff;background:#102b42;color:#fff;border-radius:12px;padding:10px;margin:4px}
+</style>
+</head>
+<body>
+<h1>${p.icon||'🧩'} ${name}</h1>
+<div class="card"><h2>Prototype V0</h2><p>${p.goal||'Prototype généré depuis BI Central.'}</p></div>
+<div class="card"><h2>Prochaine action</h2><p>${p.nextAction||'À compléter.'}</p></div>
+<nav><button>Accueil</button><button>Données</button><button>Roadmap</button><button>Livraison</button></nav>
+</body>
+</html>`;
+}
+function projectDataDemoText(){
+  const {p,name,slug}=projectPackDerived();
+  return JSON.stringify({
+    project:name,
+    slug,
+    generated_from:'BI Central V6.7A',
+    demo:true,
+    project_state:{
+      status:p.status||'À tester',
+      phase:p.phase||'Initialisation',
+      progress:p.progress||0
+    },
+    roadmap:(p.roadmapBlocks||[]).slice(0,5).map(b=>({title:b.title,status:b.status,priority:b.priority}))
+  },null,2);
+}
+function downloadProjectPackFile(kind){
+  const {slug}=projectPackDerived();
+  if(kind==='index')downloadTextFile('index.html',projectIndexPreview(),'text/html');
+  if(kind==='manifest')downloadTextFile('manifest.json',projectManifestText(),'application/json');
+  if(kind==='roadmap')downloadTextFile('roadmap.json',projectRoadmapText(),'application/json');
+  if(kind==='readme')downloadTextFile('README.md',projectReadmeText(),'text/markdown');
+  if(kind==='data')downloadTextFile('data-demo.json',projectDataDemoText(),'application/json');
+  toast('Fichier projet généré');
+}
+function renderPackPanel(mode='creator'){
+  const isProject=mode==='project';
+  const dl=isProject?'downloadProjectPackFile':'downloadDeployFile';
+  return `<section class="pack-panel">
+    <h3>📦 Pack V0 téléchargeable</h3>
+    <p class="muted">Génère les fichiers de départ à déposer dans le dossier GitHub cible ou à livrer en ZIP manuel. Pas d’écriture automatique GitHub.</p>
+    <div class="pack-grid">
+      <div class="pack-file"><b>index.html</b><small>Prototype HTML V0 ouvrable directement.</small><button class="mini-btn" onclick="${dl}('index')">Télécharger</button></div>
+      <div class="pack-file"><b>manifest.json</b><small>Identité du BI, chemins, version, statut.</small><button class="mini-btn" onclick="${dl}('manifest')">Télécharger</button></div>
+      <div class="pack-file"><b>roadmap.json</b><small>Blocs de démarrage et étapes projet.</small><button class="mini-btn" onclick="${dl}('roadmap')">Télécharger</button></div>
+      <div class="pack-file"><b>README.md</b><small>Notice projet lisible dans GitHub.</small><button class="mini-btn" onclick="${dl}('readme')">Télécharger</button></div>
+      <div class="pack-file"><b>data-demo.json</b><small>Données de démonstration initiales.</small><button class="mini-btn" onclick="${dl}('data')">Télécharger</button></div>
+    </div>
+    <div class="pack-warning">Étape suivante possible : générer un vrai ZIP en navigateur avec librairie dédiée, ou passer par Apps Script côté serveur.</div>
+  </section>`;
+}
+
 function renderDeployCreatorModal(){
   return `<div class="deploy-modal-backdrop ${deployCreatorOpen?'open':''}" onclick="if(event.target===this)closeDeployCreator()">
     <div class="deploy-modal">
@@ -3535,11 +3842,13 @@ function renderDeployCreatorModal(){
 function selectedDeployDerived(){
   const p=selected();
   const name=p?.name||'Projet BI';
-  const slug=slugifyProjectName(name);
-  const appPath=p?.sources?.githubPath || `apps/${slug}/`;
+  const slug=projectSlug(p);
+  const parent=parentOf(p);
+  const parentSlug=parent?projectSlug(parent):slug;
+  const appPath=p?.sources?.githubPath || (isSubProject(p)?`apps/${parentSlug}/modules/${slug}/`:`apps/${slug}/`);
   const url=p?.sources?.pagesUrl || `https://koink30.github.io/bi-central/${appPath}`;
-  const drive=p?.sources?.driveFolder || p?.deployConfig?.driveRoot || `BI_${slug.toUpperCase()}`;
-  return {p,name,slug,appPath,url,drive};
+  const drive=p?.sources?.driveFolder || p?.deployConfig?.driveRoot || (isSubProject(p)?`BI_${parentSlug.toUpperCase()}/03_HTML_BI/modules/${slug}/`:`BI_${slug.toUpperCase()}`);
+  return {p,name,slug,parent,parentSlug,appPath,url,drive};
 }
 function updateProjectDeployField(field,value){
   const p=selected(); if(!p)return;
@@ -3550,6 +3859,61 @@ function updateProjectDeployField(field,value){
   persist('configuration déploiement '+(p.name||'projet'));
   renderAll();
 }
+
+function renderSubprojectsTab(){
+  ensureHierarchyModel();
+  const p=selected();
+  const parent=isSubProject(p)?parentOf(p):p;
+  const kids=parent?childrenOf(parent.id):[];
+  if(isSubProject(p)){
+    return `<div class="view-title"><h2>🧬 Parent / structure</h2><span class="pill sub">Sous-projet BI</span></div>
+      <section class="parent-link-panel">
+        <h3>Projet parent</h3>
+        ${parent?`<p>Ce sous-projet est rattaché à <b>${esc(parent.name)}</b>.</p><button class="mini-btn" onclick="selectProjectById('${parent.id}','subprojects')">↖ Ouvrir le parent</button>`:'<p>Aucun parent rattaché.</p>'}
+      </section>
+      <section class="summary-panel">
+        <h3>Chemins hérités</h3>
+        ${hierarchyPath(p)}
+        <pre class="deploy-output">${esc(JSON.stringify({parent:parent?.name||'',subproject:p.name,githubPath:p.sources?.githubPath||'',pagesUrl:p.sources?.pagesUrl||'',drive:p.sources?.driveFolder||''},null,2))}</pre>
+      </section>`;
+  }
+  return `<div class="view-title"><h2>🧬 Sous-projets</h2><span class="pill green">${kids.length} module(s)</span></div>
+    <section class="deploy-hero">
+      <h2>${esc(p.name)}</h2>
+      <p>Vue structurelle du projet parent : sous-projets rattachés, chemins GitHub/Drive, avancement et navigation.</p>
+      ${hierarchyPath(p)}
+      <div class="deploy-actions"><button class="mini-btn" onclick="openDeployCreator('subproject')">➕ Ajouter un sous-projet</button><button class="mini-btn" onclick="activeMain='deployment';renderAll()">Configurer déploiement parent</button></div>
+    </section>
+    <section class="summary-panel">
+      <h3>Modules / sous-projets</h3>
+      <div class="subproject-grid">
+        ${kids.map(k=>`<div class="subproject-card" onclick="selectProjectById('${k.id}')">
+          <h3>${esc(k.icon||'🧩')} ${esc(k.name)}</h3>
+          <div class="meta"><span class="pill"><span class="dot ${statusColor(k.status)}"></span>${esc(k.status||'')}</span><span class="pill">${projectReadiness(k)}%</span></div>
+          <p>${esc(k.goal||k.nextAction||'Sous-projet BI')}</p>
+          <small>GitHub : ${esc(k.sources?.githubPath||'à définir')}</small><br>
+          <small>Drive : ${esc(k.sources?.driveFolder||'à définir')}</small>
+        </div>`).join('')||'<p class="muted">Aucun sous-projet rattaché. Utilise “Ajouter un sous-projet”.</p>'}
+      </div>
+    </section>
+    <section class="summary-panel" style="margin-top:12px">
+      <h3>Structure cible recommandée</h3>
+      <pre class="deploy-output">${esc(`GitHub :
+bi-central/
+  apps/${projectSlug(p)}/
+    index.html
+    modules/
+${kids.map(k=>`      ${projectSlug(k)}/index.html`).join('\n')||'      module-a/index.html'}
+
+Drive :
+BI_${projectSlug(p).toUpperCase()}/
+  03_HTML_BI/
+    parent/
+    modules/
+${kids.map(k=>`      ${projectSlug(k)}/`).join('\n')||'      module-a/'}`)}</pre>
+    </section>`;
+}
+
 function renderDeploymentModule(){
   const {p,name,slug,appPath,url,drive}=selectedDeployDerived();
   const cfg=p.deployConfig||{};
@@ -3590,6 +3954,7 @@ function renderDeploymentModule(){
       <button class="mini-btn" onclick="updateProjectDeployField('stage','Livré')">Marquer livré</button>
     </div>
   </section>
+  ${renderPackPanel("project")}
   <div class="deploy-grid">
     <section class="deploy-card"><h3>Structure cible projet</h3><pre class="deploy-output">${esc(`Drive :
 ${drive}/
@@ -3630,9 +3995,11 @@ function createProjectFromDeployment(){
   const p={
     id:slug,
     name:s.name,
-    icon:tpl.icon,
+    kind:s.kind==='subproject'?'subproject':'parent',
+    parentId:s.kind==='subproject'?s.parentId:null,
+    icon:s.kind==='subproject'?'🧩':(tpl.icon||'🧠'),
     space:s.category==='Client'?'Pro Clients':(s.category==='Le Merlet'?'Pro Merlet':(s.category==='Perso'?'Perso':'Pro Clients')),
-    type:'Sous-projet BI',
+    type:s.kind==='subproject'?'Sous-projet BI':'Projet BI',
     client:s.client,
     phase:'Initialisation',
     status:'À tester',
@@ -3695,7 +4062,9 @@ function renderDeploymentCreatorContent(){const {s,tpl,slug,appPath,url,driveRoo
 <div><label>Complexité</label><select onchange="setDeployField('complexity',this.value)">${['Découverte','Standard','Confort','Premium','Prototype rapide'].map(x=>`<option ${s.complexity===x?'selected':''}>${x}</option>`).join('')}</select></div>
 <div><label>Livraison</label><select onchange="setDeployField('delivery',this.value)">${['GitHub Pages / ZIP','ZIP local','Drive uniquement','Démo privée','Repo dédié plus tard'].map(x=>`<option ${s.delivery===x?'selected':''}>${x}</option>`).join('')}</select></div>
 <div><label>Publication publique</label><select onchange="setDeployField('public',this.value==='true')"><option value="true" ${s.public?'selected':''}>Oui</option><option value="false" ${!s.public?'selected':''}>Non</option></select></div>
-<div class="full"><label>Description courte</label><textarea onchange="setDeployField('description',this.value)">${esc(s.description)}</textarea></div>
+<div><label>Type BI</label><select onchange="setDeployField('kind',this.value)"><option value="parent" ${s.kind!=='subproject'?'selected':''}>Projet BI parent</option><option value="subproject" ${s.kind==='subproject'?'selected':''}>Sous-projet BI</option></select></div>
+      <div><label>Projet parent</label><select onchange="setDeployField('parentId',this.value)" ${s.kind==='subproject'?'':'disabled'}><option value="">— aucun —</option>${state.projects.filter(isParentProject).map(p=>`<option value="${esc(p.id)}" ${s.parentId===p.id?'selected':''}>${esc(p.name)}</option>`).join('')}</select></div>
+      <div class="full"><label>Description courte</label><textarea onchange="setDeployField('description',this.value)">${esc(s.description)}</textarea></div>
 </div></section>
 <section class="deploy-card"><h3>2. Template de départ</h3><div class="template-grid">${DEPLOY_TEMPLATES.map(t=>`<div class="template-tile ${s.template===t.id?'active':''}" onclick="setDeployField('template','${t.id}')"><b>${t.icon} ${esc(t.name)}</b><small>${esc(t.desc)}</small></div>`).join('')}</div></section>
 </div>
@@ -3704,7 +4073,8 @@ function renderDeploymentCreatorContent(){const {s,tpl,slug,appPath,url,driveRoo
 <section class="deploy-card"><h3>4. Structure cible</h3><div><span class="path-badge">Drive : ${esc(driveRoot)}</span><span class="path-badge">GitHub : ${esc(appPath)}</span><span class="path-badge">URL : ${esc(url)}</span></div><pre class="deploy-output">${esc(deployFolderTree())}</pre><div class="deploy-actions"><button class="mini-btn" onclick="copyDeployText('tree')">Copier structure</button></div></section>
 <section class="deploy-card"><h3>5. Pack V0 théorique</h3><pre class="deploy-output">${esc(deployManifest())}</pre><div class="deploy-actions"><button class="mini-btn" onclick="copyDeployText('manifest')">Copier manifest</button><button class="mini-btn" onclick="copyDeployText('readme')">Copier README</button><button class="mini-btn" onclick="copyDeployText('html')">Copier index V0</button></div></section>
 </div>
-<section class="deploy-card" style="margin-top:12px"><h3>6. Bloc roadmap prêt à saisir</h3><pre class="deploy-output">${esc(deployRoadmapBlock())}</pre><div class="deploy-actions"><button class="mini-btn" onclick="copyDeployText('roadmap')">Copier bloc roadmap</button><button class="mini-btn" onclick="toast('Étape suivante : génération ZIP projet V0')">Étape suivante</button></div></section>`}
+${renderPackPanel("creator")}
+  <section class="deploy-card" style="margin-top:12px"><h3>6. Bloc roadmap prêt à saisir</h3><pre class="deploy-output">${esc(deployRoadmapBlock())}</pre><div class="deploy-actions"><button class="mini-btn" onclick="copyDeployText('roadmap')">Copier bloc roadmap</button><button class="mini-btn" onclick="toast('Étape suivante : génération ZIP projet V0')">Étape suivante</button></div></section>`}
 
 function renderWorkTimeDemo(){
   const events=collectWorkEventsDemo();
@@ -3796,6 +4166,7 @@ function renderMainView(){
   const p=selected(), total=state.projects.length, active=state.projects.filter(p=>['En cours','Déployé','Validé','À tester'].includes(p.status)).length, avg=Math.round(state.projects.reduce((a,p)=>a+projectReadiness(p),0)/Math.max(1,total));
   let html='';
   if(activeMain==='fiche'){html=''}
+  else if(activeMain==='subprojects'){html=renderSubprojectsTab()}
   else if(activeMain==='progress'){html=renderProgressTab()}
   else if(activeMain==='versionsTimeline'){html=renderVersionsTimeline()}
   else if(activeMain==='worktime'){html=renderWorkTimeCalculator()}
