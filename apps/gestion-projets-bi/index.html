@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>Cockpit Projets BI · V6.10B Déploiement GitHub réel</title>
+<title>Cockpit Projets BI · V6.10C Diagnostic GitHub réel</title>
 <style>
 :root{
   --bg:#030711;--bg2:#06112a;--panel:rgba(7,18,41,.82);--panel2:rgba(9,28,61,.72);
@@ -1530,7 +1530,7 @@ body.show-deleted .deleted-project-card{display:block!important}
 
 
 
-/* V6.10B - Déploiement GitHub réel + lancement BI cible */
+/* V6.10C - Diagnostic GitHub réel + lancement BI cible */
 .deploy610b-card{border:1px solid rgba(156,90,255,.35);background:linear-gradient(145deg,rgba(34,12,66,.86),rgba(5,18,43,.76));border-radius:22px;padding:16px;margin:14px 0;box-shadow:0 0 34px rgba(156,90,255,.12)}
 .deploy610b-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:12px}.deploy610b-head h3{margin:0;font-size:18px}.deploy610b-head p{margin:5px 0 0;color:var(--muted);max-width:800px}.deploy610b-status{display:flex;gap:8px;flex-wrap:wrap}.deploy610b-badge{border:1px solid rgba(156,90,255,.32);background:rgba(2,10,24,.48);border-radius:999px;padding:7px 10px;font-size:12px;color:#efe3ff;font-weight:900}.deploy610b-badge.ok{border-color:rgba(53,243,132,.50);color:#dffff0}.deploy610b-badge.warn{border-color:rgba(255,195,77,.50);color:#fff1c9}.deploy610b-badge.lock{border-color:rgba(255,91,134,.50);color:#ffd7df}.deploy610b-flow{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:9px;margin:10px 0}.deploy610b-step{border:1px solid rgba(255,255,255,.10);border-radius:18px;background:rgba(0,8,20,.38);padding:11px}.deploy610b-step b{display:block}.deploy610b-step small{display:block;color:var(--muted);margin-top:4px}.deploy610b-step.ok{border-color:rgba(53,243,132,.35);box-shadow:inset 0 0 18px rgba(53,243,132,.07)}.deploy610b-step.warn{border-color:rgba(255,195,77,.38)}.deploy610b-grid{display:grid;grid-template-columns:1.2fr .8fr;gap:12px}.deploy610b-form{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.deploy610b-form .full{grid-column:1/-1}.deploy610b-form label{display:block;font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted2);margin-bottom:5px;font-weight:900}.deploy610b-form input,.deploy610b-form select,.deploy610b-form textarea{width:100%;box-sizing:border-box;border:1px solid rgba(156,90,255,.28);border-radius:14px;background:rgba(0,8,20,.52);color:#fff;padding:10px 11px;outline:none}.deploy610b-form textarea{min-height:74px;resize:vertical}.deploy610b-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}.deploy610b-btn{border:1px solid rgba(156,90,255,.42);background:linear-gradient(135deg,rgba(156,90,255,.25),rgba(40,234,255,.12));color:#fff;border-radius:14px;padding:10px 12px;font-weight:900;cursor:pointer}.deploy610b-btn.secondary{background:rgba(0,8,20,.38)}.deploy610b-btn.danger{border-color:rgba(255,91,134,.50);background:rgba(255,91,134,.14)}.deploy610b-btn.launch{border-color:rgba(53,243,132,.55);background:rgba(53,243,132,.14)}.deploy610b-log{white-space:pre-wrap;background:rgba(0,8,20,.56);border:1px solid rgba(156,90,255,.22);border-radius:16px;padding:12px;min-height:130px;color:#dbeeff;font-family:Consolas,monospace;font-size:12px;line-height:1.45}.deploy610b-warning{margin-top:12px;border:1px solid rgba(255,195,77,.30);background:rgba(255,195,77,.09);border-radius:16px;padding:11px;color:#fff5d2}.deploy610b-urlbox{border:1px solid rgba(40,234,255,.22);background:rgba(0,8,20,.38);border-radius:16px;padding:11px;margin-top:10px}.deploy610b-urlbox b{display:block;color:#fff}.deploy610b-urlbox small{display:block;color:var(--muted);word-break:break-all;margin-top:4px}@media(max-width:900px){.deploy610b-grid,.deploy610b-flow{grid-template-columns:1fr}.deploy610b-form{grid-template-columns:1fr}}
 
@@ -1614,7 +1614,7 @@ body.show-deleted .deleted-project-card{display:block!important}
 
 <script>
 'use strict';
-const VERSION='V6.10B-drive-github-deploy-reel';
+const VERSION='V6.10C-diagnostic-github-deploy-reel';
 const STABLE_KEY='central_bi_project_manager_current';
 const VERSION_KEY='central_bi_project_manager_v68c';
 const KEY=STABLE_KEY;
@@ -5778,54 +5778,183 @@ function deploy610Download(kind){
 }
 function deploy610CopyAppsScript(){navigator.clipboard?.writeText(deploy610AppsScriptTemplate());toast('Script Apps Script copié')}
 function deploy610AppsScriptTemplate(){return `/**
- * BI Central V6.10A — Drive Deploy endpoint
- * 1) Créer un projet Apps Script.
- * 2) Coller ce code.
- * 3) Dans Paramètres du projet > Propriétés du script, ajouter DEPLOY_SECRET si souhaité.
- * 4) Déployer > Nouvelle application web > Exécuter en tant que moi.
- * 5) Coller l'URL /exec dans le Cockpit.
+ * BI Central V6.10C — Drive + GitHub Deploy endpoint avec diagnostic
+ *
+ * Script Properties possibles :
+ * - DEPLOY_SECRET  : optionnel, même clé que dans le Cockpit.
+ * - GITHUB_TOKEN   : obligatoire pour publier dans GitHub.
+ *
+ * Côté GitHub : token avec permission Contents: read/write sur Koink30/bi-central.
+ * Le token ne doit jamais être collé dans le BI HTML.
  */
+var BI_DEPLOY_VERSION = 'V6.10C';
+var LAST_LOG_KEY = 'BI_CENTRAL_LAST_DEPLOY_LOG_V610C';
+
 function doPost(e) {
+  var started = new Date();
   try {
     var raw = e && e.postData && e.postData.contents ? e.postData.contents : '{}';
     var payload = JSON.parse(raw);
-    var expectedSecret = PropertiesService.getScriptProperties().getProperty('DEPLOY_SECRET') || '';
+    var expectedSecret = getProp_('DEPLOY_SECRET');
     if (expectedSecret && payload.secret !== expectedSecret) {
-      return json_({success:false, error:'unauthorized'});
+      var denied = baseResult_(payload, 'unauthorized', started);
+      denied.success = false;
+      denied.error = 'unauthorized';
+      storeLast_(denied);
+      return json_(denied);
     }
-    if (payload.action === 'ping') {
-      return json_({success:true, pong:true, at:new Date().toISOString()});
-    }
-    if (payload.action !== 'deploy_project_drive' && payload.action !== 'simulate_drive_deploy') {
-      return json_({success:false, error:'unknown action', action:payload.action});
-    }
-    var result = deployProjectDrive_(payload);
-    return json_({success:true, result:result, at:new Date().toISOString()});
+    var result = handleAction_(payload, started);
+    storeLast_(result);
+    return json_(result);
   } catch (err) {
-    return json_({success:false, error:String(err && err.stack ? err.stack : err)});
+    var failed = {
+      success: false,
+      version: BI_DEPLOY_VERSION,
+      action: 'exception',
+      error: String(err && err.message ? err.message : err),
+      stack: String(err && err.stack ? err.stack : ''),
+      finished_at: new Date().toISOString(),
+      duration_ms: new Date().getTime() - started.getTime()
+    };
+    storeLast_(failed);
+    return json_(failed);
   }
 }
 
-function json_(obj) {
-  return ContentService.createTextOutput(JSON.stringify(obj, null, 2)).setMimeType(ContentService.MimeType.JSON);
+function doGet(e) {
+  var params = e && e.parameter ? e.parameter : {};
+  var action = params.action || 'info';
+  var result;
+
+  if (action === 'last_log') {
+    result = getLast_();
+  } else if (action === 'github_diagnostic') {
+    result = githubDiagnostic_({ github: { repo: params.repo || 'Koink30/bi-central', branch: params.branch || 'main' } }, new Date());
+    storeLast_(result);
+  } else {
+    result = {
+      success: true,
+      version: 'BI Central ' + BI_DEPLOY_VERSION,
+      message: 'Endpoint Drive + GitHub actif. Utiliser POST depuis le Cockpit.',
+      githubTokenPresent: !!getGithubToken_(),
+      available_get_actions: ['last_log', 'github_diagnostic']
+    };
+  }
+
+  if (params.callback) {
+    return jsonp_(params.callback, result);
+  }
+  return json_(result);
 }
 
-function deployProjectDrive_(payload) {
+function handleAction_(payload, started) {
+  var action = payload.action || 'ping';
+
+  if (action === 'ping') {
+    var ping = baseResult_(payload, action, started);
+    ping.pong = true;
+    ping.githubTokenPresent = !!getGithubToken_();
+    return finish_(ping, started);
+  }
+
+  if (action === 'github_ping') {
+    var gp = baseResult_(payload, action, started);
+    gp.githubTokenPresent = !!getGithubToken_();
+    gp.repo = (payload.github && payload.github.repo) || '';
+    return finish_(gp, started);
+  }
+
+  if (action === 'github_diagnostic') {
+    return githubDiagnostic_(payload, started);
+  }
+
+  if (action === 'github_write_test') {
+    return githubWriteTest_(payload, started);
+  }
+
+  if (action === 'simulate_drive_deploy') {
+    var sd = baseResult_(payload, action, started);
+    sd.simulation = true;
+    sd.scope = 'drive';
+    sd.root = payload.drive && payload.drive.rootName;
+    sd.folders = (payload.drive && payload.drive.folders || []).length;
+    sd.files = Object.keys(payload.files || {}).length;
+    return finish_(sd, started);
+  }
+
+  if (action === 'deploy_project_drive') {
+    var dr = baseResult_(payload, action, started);
+    dr.scope = 'drive';
+    dr.drive = deployDrive_(payload);
+    return finish_(dr, started);
+  }
+
+  if (action === 'simulate_github_deploy') {
+    var sg = baseResult_(payload, action, started);
+    sg.simulation = true;
+    sg.scope = 'github';
+    sg.github = githubPreview_(payload);
+    return finish_(sg, started);
+  }
+
+  if (action === 'deploy_project_github') {
+    var gh = baseResult_(payload, action, started);
+    gh.scope = 'github';
+    gh.github = deployGithub_(payload);
+    return finish_(gh, started);
+  }
+
+  if (action === 'deploy_project_full') {
+    var full = baseResult_(payload, action, started);
+    full.scope = 'drive_github';
+    full.drive = deployDrive_(payload);
+    full.github = deployGithub_(payload);
+    return finish_(full, started);
+  }
+
+  var unknown = baseResult_(payload, action, started);
+  unknown.success = false;
+  unknown.error = 'unknown_action';
+  return finish_(unknown, started);
+}
+
+function baseResult_(payload, action, started) {
+  return {
+    success: true,
+    version: BI_DEPLOY_VERSION,
+    action: action,
+    deploy_id: payload.deploy_id || payload.deployId || '',
+    project: payload.project ? { id: payload.project.id || '', name: payload.project.name || '', slug: payload.project.slug || '' } : {},
+    started_at: started.toISOString()
+  };
+}
+
+function finish_(obj, started) {
+  obj.finished_at = new Date().toISOString();
+  obj.duration_ms = new Date().getTime() - started.getTime();
+  return obj;
+}
+
+function deployDrive_(payload) {
   var drive = payload.drive || {};
   var rootName = safeName_(drive.rootName || (payload.project && payload.project.name) || 'BI_PROJECT');
   var root = DriveApp.createFolder(rootName);
-  var folders = {'': root};
-  var folderUrls = {'/': root.getUrl()};
+  var folders = { '': root };
+  var folderUrls = { '/': root.getUrl() };
+
   (drive.folders || []).forEach(function(path) {
-    var folder = ensureFolderPath_(root, folders, path);
-    folderUrls[path] = folder.getUrl();
+    var clean = cleanPath_(path);
+    var folder = ensureFolderPath_(root, folders, clean);
+    folderUrls[clean] = folder.getUrl();
   });
+
   var files = payload.files || {};
   var createdFiles = [];
   Object.keys(files).forEach(function(path) {
     var file = createTextFile_(root, folders, path, String(files[path] || ''));
-    createdFiles.push({path:path, url:file.getUrl()});
+    createdFiles.push({ path: cleanPath_(path), url: file.getUrl() });
   });
+
   return {
     driveRootName: rootName,
     driveRootUrl: root.getUrl(),
@@ -5835,22 +5964,240 @@ function deployProjectDrive_(payload) {
   };
 }
 
+function githubPreview_(payload) {
+  var gh = payload.github || {};
+  var files = gh.files || {};
+  return {
+    tokenPresent: !!getGithubToken_(),
+    repo: gh.repo || 'Koink30/bi-central',
+    branch: gh.branch || 'main',
+    path: cleanPath_(gh.path || ''),
+    publicUrl: gh.publicUrl || '',
+    fileCount: Object.keys(files).length,
+    files: Object.keys(files)
+  };
+}
+
+function githubDiagnostic_(payload, started) {
+  var res = baseResult_(payload || {}, 'github_diagnostic', started || new Date());
+  var token = getGithubToken_();
+  var gh = payload.github || {};
+  var repoFull = gh.repo || 'Koink30/bi-central';
+  var branch = gh.branch || 'main';
+  res.githubTokenPresent = !!token;
+  res.repo = repoFull;
+  res.branch = branch;
+  res.checks = [];
+
+  if (!token) {
+    res.success = false;
+    res.error = 'GITHUB_TOKEN absent dans les propriétés Apps Script.';
+    return finish_(res, started || new Date());
+  }
+
+  var meta = githubFetch_('https://api.github.com/repos/' + encodeRepoFull_(repoFull), token);
+  res.checks.push({ name: 'repo_metadata', code: meta.code, ok: meta.code === 200, body: meta.preview });
+
+  var br = githubFetch_('https://api.github.com/repos/' + encodeRepoFull_(repoFull) + '/branches/' + encodeURIComponent(branch), token);
+  res.checks.push({ name: 'branch', code: br.code, ok: br.code === 200, body: br.preview });
+
+  res.success = res.checks.every(function(c) { return c.ok; });
+  if (!res.success) res.error = 'Diagnostic GitHub non OK. Vérifie token, repo, branche et permissions Contents read/write.';
+  return finish_(res, started || new Date());
+}
+
+function githubWriteTest_(payload, started) {
+  var res = baseResult_(payload || {}, 'github_write_test', started || new Date());
+  var token = getGithubToken_();
+  if (!token) {
+    res.success = false;
+    res.error = 'GITHUB_TOKEN absent dans les propriétés Apps Script.';
+    return finish_(res, started || new Date());
+  }
+  var gh = payload.github || {};
+  var repoFull = gh.repo || 'Koink30/bi-central';
+  var branch = gh.branch || 'main';
+  var path = cleanPath_('apps/_deploy_tests/github_write_test.json');
+  var content = JSON.stringify({
+    ok: true,
+    version: BI_DEPLOY_VERSION,
+    at: new Date().toISOString(),
+    source: 'Apps Script diagnostic write test',
+    project: payload.project || {}
+  }, null, 2);
+  res.github = {
+    repo: repoFull,
+    branch: branch,
+    path: path,
+    file: upsertGithubFile_(repoFull, branch, path, content, 'BI Central GitHub write test', token)
+  };
+  return finish_(res, started || new Date());
+}
+
+function deployGithub_(payload) {
+  var token = getGithubToken_();
+  if (!token) {
+    throw new Error('GITHUB_TOKEN manquant dans les propriétés du script Apps Script.');
+  }
+
+  var gh = payload.github || {};
+  var repoFull = gh.repo || 'Koink30/bi-central';
+  var branch = gh.branch || 'main';
+  var basePath = cleanPath_(gh.path || 'apps/bi-project/');
+  var files = gh.files || {};
+  var message = gh.commitMessage || ('Deploy ' + ((payload.project && payload.project.name) || 'BI project'));
+  var results = [];
+
+  if (!Object.keys(files).length) {
+    throw new Error('Aucun fichier GitHub à publier dans payload.github.files.');
+  }
+
+  Object.keys(files).forEach(function(name) {
+    var targetPath = cleanPath_(basePath + '/' + name);
+    var result = upsertGithubFile_(repoFull, branch, targetPath, String(files[name] || ''), message, token);
+    results.push(result);
+  });
+
+  return {
+    repo: repoFull,
+    branch: branch,
+    path: basePath,
+    publicUrl: gh.publicUrl || '',
+    fileCount: results.length,
+    files: results
+  };
+}
+
+function upsertGithubFile_(repoFull, branch, path, content, message, token) {
+  var parts = String(repoFull || '').split('/');
+  if (parts.length < 2) {
+    throw new Error('Repo GitHub invalide : ' + repoFull);
+  }
+
+  var owner = parts.shift();
+  var repo = parts.join('/');
+  var encodedPath = path.split('/').map(function(part) {
+    return encodeURIComponent(part);
+  }).join('/');
+
+  var api = 'https://api.github.com/repos/' + encodeURIComponent(owner) + '/' + encodeURIComponent(repo) + '/contents/' + encodedPath;
+  var headers = githubHeaders_(token);
+  var sha = '';
+
+  var getResp = UrlFetchApp.fetch(api + '?ref=' + encodeURIComponent(branch), {
+    method: 'get',
+    headers: headers,
+    muteHttpExceptions: true
+  });
+
+  if (getResp.getResponseCode() === 200) {
+    try {
+      sha = JSON.parse(getResp.getContentText()).sha || '';
+    } catch (err) {
+      sha = '';
+    }
+  } else if (getResp.getResponseCode() !== 404) {
+    throw new Error('GitHub lecture ' + path + ' : HTTP ' + getResp.getResponseCode() + ' ' + getResp.getContentText().slice(0, 700));
+  }
+
+  var body = {
+    message: message,
+    content: base64Utf8_(content),
+    branch: branch
+  };
+  if (sha) body.sha = sha;
+
+  var putResp = UrlFetchApp.fetch(api, {
+    method: 'put',
+    contentType: 'application/json',
+    headers: headers,
+    payload: JSON.stringify(body),
+    muteHttpExceptions: true
+  });
+
+  var code = putResp.getResponseCode();
+  var text = putResp.getContentText();
+  if (code !== 200 && code !== 201) {
+    throw new Error('GitHub écriture ' + path + ' : HTTP ' + code + ' ' + text.slice(0, 900));
+  }
+
+  var obj = {};
+  try {
+    obj = JSON.parse(text);
+  } catch (err2) {
+    obj = {};
+  }
+
+  return {
+    path: path,
+    status: code === 201 ? 'created' : 'updated',
+    sha: obj.content && obj.content.sha || '',
+    html_url: obj.content && obj.content.html_url || '',
+    commit_sha: obj.commit && obj.commit.sha || ''
+  };
+}
+
+function githubFetch_(url, token) {
+  var resp = UrlFetchApp.fetch(url, {
+    method: 'get',
+    headers: githubHeaders_(token),
+    muteHttpExceptions: true
+  });
+  var text = resp.getContentText() || '';
+  return { code: resp.getResponseCode(), preview: text.slice(0, 700) };
+}
+
+function encodeRepoFull_(repoFull) {
+  var parts = String(repoFull || '').split('/');
+  if (parts.length < 2) throw new Error('Repo GitHub invalide : ' + repoFull);
+  var owner = encodeURIComponent(parts.shift());
+  var repo = encodeURIComponent(parts.join('/'));
+  return owner + '/' + repo;
+}
+
+function githubHeaders_(token) {
+  return {
+    Authorization: 'Bearer ' + token,
+    Accept: 'application/vnd.github+json',
+    'X-GitHub-Api-Version': '2022-11-28',
+    'User-Agent': 'BI-Central-Apps-Script'
+  };
+}
+
+function getGithubToken_() {
+  return getProp_('GITHUB_TOKEN') || getProp_('GH_TOKEN');
+}
+
+function getProp_(key) {
+  return PropertiesService.getScriptProperties().getProperty(key) || '';
+}
+
+function base64Utf8_(content) {
+  return Utilities.base64Encode(String(content || ''), Utilities.Charset.UTF_8);
+}
+
 function ensureFolderPath_(root, folders, path) {
-  path = String(path || '').replace(/^\\/+|\\/+$/g, '');
+  path = cleanPath_(path);
   if (!path) return root;
+
   var parts = path.split('/').filter(Boolean);
   var current = root;
   var key = '';
+
   parts.forEach(function(part) {
-    key = key ? key + '/' + safeName_(part) : safeName_(part);
-    if (!folders[key]) folders[key] = current.createFolder(safeName_(part));
+    var safe = safeName_(part);
+    key = key ? key + '/' + safe : safe;
+    if (!folders[key]) {
+      folders[key] = current.createFolder(safe);
+    }
     current = folders[key];
   });
+
   return current;
 }
 
 function createTextFile_(root, folders, relativePath, content) {
-  relativePath = String(relativePath || 'file.txt').replace(/^\\/+|\\/+$/g, '');
+  relativePath = cleanPath_(relativePath || 'file.txt');
   var parts = relativePath.split('/').filter(Boolean);
   var fileName = safeName_(parts.pop() || 'file.txt');
   var folderPath = parts.join('/');
@@ -5868,9 +6215,69 @@ function mimeFor_(name) {
 }
 
 function safeName_(name) {
-  return String(name || 'BI_PROJECT').replace(/[\\\\/:*?"<>|#%{}~&]/g, '_').trim().slice(0, 120) || 'BI_PROJECT';
+  return String(name || 'BI_PROJECT')
+    .replace(/[\\/:*?"<>|#%{}~&]/g, '_')
+    .trim()
+    .slice(0, 120) || 'BI_PROJECT';
 }
-`;}
+
+function cleanPath_(path) {
+  var value = String(path || '').replace(/\/g, '/');
+  value = value.split('/').filter(function(part) {
+    return part !== '';
+  }).join('/');
+  return value;
+}
+
+function storeLast_(obj) {
+  var safe = cloneForLog_(obj || {});
+  var text = JSON.stringify(safe, null, 2);
+  if (text.length > 8500) {
+    safe.truncated = true;
+    safe.original_length = text.length;
+    if (safe.github && safe.github.files && safe.github.files.length > 12) {
+      safe.github.files = safe.github.files.slice(0, 12);
+      safe.github.files_note = 'Liste tronquée dans le log Apps Script.';
+    }
+    text = JSON.stringify(safe, null, 2).slice(0, 8500);
+  }
+  PropertiesService.getScriptProperties().setProperty(LAST_LOG_KEY, text);
+}
+
+function getLast_() {
+  var raw = PropertiesService.getScriptProperties().getProperty(LAST_LOG_KEY) || '';
+  if (!raw) return { success: false, version: BI_DEPLOY_VERSION, error: 'Aucun log de déploiement enregistré.' };
+  try {
+    return JSON.parse(raw);
+  } catch (err) {
+    return { success: false, version: BI_DEPLOY_VERSION, error: 'Log illisible', raw: raw.slice(0, 3000) };
+  }
+}
+
+function cloneForLog_(obj) {
+  var clone;
+  try {
+    clone = JSON.parse(JSON.stringify(obj || {}));
+  } catch (err) {
+    clone = { success: false, error: 'clone log impossible', raw: String(obj) };
+  }
+  return clone;
+}
+
+function json_(obj) {
+  return ContentService
+    .createTextOutput(JSON.stringify(obj, null, 2))
+    .setMimeType(ContentService.MimeType.JSON);
+}
+
+function jsonp_(callback, obj) {
+  var cb = String(callback || 'callback').replace(/[^a-zA-Z0-9_.$]/g, '');
+  if (!cb) cb = 'callback';
+  return ContentService
+    .createTextOutput(cb + '(' + JSON.stringify(obj) + ');')
+    .setMimeType(ContentService.MimeType.JAVASCRIPT);
+}
+`; }
 function deploy610RenderPanel(){
   const {cfg}=deploy69Derived();
   deploy610EnsureConfig(selected());
@@ -5905,7 +6312,7 @@ renderDeploymentModule=function(){
 
 
 
-/* V6.10B - Déploiement GitHub réel + lancement du BI cible */
+/* V6.10C - Diagnostic GitHub réel + lancement du BI cible */
 function deploy610BEnsureConfig(p){
   const cfg=deploy610EnsureConfig(p);
   if(!p)return cfg;
@@ -6227,8 +6634,21 @@ function base64Utf8_(content) {
   return Utilities.base64Encode(Utilities.newBlob(String(content || ''), MimeType.PLAIN_TEXT).getBytes());
 }
 
+function stripEdgeSlashes_(value) {
+  var s = String(value || '');
+  while (s.charAt(0) === '/') s = s.slice(1);
+  while (s.length && s.charAt(s.length - 1) === '/') s = s.slice(0, -1);
+  return s;
+}
+
+function collapseSlashes_(value) {
+  var s = String(value || '');
+  while (s.indexOf('//') !== -1) s = s.split('//').join('/');
+  return s;
+}
+
 function ensureFolderPath_(root, folders, path) {
-  path = String(path || '').replace(/^\/+|\/+$/g, '');
+  path = stripEdgeSlashes_(path);
   if (!path) return root;
   var parts = path.split('/').filter(Boolean);
   var current = root;
@@ -6243,7 +6663,7 @@ function ensureFolderPath_(root, folders, path) {
 }
 
 function createTextFile_(root, folders, relativePath, content) {
-  relativePath = String(relativePath || 'file.txt').replace(/^\/+|\/+$/g, '');
+  relativePath = stripEdgeSlashes_(relativePath || 'file.txt');
   var parts = relativePath.split('/').filter(Boolean);
   var fileName = safeName_(parts.pop() || 'file.txt');
   var folderPath = parts.join('/');
@@ -6261,11 +6681,17 @@ function mimeFor_(name) {
 }
 
 function safeName_(name) {
-  return String(name || 'BI_PROJECT').replace(/[\\/:*?"<>|#%{}~&]/g, '_').trim().slice(0, 120) || 'BI_PROJECT';
+  var s = String(name || 'BI_PROJECT');
+  var bad = [String.fromCharCode(92), '/', ':', '*', '?', '"', '<', '>', '|', '#', '%', '{', '}', '~', '&'];
+  for (var i = 0; i < bad.length; i++) s = s.split(bad[i]).join('_');
+  s = s.trim().slice(0, 120);
+  return s || 'BI_PROJECT';
 }
 
 function cleanPath_(path) {
-  return String(path || '').replace(/\\/g, '/').replace(/^\/+|\/+$/g, '').replace(/\/+/g, '/');
+  var s = String(path || '').split(String.fromCharCode(92)).join('/');
+  s = stripEdgeSlashes_(s);
+  return collapseSlashes_(s);
 }
 
 function json_(obj) {
@@ -6306,6 +6732,121 @@ renderDeploymentModule=function(){
   html=html.replace('Le push GitHub automatique reste l’étape suivante.','Le push GitHub automatique est désormais disponible via V6.10B, avec token stocké côté Apps Script.');
   return html;
 };
+
+
+
+/* V6.10C - Diagnostic GitHub lisible malgré no-cors */
+function deploy610CNewId(){return 'deploy_'+Date.now()+'_'+Math.random().toString(16).slice(2)}
+function deploy610CEndpoint(){const {cfg}=deploy69Derived();deploy610BEnsureConfig(selected());return cfg.githubDeployEndpoint||cfg.driveDeployEndpoint||cfg.dataAppsScriptEndpoint||''}
+function deploy610CSecret(){const {cfg}=deploy69Derived();deploy610BEnsureConfig(selected());return cfg.driveDeploySecret||''}
+function deploy610CAppendDeployId(payload){payload.deploy_id=deploy610CNewId();payload.requested_from='Cockpit '+VERSION;return payload}
+function deploy610CJsonp(action,extra){
+  const endpoint=deploy610CEndpoint();
+  if(!endpoint){toast('Endpoint Apps Script manquant');deploy610BSetLog('Erreur','Endpoint Apps Script manquant pour lecture log.');return;}
+  const cb='deploy610C_cb_'+Date.now()+'_'+Math.random().toString(16).slice(2);
+  const params=new URLSearchParams(Object.assign({action:action||'last_log',callback:cb,t:String(Date.now())},extra||{}));
+  const secret=deploy610CSecret(); if(secret)params.set('secret',secret);
+  const sep=endpoint.includes('?')?'&':'?';
+  const script=document.createElement('script');
+  window[cb]=function(obj){
+    try{deploy610CHandleLog(obj);}finally{try{delete window[cb]}catch(e){window[cb]=null} setTimeout(()=>script.remove(),50)}
+  };
+  script.onerror=function(){deploy610BSetLog('Erreur log','Impossible de lire le dernier log Apps Script via JSONP. Ouvre le log brut.');try{delete window[cb]}catch(e){}}
+  script.src=endpoint+sep+params.toString();
+  document.body.appendChild(script);
+}
+function deploy610CReadLastLog(){deploy610CJsonp('last_log')}
+function deploy610COpenLastLog(){
+  const endpoint=deploy610CEndpoint(); if(!endpoint){toast('Endpoint Apps Script manquant');return;}
+  const params=new URLSearchParams({action:'last_log',t:String(Date.now())}); const secret=deploy610CSecret(); if(secret)params.set('secret',secret);
+  window.open(endpoint+(endpoint.includes('?')?'&':'?')+params.toString(),'_blank','noopener');
+}
+function deploy610CHandleLog(obj){
+  const p=selected(); if(!p)return;
+  const cfg=deploy610BEnsureConfig(p);
+  const ok=!!(obj&&obj.success);
+  const action=obj&&obj.action?obj.action:'last_log';
+  const txt=JSON.stringify(obj||{},null,2).slice(0,9000);
+  if(ok && (action==='deploy_project_github'||action==='deploy_project_full'))deploy610BMarkPublished('GitHub confirmé');
+  cfg.githubDeployLastStatus=ok?'Log Apps Script OK':'Log Apps Script ERREUR';
+  cfg.githubDeployLastLog='['+nowFr()+'] Lecture du dernier log Apps Script · action '+action+' · success '+ok+'\n\n'+txt;
+  p.updated=nowFr();
+  persist('journal GitHub V6.10C lu');
+  renderAll();
+}
+async function deploy610CSendAction(action,label,readDelay){
+  const {cfg}=deploy69Derived(); deploy610BEnsureConfig(selected());
+  const endpoint=deploy610CEndpoint();
+  if(!endpoint){toast('Endpoint Apps Script manquant');return deploy610BSetLog('Erreur','Endpoint Apps Script manquant.');}
+  const payload=deploy610CAppendDeployId(deploy610BGithubPayload(true));
+  payload.action=action;
+  try{
+    await fetch(endpoint,{method:'POST',mode:'no-cors',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(payload)});
+    deploy610BSetLog(label||'Action envoyée','Demande envoyée à Apps Script. Lecture du dernier log dans quelques secondes.');
+    setTimeout(deploy610CReadLastLog,readDelay||1800);
+  }catch(e){deploy610BSetLog('Erreur',String(e&&e.message?e.message:e));}
+}
+function deploy610CDiagnosticGithub(){deploy610CSendAction('github_diagnostic','Diagnostic GitHub envoyé',1600)}
+function deploy610CWriteTest(){
+  if(!confirm('Lancer un test écriture GitHub ?\n\nCela crée ou met à jour apps/_deploy_tests/github_write_test.json dans le dépôt.'))return;
+  deploy610CSendAction('github_write_test','Test écriture GitHub envoyé',2200);
+}
+const deploy610BRunGithubV610B=deploy610BRunGithub;
+deploy610BRunGithub=async function(simulation){
+  const {p,cfg}=deploy69Derived(); deploy610BEnsureConfig(p);
+  const payload=deploy610CAppendDeployId(deploy610BGithubPayload(!!simulation));
+  if(simulation){deploy610BSetLog('Simulation GitHub OK','Simulation GitHub : '+Object.keys(payload.github.files).length+' fichiers prêts pour '+payload.github.repo+'/'+payload.github.path+'.','URL cible : '+payload.github.publicUrl);return;}
+  if(deploy610BIsSelfCockpit(p)){deploy610BSetLog('Bloqué','Ce projet correspond au cockpit Gestion Projets BI. Publication cible automatique désactivée pour éviter de remplacer le cockpit par lui-même.');return;}
+  const endpoint=deploy610CEndpoint();
+  if(!endpoint){toast('Endpoint Apps Script manquant');return deploy610BSetLog('Erreur','Impossible de déployer GitHub : endpoint Apps Script manquant.');}
+  if(!confirm('Lancer le déploiement réel GitHub pour ce projet ?\n\nLe script Apps Script utilisera le token GITHUB_TOKEN stocké côté Apps Script pour créer/remplacer les fichiers dans le dépôt.'))return;
+  try{
+    await fetch(endpoint,{method:'POST',mode:'no-cors',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(payload)});
+    deploy610BSetLog('Déploiement GitHub envoyé','Demande envoyée à Apps Script en mode no-cors. V6.10C va maintenant lire le dernier log Apps Script pour confirmer succès ou erreur.');
+    setTimeout(deploy610CReadLastLog,2200);
+    setTimeout(deploy610CReadLastLog,5200);
+  }catch(e){deploy610BSetLog('Erreur','Déploiement GitHub impossible : '+(e.message||e));}
+}
+const deploy610BRunFullV610B=deploy610BRunFull;
+deploy610BRunFull=async function(){
+  const {p}=deploy69Derived(); deploy610BEnsureConfig(p);
+  if(deploy610BIsSelfCockpit(p)){deploy610BSetLog('Bloqué','Déploiement complet désactivé pour le cockpit lui-même.');return;}
+  const endpoint=deploy610CEndpoint();
+  if(!endpoint){toast('Endpoint Apps Script manquant');return deploy610BSetLog('Erreur','Impossible de déployer complet : endpoint Apps Script manquant.');}
+  const payload=deploy610CAppendDeployId(deploy610BFullPayload(false));
+  if(!confirm('Lancer le déploiement complet Drive + GitHub ?\n\nDrive sera recréé et GitHub sera mis à jour.'))return;
+  try{
+    await fetch(endpoint,{method:'POST',mode:'no-cors',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(payload)});
+    deploy610BSetLog('Déploiement complet envoyé','Demande envoyée. V6.10C va lire le dernier log Apps Script.');
+    setTimeout(deploy610CReadLastLog,2500);
+    setTimeout(deploy610CReadLastLog,6500);
+  }catch(e){deploy610BSetLog('Erreur','Déploiement complet impossible : '+(e.message||e));}
+}
+function deploy610CDownloadScript(){downloadTextFile('AppsScript_V6_10C_Drive_GitHub_DIAGNOSTIC.gs',deploy610AppsScriptTemplate(),'text/plain');toast('Apps Script V6.10C généré')}
+function deploy610CCopyScript(){navigator.clipboard?.writeText(deploy610AppsScriptTemplate());toast('Apps Script V6.10C copié')}
+function deploy610BRenderGithubPanel(){
+  const {p,cfg,appPath,url}=deploy69Derived(); deploy610BEnsureConfig(p);
+  const stat=deploy610BGithubStatus();
+  const endpoint=stat.endpoint;
+  const self=stat.self;
+  const repo=cfg.githubRepo||p.sources?.githubRepo||'Koink30/bi-central';
+  const branch=cfg.githubBranch||p.sources?.githubBranch||'main';
+  return `<section class="deploy610b-card"><div class="deploy610b-head"><div><h3>5. Déploiement GitHub réel — V6.10C</h3><p>Couche production : publication GitHub via Apps Script + diagnostic lisible. Le cockpit envoie en no-cors, puis récupère le dernier log Apps Script par JSONP pour afficher le vrai succès ou la vraie erreur.</p></div><div class="deploy610b-status"><span class="deploy610b-badge ${endpoint?'ok':'warn'}">${endpoint?'Endpoint OK':'Endpoint manquant'}</span><span class="deploy610b-badge ok">${stat.fileCount} fichiers</span><span class="deploy610b-badge ${self?'lock':'ok'}">${self?'Cockpit protégé':'BI lançable'}</span><span class="deploy610b-badge ok">Logs V6.10C</span></div></div>
+  <div class="deploy610b-flow"><div class="deploy610b-step ok"><b>1. Pack GitHub</b><small>index, manifest, README, datas.</small></div><div class="deploy610b-step ${endpoint?'ok':'warn'}"><b>2. Apps Script</b><small>Token côté serveur + logs.</small></div><div class="deploy610b-step"><b>3. Commit</b><small>Create/update file contents.</small></div><div class="deploy610b-step ${self?'warn':'ok'}"><b>4. Confirmation</b><small>Lecture dernier log + ouverture BI.</small></div></div>
+  <div class="deploy610b-grid"><div><div class="deploy610b-form">
+    <div class="full"><label>Endpoint Apps Script GitHub /exec</label><input placeholder="https://script.google.com/macros/s/.../exec" value="${esc(endpoint)}" onchange="deploy610BUpdate('githubDeployEndpoint',this.value)"></div>
+    <div><label>Repository</label><input value="${esc(repo)}" onchange="deploy610BUpdate('githubRepo',this.value)"></div>
+    <div><label>Branche</label><input value="${esc(branch)}" onchange="deploy610BUpdate('githubBranch',this.value)"></div>
+    <div class="full"><label>Chemin GitHub cible</label><input value="${esc(appPath)}" onchange="deploy610BUpdate('githubPath',this.value)"></div>
+    <div class="full"><label>URL publique cible</label><input value="${esc(url)}" onchange="deploy610BUpdate('pagesUrl',this.value)"></div>
+    <div class="full"><label>Message de commit automatique</label><input value="${esc(cfg.githubCommitMessage||'')}" onchange="deploy610BUpdate('githubCommitMessage',this.value)"></div>
+    <div><label>Mode d’envoi</label><select onchange="deploy610BUpdate('githubDeploySendMode',this.value)">${['no-cors','cors'].map(x=>`<option ${((cfg.githubDeploySendMode||cfg.driveDeploySendMode||'no-cors')===x)?'selected':''}>${x}</option>`).join('')}</select></div>
+    <div><label>Fichiers racine</label><select onchange="deploy610BUpdate('githubCreateRootFiles',this.value==='oui')"><option value="oui" ${cfg.githubCreateRootFiles!==false?'selected':''}>oui</option><option value="non" ${cfg.githubCreateRootFiles===false?'selected':''}>non</option></select></div>
+  </div><div class="deploy610b-actions"><button class="deploy610b-btn secondary" onclick="deploy610CDownloadScript()">Télécharger Apps Script V6.10C</button><button class="deploy610b-btn secondary" onclick="deploy610CCopyScript()">Copier Apps Script V6.10C</button><button class="deploy610b-btn secondary" onclick="deploy610BDownload('githubManifest')">Manifest GitHub</button><button class="deploy610b-btn secondary" onclick="deploy610CDiagnosticGithub()">Diagnostic API</button><button class="deploy610b-btn secondary" onclick="deploy610CWriteTest()">Test écriture</button><button class="deploy610b-btn secondary" onclick="deploy610CReadLastLog()">Lire dernier log</button><button class="deploy610b-btn secondary" onclick="deploy610COpenLastLog()">Ouvrir log brut ↗</button><button class="deploy610b-btn" onclick="deploy610BRunGithub(true)">Simulation GitHub</button><button class="deploy610b-btn danger" onclick="deploy610BRunGithub(false)">Déployer GitHub réel</button><button class="deploy610b-btn danger" onclick="deploy610BRunFull()">Drive + GitHub</button><button class="deploy610b-btn launch" onclick="deploy610BOpenTarget()" ${self?'disabled':''}>Ouvrir BI cible ↗</button></div></div>
+  <div><label style="display:block;font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted2);font-weight:900;margin-bottom:5px">Journal GitHub</label><div class="deploy610b-log">${esc((cfg.githubDeployLastStatus||'En attente')+'\n'+(cfg.githubDeployLastLog||''))}</div><div class="deploy610b-urlbox"><b>URL cible</b><small>${esc(url)}</small></div><div class="deploy610b-urlbox"><b>Chemin repo</b><small>${esc(repo+' / '+branch+' / '+appPath)}</small></div></div></div>
+  <div class="deploy610b-warning"><b>V6.10C :</b> remplace le code Apps Script par la version V6.10C, redéploie la web app, puis utilise <b>Diagnostic API</b>, <b>Test écriture</b> et <b>Lire dernier log</b>. Le token GitHub reste uniquement dans les propriétés Apps Script sous <b>GITHUB_TOKEN</b>.</div>
+</section>`;
+}
 
 function renderAll(){
   ensureStartupSelection();
