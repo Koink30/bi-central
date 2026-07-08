@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>Cockpit Projets BI · V6.9B Déploiement + Google Drive data</title>
+<title>Cockpit Projets BI · V6.10A Connecteur Drive réel</title>
 <style>
 :root{
   --bg:#030711;--bg2:#06112a;--panel:rgba(7,18,41,.82);--panel2:rgba(9,28,61,.72);
@@ -1500,7 +1500,7 @@ body.show-deleted .deleted-project-card{display:block!important}
 
 
 
-/* V6.9B - Déploiement projet complet : source HTML, modèles, arborescence, Google Drive data */
+/* V6.10A - Déploiement projet complet : source HTML, modèles, arborescence, Google Drive data */
 .deploy69-hero{border:1px solid rgba(53,243,132,.32);background:radial-gradient(circle at 8% 0%,rgba(53,243,132,.12),transparent 34%),radial-gradient(circle at 86% 15%,rgba(40,234,255,.12),transparent 36%),rgba(5,15,35,.58);border-radius:22px;padding:16px;margin-bottom:14px;box-shadow:0 0 28px rgba(53,243,132,.08)}
 .deploy69-hero h2{margin:0 0 8px;font-size:26px;color:#f5fbff}.deploy69-hero p{margin:0;color:var(--muted);line-height:1.45}.deploy69-hero .deploy-actions{margin-top:12px}
 .deploy69-score{display:grid;grid-template-columns:120px 1fr;gap:14px;align-items:center;margin-top:12px}.deploy69-ring{width:110px;height:110px;border-radius:50%;display:grid;place-items:center;position:relative;background:conic-gradient(rgba(53,243,132,.85) var(--pct),rgba(255,255,255,.08) 0);box-shadow:0 0 24px rgba(53,243,132,.14)}.deploy69-ring:before{content:"";position:absolute;inset:12px;border-radius:50%;background:rgba(3,8,18,.96);border:1px solid rgba(255,255,255,.10)}.deploy69-ring b{position:relative;font-size:24px;color:#fff}.deploy69-score-text{color:#dfffe9;font-size:12px;line-height:1.45}
@@ -1521,6 +1521,13 @@ body.show-deleted .deleted-project-card{display:block!important}
 
 @media(max-width:1150px){.deploy69-grid{grid-template-columns:1fr}.deploy69-source-grid{grid-template-columns:1fr}.deploy69-files{grid-template-columns:1fr 1fr}}@media(max-width:720px){.deploy69-form,.deploy69-files,.deploy69-score{grid-template-columns:1fr}.deploy69-ring{width:94px;height:94px}}
 
+
+
+/* V6.10A - Connecteur Drive réel */
+.deploy610-card{border:1px solid rgba(53,243,132,.30);background:linear-gradient(145deg,rgba(8,35,55,.82),rgba(6,17,42,.72));border-radius:22px;padding:16px;margin:14px 0;box-shadow:0 0 32px rgba(53,243,132,.10)}
+.deploy610-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:12px}.deploy610-head h3{margin:0;font-size:18px}.deploy610-head p{margin:5px 0 0;color:var(--muted);max-width:760px}.deploy610-status{display:flex;gap:8px;flex-wrap:wrap}.deploy610-badge{border:1px solid rgba(40,234,255,.25);background:rgba(2,10,24,.48);border-radius:999px;padding:7px 10px;font-size:12px;color:#dff8ff;font-weight:800}.deploy610-badge.ok{border-color:rgba(53,243,132,.50);color:#dffff0}.deploy610-badge.warn{border-color:rgba(255,195,77,.50);color:#fff1c9}.deploy610-form{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.deploy610-form .full{grid-column:1/-1}.deploy610-form label{display:block;font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted2);margin-bottom:5px;font-weight:900}.deploy610-form input,.deploy610-form select,.deploy610-form textarea{width:100%;box-sizing:border-box;border:1px solid rgba(40,234,255,.24);border-radius:14px;background:rgba(0,8,20,.52);color:#fff;padding:10px 11px;outline:none}.deploy610-form textarea{min-height:78px;resize:vertical}.deploy610-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}.deploy610-btn{border:1px solid rgba(53,243,132,.36);background:linear-gradient(135deg,rgba(16,89,54,.95),rgba(14,53,94,.78));color:#effff5;border-radius:14px;padding:10px 13px;font-weight:900;cursor:pointer;box-shadow:0 0 18px rgba(53,243,132,.08)}.deploy610-btn.secondary{border-color:rgba(40,234,255,.36);background:rgba(9,28,61,.72)}.deploy610-btn.danger{border-color:rgba(255,100,114,.42);background:rgba(75,16,32,.74)}.deploy610-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:12px;margin-top:12px}.deploy610-log{border:1px solid rgba(40,234,255,.18);background:rgba(2,8,20,.52);border-radius:18px;padding:12px;min-height:120px;white-space:pre-wrap;font-family:ui-monospace,Consolas,monospace;font-size:12px;color:#cfefff;overflow:auto}.deploy610-flow{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}.deploy610-step{border:1px solid rgba(40,234,255,.20);background:rgba(2,12,28,.58);border-radius:16px;padding:11px;min-height:72px}.deploy610-step b{display:block;color:#fff;margin-bottom:5px}.deploy610-step small{color:var(--muted)}.deploy610-step.ok{border-color:rgba(53,243,132,.34);box-shadow:0 0 18px rgba(53,243,132,.08)}.deploy610-warning{margin-top:10px;border:1px solid rgba(255,195,77,.32);background:rgba(65,44,10,.22);border-radius:16px;padding:10px;color:#ffe8ad;font-size:13px}.deploy610-output-links{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}.deploy610-output-links a,.deploy610-output-links span{border:1px solid rgba(40,234,255,.24);border-radius:999px;padding:6px 9px;background:rgba(2,12,28,.62);font-size:12px;color:#e9fbff;text-decoration:none}
+@media(max-width:900px){.deploy610-form,.deploy610-grid{grid-template-columns:1fr}.deploy610-flow{grid-template-columns:1fr 1fr}}
+
 </style>
 </head>
 <body>
@@ -1528,7 +1535,7 @@ body.show-deleted .deleted-project-card{display:block!important}
   <header class="header">
     <section class="brand">
       <div class="logo">BI</div>
-      <div><h1>Cockpit Projets BI</h1><p class="subtitle">V6.9B · Déploiement + Google Drive data</p></div>
+      <div><h1>Cockpit Projets BI</h1><p class="subtitle">V6.10A · Déploiement Drive réel</p></div>
     </section>
     <nav class="quick">
       <a class="toplink" id="projectGptLink" target="_blank" rel="noopener">
@@ -1601,7 +1608,7 @@ body.show-deleted .deleted-project-card{display:block!important}
 
 <script>
 'use strict';
-const VERSION='V6.9B-deploiement-google-drive-data';
+const VERSION='V6.10A-connecteur-drive-reel';
 const STABLE_KEY='central_bi_project_manager_current';
 const VERSION_KEY='central_bi_project_manager_v68c';
 const KEY=STABLE_KEY;
@@ -4260,6 +4267,13 @@ function projectIndexPreview(){
 body{font-family:Arial,sans-serif;background:#07111f;color:#eef;padding:32px}
 .card{border:1px solid #24445f;border-radius:18px;padding:18px;background:#0d1b2e;margin:12px 0}
 button{border:1px solid #36eaff;background:#102b42;color:#fff;border-radius:12px;padding:10px;margin:4px}
+
+
+/* V6.10A - Connecteur Drive réel */
+.deploy610-card{border:1px solid rgba(53,243,132,.30);background:linear-gradient(145deg,rgba(8,35,55,.82),rgba(6,17,42,.72));border-radius:22px;padding:16px;margin:14px 0;box-shadow:0 0 32px rgba(53,243,132,.10)}
+.deploy610-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:12px}.deploy610-head h3{margin:0;font-size:18px}.deploy610-head p{margin:5px 0 0;color:var(--muted);max-width:760px}.deploy610-status{display:flex;gap:8px;flex-wrap:wrap}.deploy610-badge{border:1px solid rgba(40,234,255,.25);background:rgba(2,10,24,.48);border-radius:999px;padding:7px 10px;font-size:12px;color:#dff8ff;font-weight:800}.deploy610-badge.ok{border-color:rgba(53,243,132,.50);color:#dffff0}.deploy610-badge.warn{border-color:rgba(255,195,77,.50);color:#fff1c9}.deploy610-form{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.deploy610-form .full{grid-column:1/-1}.deploy610-form label{display:block;font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted2);margin-bottom:5px;font-weight:900}.deploy610-form input,.deploy610-form select,.deploy610-form textarea{width:100%;box-sizing:border-box;border:1px solid rgba(40,234,255,.24);border-radius:14px;background:rgba(0,8,20,.52);color:#fff;padding:10px 11px;outline:none}.deploy610-form textarea{min-height:78px;resize:vertical}.deploy610-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}.deploy610-btn{border:1px solid rgba(53,243,132,.36);background:linear-gradient(135deg,rgba(16,89,54,.95),rgba(14,53,94,.78));color:#effff5;border-radius:14px;padding:10px 13px;font-weight:900;cursor:pointer;box-shadow:0 0 18px rgba(53,243,132,.08)}.deploy610-btn.secondary{border-color:rgba(40,234,255,.36);background:rgba(9,28,61,.72)}.deploy610-btn.danger{border-color:rgba(255,100,114,.42);background:rgba(75,16,32,.74)}.deploy610-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:12px;margin-top:12px}.deploy610-log{border:1px solid rgba(40,234,255,.18);background:rgba(2,8,20,.52);border-radius:18px;padding:12px;min-height:120px;white-space:pre-wrap;font-family:ui-monospace,Consolas,monospace;font-size:12px;color:#cfefff;overflow:auto}.deploy610-flow{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}.deploy610-step{border:1px solid rgba(40,234,255,.20);background:rgba(2,12,28,.58);border-radius:16px;padding:11px;min-height:72px}.deploy610-step b{display:block;color:#fff;margin-bottom:5px}.deploy610-step small{color:var(--muted)}.deploy610-step.ok{border-color:rgba(53,243,132,.34);box-shadow:0 0 18px rgba(53,243,132,.08)}.deploy610-warning{margin-top:10px;border:1px solid rgba(255,195,77,.32);background:rgba(65,44,10,.22);border-radius:16px;padding:10px;color:#ffe8ad;font-size:13px}.deploy610-output-links{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}.deploy610-output-links a,.deploy610-output-links span{border:1px solid rgba(40,234,255,.24);border-radius:999px;padding:6px 9px;background:rgba(2,12,28,.62);font-size:12px;color:#e9fbff;text-decoration:none}
+@media(max-width:900px){.deploy610-form,.deploy610-grid{grid-template-columns:1fr}.deploy610-flow{grid-template-columns:1fr 1fr}}
+
 </style>
 </head>
 <body>
@@ -5139,7 +5153,7 @@ function renderClientOfferTab(){const parent=selectedBiParent?.()||selected();co
 function renderClientOfferModal(){const s=getClientOfferState(), offer=clientOfferPack();return `<div class="create-modal-backdrop ${clientOfferOpen?'open':''}" onclick="if(event.target===this)closeClientOfferModal()"><div class="create-modal"><div class="create-modal-head"><div><h2>🏢 Nouveau projet client automatique</h2><p>Création d’un projet parent + modules client comme sous-projets BI.</p></div><button class="mini-btn" onclick="closeClientOfferModal()">Fermer</button></div><div class="safe-note"><b>Mode safe V6.8E :</b> on garde la V6.7I, on ajoute seulement une couche d’offre client et des sous-projets automatiques.</div><div class="create-grid"><section class="create-card"><h3>Paramètres client</h3><div class="create-form"><div><label>Nom du BI</label><input value="${esc(s.name)}" onchange="setClientOfferField('name',this.value)"></div><div><label>Client / activité</label><input value="${esc(s.client)}" onchange="setClientOfferField('client',this.value)"></div><div><label>Espace</label><select onchange="setClientOfferField('space',this.value)">${['Pro Clients','Perso','Pro Merlet'].map(x=>`<option ${s.space===x?'selected':''}>${x}</option>`).join('')}</select></div><div><label>Livraison</label><select onchange="setClientOfferField('delivery',this.value)">${['GitHub Pages / ZIP','ZIP local','Drive uniquement','Démo privée'].map(x=>`<option ${s.delivery===x?'selected':''}>${x}</option>`).join('')}</select></div><div class="full"><label>Description</label><textarea onchange="setClientOfferField('description',this.value)">${esc(s.description)}</textarea></div></div></section><section class="create-card"><h3>Offre</h3><div class="template-grid">${Object.values(CLIENT_OFFER_PACKS).map(o=>`<div class="template-tile ${s.offer===o.id?'active':''}" onclick="setClientOfferField('offer','${o.id}')"><b>${esc(o.name)}</b><small>${esc(o.price)} · ${esc(o.desc)}</small></div>`).join('')}</div></section></div><section class="create-card" style="margin-top:12px"><h3>Modules générés</h3>${renderClientModuleCards(offer.modules)}<h3 style="margin-top:12px">Prévisualisation</h3><pre class="client-pack-preview">${esc(clientOfferPreviewText())}</pre><div class="deploy-actions"><button class="mini-btn" onclick="createClientOfferPack()">Créer projet + modules</button><button class="mini-btn" onclick="navigator.clipboard?.writeText(clientOfferPreviewText());toast('Copié')">Copier structure</button></div></section></div></div>`}
 
 
-/* V6.9A - Déploiement projet complet : source HTML fournie / modèle prédéfini / base vide */
+/* V6.10A - Déploiement projet complet : source HTML fournie / modèle prédéfini / base vide */
 const DEPLOY69_TEMPLATES=[
   {id:'blank',icon:'✨',name:'BI vide / prototype',desc:'Base minimale pour démarrer sans métier imposé.',tabs:['Accueil','Données','Roadmap','Livraison']},
   {id:'commerce',icon:'🛒',name:'BI Commerce',desc:'Produits, prix, étiquettes, commandes, stock simple.',tabs:['Dashboard','Produits','Prix','Étiquettes','Commandes','Stock']},
@@ -5206,7 +5220,7 @@ function deploy69Update(field,value){
   if(field.startsWith('sources.'))p.sources[field.split('.')[1]]=value;
   else p.deployConfig[field]=value;
   p.updated=nowFr();
-  persist('déploiement V6.9A '+field+' '+(p.name||'projet'));
+  persist('déploiement V6.10A '+field+' '+(p.name||'projet'));
   renderAll();
 }
 function deploy69ToggleCheck(id){
@@ -5287,7 +5301,7 @@ Google Drive data :
   Sync : ${cfg.dataSyncDirection||'Drive → BI puis export BI → Drive'}
   Google Sheet : ${cfg.dataSheetsUrl||'à renseigner'}
   Google Form : ${cfg.dataFormsUrl||'à renseigner'}
-  Apps Script : ${cfg.dataAppsScriptEndpoint||'à connecter plus tard'}
+  Apps Script : ${cfg.dataAppsScriptEndpoint||'à connecter'}
 
 GitHub :
 bi-central/
@@ -5309,7 +5323,7 @@ function deploy69DataSources(){
   return {
     project:name,
     slug,
-    generated_from:'BI Central V6.9B',
+    generated_from:'BI Central V6.10A',
     drive_root:rootDrive,
     data_root:cfg.dataRoot||`${rootDrive}/02_DONNEES`,
     data_mode:cfg.dataMode||'Drive + JSON local',
@@ -5342,11 +5356,18 @@ function deploy69TemplateHtml(){
 <title>${esc(name)} · V0.1</title>
 <style>
 body{margin:0;min-height:100vh;font-family:Segoe UI,Arial,sans-serif;color:#eef;background:radial-gradient(circle at 50% 0,#12386b,#030711 64%);padding:28px}.hero,.card{border:1px solid rgba(40,234,255,.28);background:rgba(5,15,35,.72);border-radius:22px;padding:18px;margin:12px 0;box-shadow:0 0 24px rgba(40,234,255,.10)}h1{font-size:42px;margin:0 0 8px}.muted{color:#9ec5df}button{border:1px solid rgba(40,234,255,.42);background:#0b2448;color:#fff;border-radius:13px;padding:10px 13px;margin:4px;font-weight:800}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}.tag{display:inline-block;border:1px solid rgba(53,243,132,.36);color:#dfffe9;border-radius:999px;padding:5px 9px;font-size:12px}
+
+
+/* V6.10A - Connecteur Drive réel */
+.deploy610-card{border:1px solid rgba(53,243,132,.30);background:linear-gradient(145deg,rgba(8,35,55,.82),rgba(6,17,42,.72));border-radius:22px;padding:16px;margin:14px 0;box-shadow:0 0 32px rgba(53,243,132,.10)}
+.deploy610-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:12px}.deploy610-head h3{margin:0;font-size:18px}.deploy610-head p{margin:5px 0 0;color:var(--muted);max-width:760px}.deploy610-status{display:flex;gap:8px;flex-wrap:wrap}.deploy610-badge{border:1px solid rgba(40,234,255,.25);background:rgba(2,10,24,.48);border-radius:999px;padding:7px 10px;font-size:12px;color:#dff8ff;font-weight:800}.deploy610-badge.ok{border-color:rgba(53,243,132,.50);color:#dffff0}.deploy610-badge.warn{border-color:rgba(255,195,77,.50);color:#fff1c9}.deploy610-form{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.deploy610-form .full{grid-column:1/-1}.deploy610-form label{display:block;font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted2);margin-bottom:5px;font-weight:900}.deploy610-form input,.deploy610-form select,.deploy610-form textarea{width:100%;box-sizing:border-box;border:1px solid rgba(40,234,255,.24);border-radius:14px;background:rgba(0,8,20,.52);color:#fff;padding:10px 11px;outline:none}.deploy610-form textarea{min-height:78px;resize:vertical}.deploy610-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}.deploy610-btn{border:1px solid rgba(53,243,132,.36);background:linear-gradient(135deg,rgba(16,89,54,.95),rgba(14,53,94,.78));color:#effff5;border-radius:14px;padding:10px 13px;font-weight:900;cursor:pointer;box-shadow:0 0 18px rgba(53,243,132,.08)}.deploy610-btn.secondary{border-color:rgba(40,234,255,.36);background:rgba(9,28,61,.72)}.deploy610-btn.danger{border-color:rgba(255,100,114,.42);background:rgba(75,16,32,.74)}.deploy610-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:12px;margin-top:12px}.deploy610-log{border:1px solid rgba(40,234,255,.18);background:rgba(2,8,20,.52);border-radius:18px;padding:12px;min-height:120px;white-space:pre-wrap;font-family:ui-monospace,Consolas,monospace;font-size:12px;color:#cfefff;overflow:auto}.deploy610-flow{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}.deploy610-step{border:1px solid rgba(40,234,255,.20);background:rgba(2,12,28,.58);border-radius:16px;padding:11px;min-height:72px}.deploy610-step b{display:block;color:#fff;margin-bottom:5px}.deploy610-step small{color:var(--muted)}.deploy610-step.ok{border-color:rgba(53,243,132,.34);box-shadow:0 0 18px rgba(53,243,132,.08)}.deploy610-warning{margin-top:10px;border:1px solid rgba(255,195,77,.32);background:rgba(65,44,10,.22);border-radius:16px;padding:10px;color:#ffe8ad;font-size:13px}.deploy610-output-links{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}.deploy610-output-links a,.deploy610-output-links span{border:1px solid rgba(40,234,255,.24);border-radius:999px;padding:6px 9px;background:rgba(2,12,28,.62);font-size:12px;color:#e9fbff;text-decoration:none}
+@media(max-width:900px){.deploy610-form,.deploy610-grid{grid-template-columns:1fr}.deploy610-flow{grid-template-columns:1fr 1fr}}
+
 </style>
 </head>
 <body>
 <section class="hero">
-  <span class="tag">${esc(sourceLabel)} · Généré depuis BI Central V6.9A</span>
+  <span class="tag">${esc(sourceLabel)} · Généré depuis BI Central V6.10A</span>
   <h1>${p.icon||tpl.icon||'🧩'} ${esc(name)}</h1>
   <p class="muted">${esc(ident.shortDescription||p.goal||'Prototype initial à compléter.')}</p>
   <nav>${tabHtml}</nav>
@@ -5365,7 +5386,7 @@ function deploy69Manifest(){
   const {p,cfg,name,slug,rootDrive,appPath,url,tpl,kids,ident}=deploy69Derived();
   return JSON.stringify({
     version:'V0.1',
-    generated_from:'BI Central V6.9B',
+    generated_from:'BI Central V6.10A',
     project:name,
     slug,
     kind:p.kind||'parent',
@@ -5416,12 +5437,12 @@ Mode data : ${cfg.dataMode||'Drive + JSON local'}
 Synchro : ${cfg.dataSyncDirection||'Drive → BI puis export BI → Drive'}
 Google Sheet : ${cfg.dataSheetsUrl||'à renseigner'}
 Google Form : ${cfg.dataFormsUrl||'à renseigner'}
-Apps Script : ${cfg.dataAppsScriptEndpoint||'à connecter plus tard'}
+Apps Script : ${cfg.dataAppsScriptEndpoint||'à connecter'}
 
 ## Notes déploiement
 ${cfg.deploymentNote||'À compléter après test local.'}
 
-Généré depuis BI Central V6.9B.`;
+Généré depuis BI Central V6.10A.`;
 }
 
 function deploy69Roadmap(){
@@ -5433,12 +5454,12 @@ function deploy69Roadmap(){
     {title:'Générer index.html V0',type:'Développement',status:'À faire',priority:'Haute',text:'Source : '+cfg.sourceMode+'. Tester localement le fichier HTML.'},
     {title:'Publier / livrer',type:'Livraison',status:'À faire',priority:'Moyenne',text:`Drive ${rootDrive} · GitHub ${appPath} · URL ${url}`}
   ];
-  return JSON.stringify({project:name,generated_from:'BI Central V6.9B',blocks,existing:(p.roadmapBlocks||[]).map(b=>({title:b.title,status:b.status,priority:b.priority}))},null,2);
+  return JSON.stringify({project:name,generated_from:'BI Central V6.10A',blocks,existing:(p.roadmapBlocks||[]).map(b=>({title:b.title,status:b.status,priority:b.priority}))},null,2);
 }
 function deploy69DataDemo(){
   const {p,name,slug,kids,ident}=deploy69Derived();
   return JSON.stringify({
-    project:name,slug,generated_from:'BI Central V6.9B',demo:true,
+    project:name,slug,generated_from:'BI Central V6.10A',demo:true,
     data_drive:deploy69DataSources(),
     identity:{short:ident.shortDescription||p.goal||'',user:ident.user||'',objective:ident.objective||''},
     modules:kids.map(k=>({name:k.name,status:k.status,progress:k.progress||0})),
@@ -5455,7 +5476,7 @@ function deploy69FicheIdentiteJson(){
 }
 function deploy69ContextIa(){
   const {p}=deploy69Derived();
-  if(typeof projectIdentityPrompt==='function')return projectIdentityPrompt(p)+'\n\n---\nDEPLOIEMENT V6.9B\n'+deploy69FolderTree()+'\n\n---\nGOOGLE DRIVE DATA\n'+deploy69DriveDataMap();
+  if(typeof projectIdentityPrompt==='function')return projectIdentityPrompt(p)+'\n\n---\nDEPLOIEMENT V6.10A\n'+deploy69FolderTree()+'\n\n---\nGOOGLE DRIVE DATA\n'+deploy69DriveDataMap();
   return deploy69Readme()+'\n\n'+deploy69DriveDataMap();
 }
 function deploy69Download(kind){
@@ -5469,7 +5490,7 @@ function deploy69Download(kind){
   if(kind==='dataSources')downloadTextFile('data_sources.json',deploy69DataSourcesJson(),'application/json');
   if(kind==='driveMap')downloadTextFile('drive_data_map.md',deploy69DriveDataMap(),'text/markdown');
   if(kind==='tree')downloadTextFile('arborescence_projet.txt',deploy69FolderTree(),'text/plain');
-  toast('Fichier V6.9B généré');
+  toast('Fichier V6.10A généré');
 }
 function downloadProjectPackFile(kind){deploy69Download(kind)}
 function projectIndexPreview(){return deploy69IndexHtml()}
@@ -5501,8 +5522,8 @@ function deploy69CreateRoadmapBlocks(){
   p.roadmapBlocks.push({id:uid(),title:'Cadrer Google Drive data',type:'Données',status:'À faire',priority:'Haute',text:deploy69DriveDataMap(),created:nowFr(),updated:nowFr()});
   p.roadmapBlocks.push({id:uid(),title:'Tester source BI '+(cfg.sourceMode||'template'),type:'Test',status:'À faire',priority:'Haute',text:'Ouvrir index.html généré, vérifier navigation et données de départ.',created:nowFr(),updated:nowFr()});
   p.versions=p.versions||[];
-  p.versions.unshift({id:uid(),name:'V0.1',version:'V0.1',type:'Déploiement',title:'Pack V0 préparé',date:nowFr(),text:'Pack projet préparé depuis l’assistant V6.9A.'});
-  persist('roadmap déploiement V6.9A');
+  p.versions.unshift({id:uid(),name:'V0.1',version:'V0.1',type:'Déploiement',title:'Pack V0 préparé',date:nowFr(),text:'Pack projet préparé depuis l’assistant V6.10A.'});
+  persist('roadmap déploiement V6.10A');
   toast('Roadmap de déploiement ajoutée');
   renderAll();
 }
@@ -5525,7 +5546,7 @@ function renderDeploymentModule(){
   const {p,cfg,name,slug,rootDrive,appPath,url,tpl,kids}=deploy69Derived();
   const score=deploy69Readiness();
   const sourceMode=cfg.sourceMode||'template';
-  return `<div class="view-title"><h2>🚀 Déploiement projet complet</h2><span class="pill green">V6.9B</span></div>
+  return `<div class="view-title"><h2>🚀 Déploiement projet complet</h2><span class="pill green">V6.10A</span></div>
   <section class="deploy69-hero">
     <h2>${esc(name)}</h2>
     <p>Assistant de déploiement complet : partir d’un projet perso, client ou Merlet, choisir une source BI, préparer l’arborescence Drive/GitHub, cadrer les datas Google Drive, générer les fichiers V0 et suivre la livraison.</p>
@@ -5578,7 +5599,7 @@ function renderDeploymentModule(){
       <div><label>Schéma données</label><input value="${esc(cfg.dataSchemaName||'data_schema.json')}" onchange="deploy69Update('dataSchemaName',this.value)"></div>
       <div class="full"><label>URL Google Sheet source</label><input placeholder="https://docs.google.com/spreadsheets/..." value="${esc(cfg.dataSheetsUrl||'')}" onchange="deploy69Update('dataSheetsUrl',this.value)"></div>
       <div class="full"><label>URL Google Form éventuel</label><input placeholder="https://docs.google.com/forms/..." value="${esc(cfg.dataFormsUrl||'')}" onchange="deploy69Update('dataFormsUrl',this.value)"></div>
-      <div class="full"><label>Endpoint Apps Script futur</label><input placeholder="https://script.google.com/macros/s/.../exec" value="${esc(cfg.dataAppsScriptEndpoint||'')}" onchange="deploy69Update('dataAppsScriptEndpoint',this.value)"></div>
+      <div class="full"><label>Endpoint Apps Script Drive</label><input placeholder="https://script.google.com/macros/s/.../exec" value="${esc(cfg.dataAppsScriptEndpoint||'')}" onchange="deploy69Update('dataAppsScriptEndpoint',this.value)"></div>
       <div class="full"><label>Notes data / règles d’import</label><textarea onchange="deploy69Update('dataNotes',this.value)">${esc(cfg.dataNotes||'')}</textarea></div>
     </div>
     <div class="deploy-actions"><button class="mini-btn" onclick="deploy69Download('dataSources')">Télécharger data_sources.json</button><button class="mini-btn" onclick="deploy69Download('driveMap')">Télécharger drive_data_map.md</button><button class="mini-btn" onclick="navigator.clipboard?.writeText(deploy69DriveDataMap());toast('Carte Drive data copiée')">Copier carte data</button></div>
@@ -5602,8 +5623,278 @@ function renderDeploymentModule(){
       <div class="deploy69-file"><b>fiche_identite.json</b><small>Carte d’identité du projet pour IA/outils.</small><button class="mini-btn" onclick="deploy69Download('identity')">Télécharger</button></div>
       <div class="deploy69-file"><b>contexte_ia.md</b><small>Brief copiable pour IA et reprise dev.</small><button class="mini-btn" onclick="deploy69Download('context')">Télécharger</button></div>
     </div>
-    <div class="deploy69-status-note"><b>Limite volontaire :</b> cette V6.9B prépare et télécharge les fichiers + la cartographie Google Drive data. La création réelle de dossiers Drive ou le push GitHub automatique viendront ensuite via Apps Script / GitHub connecté.</div>
+    <div class="deploy69-status-note"><b>Limite volontaire :</b> cette V6.10A prépare et télécharge les fichiers + la cartographie Google Drive data. La création réelle de dossiers Drive ou le push GitHub automatique viendront ensuite via Apps Script / GitHub connecté.</div>
   </section>`;
+}
+
+
+/* V6.10A - Connecteur Drive réel : override non destructif de l'onglet Déploiement */
+function deploy610EnsureConfig(p){
+  if(!p)return {};
+  deploy69EnsureConfig(p);
+  const cfg=p.deployConfig||{};
+  if(!cfg.driveDeployEndpoint)cfg.driveDeployEndpoint=cfg.dataAppsScriptEndpoint||'';
+  if(!cfg.driveDeploySecret)cfg.driveDeploySecret='';
+  if(!cfg.driveDeploySendMode)cfg.driveDeploySendMode='no-cors';
+  if(!cfg.driveDeployScope)cfg.driveDeployScope='drive_only';
+  if(typeof cfg.driveDeployCreateHtml==='undefined')cfg.driveDeployCreateHtml=true;
+  if(typeof cfg.driveDeployCreateData==='undefined')cfg.driveDeployCreateData=true;
+  if(typeof cfg.driveDeployCreateAdmin==='undefined')cfg.driveDeployCreateAdmin=true;
+  if(!cfg.driveDeployLastLog)cfg.driveDeployLastLog='Aucun déploiement réel lancé pour ce projet.';
+  if(!cfg.driveDeployLastStatus)cfg.driveDeployLastStatus='En attente';
+  return cfg;
+}
+function deploy610Update(field,value){
+  const p=selected(); if(!p)return;
+  const cfg=deploy610EnsureConfig(p);
+  if(field==='driveDeployCreateHtml'||field==='driveDeployCreateData'||field==='driveDeployCreateAdmin')cfg[field]=!!value;
+  else cfg[field]=value;
+  if(field==='driveDeployEndpoint')cfg.dataAppsScriptEndpoint=value;
+  p.updated=nowFr();
+  persist('connecteur Drive V6.10A '+field);
+  renderAll();
+}
+function deploy610FolderList(){
+  const {cfg}=deploy69Derived();
+  const base=[
+    '00_ADMIN','01_BRIEF_PROJET','02_DONNEES','02_DONNEES/00_SCHEMA','02_DONNEES/01_SOURCES_DRIVE','02_DONNEES/01_SOURCES_DRIVE/Google_Sheets','02_DONNEES/01_SOURCES_DRIVE/Google_Forms','02_DONNEES/01_SOURCES_DRIVE/PDF_imports','02_DONNEES/02_IMPORTS','02_DONNEES/02_IMPORTS/a_traiter','02_DONNEES/02_IMPORTS/traites','02_DONNEES/02_IMPORTS/erreurs','02_DONNEES/03_EXPORTS','02_DONNEES/03_EXPORTS/csv','02_DONNEES/03_EXPORTS/json','02_DONNEES/03_EXPORTS/pdf','02_DONNEES/04_CURRENT','02_DONNEES/05_SNAPSHOTS','02_DONNEES/99_ARCHIVES','03_HTML_BI','03_HTML_BI/assets','03_HTML_BI/modules','04_ROADMAP','05_LIVRABLES','05_LIVRABLES/zip_client','05_LIVRABLES/pdf','06_ARCHIVES','99_NOTES_DEV'
+  ];
+  return Array.from(new Set(base.concat((cfg.extraDriveFolders||'').split(/\n|,/).map(x=>x.trim()).filter(Boolean))));
+}
+function deploy610DriveFiles(){
+  const {cfg}=deploy69Derived();
+  const files={};
+  if(cfg.driveDeployCreateAdmin!==false){
+    files['00_ADMIN/manifest.json']=deploy69Manifest();
+    files['00_ADMIN/fiche_identite.json']=deploy69FicheIdentiteJson();
+    files['00_ADMIN/README.md']=deploy69Readme();
+    files['01_BRIEF_PROJET/contexte_ia.md']=deploy69ContextIa();
+    files['01_BRIEF_PROJET/descriptif.md']=deploy69Readme();
+  }
+  if(cfg.driveDeployCreateData!==false){
+    files['02_DONNEES/00_SCHEMA/'+(cfg.dataSchemaName||'data_schema.json')]=JSON.stringify({project:deploy69Derived().name,version:'V0.1',fields:[],rules:[],generated_from:'BI Central V6.10A'},null,2);
+    files['02_DONNEES/00_SCHEMA/dictionnaire_champs.md']='# Dictionnaire des champs\n\nÀ compléter selon les données réelles du projet.\n';
+    files['02_DONNEES/04_CURRENT/'+(cfg.dataCurrentJson||'CURRENT_data.json')]=deploy69DataDemo();
+    files['02_DONNEES/04_CURRENT/CURRENT_state.json']=JSON.stringify({generated_from:'BI Central V6.10A',updated_at:now(),status:'initial'},null,2);
+    files['02_DONNEES/data_sources.json']=deploy69DataSourcesJson();
+    files['02_DONNEES/drive_data_map.md']=deploy69DriveDataMap();
+  }
+  if(cfg.driveDeployCreateHtml!==false){
+    files['03_HTML_BI/index.html']=deploy69IndexHtml();
+    files['04_ROADMAP/roadmap.json']=deploy69Roadmap();
+    files['04_ROADMAP/versions.json']=JSON.stringify({generated_from:'BI Central V6.10A',versions:[{version:'V0.1',date:nowFr(),status:'initial'}]},null,2);
+    files['05_LIVRABLES/liens_publics.md']='# Liens publics\n\n- GitHub Pages : '+(deploy69Derived().url||'à publier')+'\n- Drive : à renseigner après création réelle.\n';
+  }
+  return files;
+}
+function deploy610Payload(simulation=false){
+  const {p,cfg,name,slug,rootDrive,appPath,url,tpl,ident,kids}=deploy69Derived();
+  deploy610EnsureConfig(p);
+  const files=deploy610DriveFiles();
+  return {
+    action: simulation?'simulate_drive_deploy':'deploy_project_drive',
+    source:'BI Central V6.10A',
+    requested_at:now(),
+    secret:cfg.driveDeploySecret||'',
+    project:{id:p.id,name,slug,space:p.space,type:p.type,client:p.client,offer:p.offerPack||'',template:cfg.templateId,template_name:tpl.name,sourceMode:cfg.sourceMode},
+    identity:ident,
+    drive:{rootName:(cfg.driveRootName||rootDrive||('BI_'+slug.toUpperCase())),folders:deploy610FolderList(),dataRoot:cfg.dataRoot||rootDrive+'/02_DONNEES'},
+    github:{repo:cfg.githubRepo||'Koink30/bi-central',path:appPath,branch:cfg.githubBranch||'main',publicUrl:url},
+    modules:kids.map(k=>({id:k.id,name:k.name,type:k.type,goal:k.goal,status:k.status,progress:k.progress||0})),
+    manifest:JSON.parse(deploy69Manifest()),
+    files
+  };
+}
+function deploy610ManifestText(){return JSON.stringify(deploy610Payload(true),null,2)}
+function deploy610StatusSummary(){
+  const {p,cfg}=deploy69Derived();
+  deploy610EnsureConfig(p);
+  const endpoint=cfg.driveDeployEndpoint||cfg.dataAppsScriptEndpoint||'';
+  const fileCount=Object.keys(deploy610DriveFiles()).length;
+  const folderCount=deploy610FolderList().length;
+  return {endpoint,fileCount,folderCount,status:cfg.driveDeployLastStatus||'En attente',log:cfg.driveDeployLastLog||''};
+}
+function deploy610SetLog(status,log,extra){
+  const p=selected(); if(!p)return;
+  const cfg=deploy610EnsureConfig(p);
+  cfg.driveDeployLastStatus=status;
+  cfg.driveDeployLastLog='['+nowFr()+'] '+log+(extra?'\n\n'+extra:'');
+  p.updated=nowFr();
+  persist('journal Drive deploy '+status);
+  renderAll();
+}
+async function deploy610TestEndpoint(){
+  const {cfg,name}=deploy69Derived(); deploy610EnsureConfig(selected());
+  const endpoint=cfg.driveDeployEndpoint||cfg.dataAppsScriptEndpoint||'';
+  if(!endpoint){toast('Endpoint Apps Script manquant');return deploy610SetLog('Erreur','Endpoint Apps Script manquant.');}
+  const payload={action:'ping',source:'BI Central V6.10A',project:name,secret:cfg.driveDeploySecret||'',requested_at:now()};
+  try{
+    const mode=cfg.driveDeploySendMode||'no-cors';
+    const res=await fetch(endpoint,{method:'POST',mode,headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(payload)});
+    if(mode==='cors'){
+      const txt=await res.text();
+      deploy610SetLog(res.ok?'Endpoint testé':'Réponse endpoint non OK','Ping envoyé avec retour lisible. HTTP '+res.status,txt.slice(0,3000));
+    }else{
+      deploy610SetLog('Ping envoyé','Ping envoyé en mode no-cors. Le navigateur ne permet pas de lire la réponse, mais Apps Script peut recevoir la demande.');
+    }
+  }catch(e){deploy610SetLog('Erreur','Test endpoint impossible : '+(e.message||e));}
+}
+async function deploy610Run(simulation){
+  const {cfg}=deploy69Derived(); deploy610EnsureConfig(selected());
+  const payload=deploy610Payload(!!simulation);
+  if(simulation){
+    deploy610SetLog('Simulation OK','Simulation générée : '+payload.drive.folders.length+' dossiers et '+Object.keys(payload.files).length+' fichiers prêts.','Télécharge le manifest si tu veux contrôler avant écriture réelle.');
+    return;
+  }
+  const endpoint=cfg.driveDeployEndpoint||cfg.dataAppsScriptEndpoint||'';
+  if(!endpoint){toast('Endpoint Apps Script manquant');return deploy610SetLog('Erreur','Impossible de déployer : endpoint Apps Script manquant.');}
+  if(!confirm('Lancer le déploiement réel Drive pour ce projet ?\n\nLe script Apps Script créera les dossiers et fichiers dans Google Drive.'))return;
+  try{
+    const mode=cfg.driveDeploySendMode||'no-cors';
+    const res=await fetch(endpoint,{method:'POST',mode,headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(payload)});
+    if(mode==='cors'){
+      const txt=await res.text();
+      let obj=null;try{obj=JSON.parse(txt)}catch(e){}
+      if(obj&&obj.success){
+        const p=selected(); p.sources=p.sources||{}; if(obj.driveRootUrl)p.sources.driveFolder=obj.driveRootUrl; if(obj.dataRootUrl)p.sources.dataDriveFolder=obj.dataRootUrl;
+        deploy610SetLog('Déploiement Drive OK','Drive créé avec retour lisible.',JSON.stringify(obj,null,2).slice(0,6000));
+      }else deploy610SetLog('Déploiement envoyé / retour à vérifier','Réponse lisible reçue mais succès non confirmé.',txt.slice(0,6000));
+    }else{
+      deploy610SetLog('Déploiement envoyé','Demande envoyée à Apps Script en mode no-cors. Vérifie ton Drive : le retour n’est pas lisible depuis le navigateur.');
+    }
+  }catch(e){deploy610SetLog('Erreur','Déploiement impossible : '+(e.message||e));}
+}
+function deploy610Download(kind){
+  if(kind==='manifest')downloadTextFile('deployment_manifest_v610a.json',deploy610ManifestText(),'application/json');
+  if(kind==='appsScript')downloadTextFile('apps_script_drive_deploy_v610a.gs',deploy610AppsScriptTemplate(),'text/plain');
+  if(kind==='payloadFiles')downloadTextFile('drive_files_manifest_v610a.json',JSON.stringify(deploy610DriveFiles(),null,2),'application/json');
+  toast('Fichier V6.10A généré');
+}
+function deploy610CopyAppsScript(){navigator.clipboard?.writeText(deploy610AppsScriptTemplate());toast('Script Apps Script copié')}
+function deploy610AppsScriptTemplate(){return `/**
+ * BI Central V6.10A — Drive Deploy endpoint
+ * 1) Créer un projet Apps Script.
+ * 2) Coller ce code.
+ * 3) Dans Paramètres du projet > Propriétés du script, ajouter DEPLOY_SECRET si souhaité.
+ * 4) Déployer > Nouvelle application web > Exécuter en tant que moi.
+ * 5) Coller l'URL /exec dans le Cockpit.
+ */
+function doPost(e) {
+  try {
+    var raw = e && e.postData && e.postData.contents ? e.postData.contents : '{}';
+    var payload = JSON.parse(raw);
+    var expectedSecret = PropertiesService.getScriptProperties().getProperty('DEPLOY_SECRET') || '';
+    if (expectedSecret && payload.secret !== expectedSecret) {
+      return json_({success:false, error:'unauthorized'});
+    }
+    if (payload.action === 'ping') {
+      return json_({success:true, pong:true, at:new Date().toISOString()});
+    }
+    if (payload.action !== 'deploy_project_drive' && payload.action !== 'simulate_drive_deploy') {
+      return json_({success:false, error:'unknown action', action:payload.action});
+    }
+    var result = deployProjectDrive_(payload);
+    return json_({success:true, result:result, at:new Date().toISOString()});
+  } catch (err) {
+    return json_({success:false, error:String(err && err.stack ? err.stack : err)});
+  }
+}
+
+function json_(obj) {
+  return ContentService.createTextOutput(JSON.stringify(obj, null, 2)).setMimeType(ContentService.MimeType.JSON);
+}
+
+function deployProjectDrive_(payload) {
+  var drive = payload.drive || {};
+  var rootName = safeName_(drive.rootName || (payload.project && payload.project.name) || 'BI_PROJECT');
+  var root = DriveApp.createFolder(rootName);
+  var folders = {'': root};
+  var folderUrls = {'/': root.getUrl()};
+  (drive.folders || []).forEach(function(path) {
+    var folder = ensureFolderPath_(root, folders, path);
+    folderUrls[path] = folder.getUrl();
+  });
+  var files = payload.files || {};
+  var createdFiles = [];
+  Object.keys(files).forEach(function(path) {
+    var file = createTextFile_(root, folders, path, String(files[path] || ''));
+    createdFiles.push({path:path, url:file.getUrl()});
+  });
+  return {
+    driveRootName: rootName,
+    driveRootUrl: root.getUrl(),
+    dataRootUrl: folderUrls['02_DONNEES'] || '',
+    folders: folderUrls,
+    files: createdFiles
+  };
+}
+
+function ensureFolderPath_(root, folders, path) {
+  path = String(path || '').replace(/^\\/+|\\/+$/g, '');
+  if (!path) return root;
+  var parts = path.split('/').filter(Boolean);
+  var current = root;
+  var key = '';
+  parts.forEach(function(part) {
+    key = key ? key + '/' + safeName_(part) : safeName_(part);
+    if (!folders[key]) folders[key] = current.createFolder(safeName_(part));
+    current = folders[key];
+  });
+  return current;
+}
+
+function createTextFile_(root, folders, relativePath, content) {
+  relativePath = String(relativePath || 'file.txt').replace(/^\\/+|\\/+$/g, '');
+  var parts = relativePath.split('/').filter(Boolean);
+  var fileName = safeName_(parts.pop() || 'file.txt');
+  var folderPath = parts.join('/');
+  var folder = ensureFolderPath_(root, folders, folderPath);
+  return folder.createFile(fileName, content, mimeFor_(fileName));
+}
+
+function mimeFor_(name) {
+  name = String(name || '').toLowerCase();
+  if (name.slice(-5) === '.html') return MimeType.HTML;
+  if (name.slice(-5) === '.json') return MimeType.PLAIN_TEXT;
+  if (name.slice(-3) === '.md') return MimeType.PLAIN_TEXT;
+  if (name.slice(-4) === '.csv') return MimeType.CSV;
+  return MimeType.PLAIN_TEXT;
+}
+
+function safeName_(name) {
+  return String(name || 'BI_PROJECT').replace(/[\\\\/:*?"<>|#%{}~&]/g, '_').trim().slice(0, 120) || 'BI_PROJECT';
+}
+`;}
+function deploy610RenderPanel(){
+  const {cfg}=deploy69Derived();
+  deploy610EnsureConfig(selected());
+  const stat=deploy610StatusSummary();
+  const endpoint=cfg.driveDeployEndpoint||cfg.dataAppsScriptEndpoint||'';
+  const configured=!!endpoint;
+  const secret=!!cfg.driveDeploySecret;
+  return `<section class="deploy610-card"><div class="deploy610-head"><div><h3>4. Connecteur Drive réel — V6.10A</h3><p>Première couche d’automatisation réelle : le cockpit génère un manifest, l’envoie à un endpoint Apps Script, puis le script crée les dossiers et fichiers dans Google Drive.</p></div><div class="deploy610-status"><span class="deploy610-badge ${configured?'ok':'warn'}">${configured?'Endpoint renseigné':'Endpoint manquant'}</span><span class="deploy610-badge ${secret?'ok':'warn'}">${secret?'Clé présente':'Clé optionnelle'}</span><span class="deploy610-badge ok">${stat.folderCount} dossiers</span><span class="deploy610-badge ok">${stat.fileCount} fichiers</span></div></div>
+  <div class="deploy610-flow"><div class="deploy610-step ok"><b>1. Manifest</b><small>Projet, identité, arborescence, fichiers.</small></div><div class="deploy610-step ${configured?'ok':''}"><b>2. Apps Script</b><small>Endpoint Drive sécurisé.</small></div><div class="deploy610-step"><b>3. Drive</b><small>Création dossiers + fichiers.</small></div><div class="deploy610-step"><b>4. Retour cockpit</b><small>Journal + liens si retour lisible.</small></div></div>
+  <div class="deploy610-grid"><div><div class="deploy610-form">
+    <div class="full"><label>URL endpoint Apps Script /exec</label><input placeholder="https://script.google.com/macros/s/.../exec" value="${esc(endpoint)}" onchange="deploy610Update('driveDeployEndpoint',this.value)"></div>
+    <div><label>Clé simple DEPLOY_SECRET</label><input placeholder="optionnel mais conseillé" value="${esc(cfg.driveDeploySecret||'')}" onchange="deploy610Update('driveDeploySecret',this.value)"></div>
+    <div><label>Mode d’envoi</label><select onchange="deploy610Update('driveDeploySendMode',this.value)">${['no-cors','cors'].map(x=>`<option ${((cfg.driveDeploySendMode||'no-cors')===x)?'selected':''}>${x}</option>`).join('')}</select></div>
+    <div><label>Créer HTML / roadmap</label><select onchange="deploy610Update('driveDeployCreateHtml',this.value==='oui')"><option value="oui" ${cfg.driveDeployCreateHtml!==false?'selected':''}>oui</option><option value="non" ${cfg.driveDeployCreateHtml===false?'selected':''}>non</option></select></div>
+    <div><label>Créer datas</label><select onchange="deploy610Update('driveDeployCreateData',this.value==='oui')"><option value="oui" ${cfg.driveDeployCreateData!==false?'selected':''}>oui</option><option value="non" ${cfg.driveDeployCreateData===false?'selected':''}>non</option></select></div>
+    <div class="full"><label>Dossiers Drive complémentaires</label><textarea placeholder="Un chemin par ligne : 07_CLIENT/Contrats ..." onchange="deploy610Update('extraDriveFolders',this.value)">${esc(cfg.extraDriveFolders||'')}</textarea></div>
+  </div><div class="deploy610-actions"><button class="deploy610-btn secondary" onclick="deploy610Download('manifest')">Télécharger manifest</button><button class="deploy610-btn secondary" onclick="deploy610Download('appsScript')">Télécharger Apps Script</button><button class="deploy610-btn secondary" onclick="deploy610CopyAppsScript()">Copier Apps Script</button><button class="deploy610-btn secondary" onclick="deploy610TestEndpoint()">Tester endpoint</button><button class="deploy610-btn" onclick="deploy610Run(true)">Simulation</button><button class="deploy610-btn danger" onclick="deploy610Run(false)">Déployer Drive réel</button></div></div>
+  <div><label style="display:block;font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted2);font-weight:900;margin-bottom:5px">Journal de déploiement</label><div class="deploy610-log">${esc((cfg.driveDeployLastStatus||'En attente')+'\n'+(cfg.driveDeployLastLog||''))}</div><div class="deploy610-output-links"><span>Statut : ${esc(stat.status)}</span><span>Mode : ${esc(cfg.driveDeploySendMode||'no-cors')}</span><span>Scope : Drive réel</span></div></div></div>
+  <div class="deploy610-warning"><b>Sécurité :</b> ne colle pas de token GitHub dans le HTML. Pour V6.10A, seule une clé simple Apps Script est prévue. Le token GitHub restera plus tard côté Apps Script / GitHub Action.</div>
+</section>`;
+}
+const renderDeploymentModuleV610Base=renderDeploymentModule;
+function renderDeploymentModule(){
+  let html=renderDeploymentModuleV610Base();
+  html=html.replace('<div class="deploy69-grid">',deploy610RenderPanel()+'\n\n  <div class="deploy69-grid">');
+  html=html.replace('<section class="deploy69-card"><h3>4. Arborescence complète</h3>','<section class="deploy69-card"><h3>5. Arborescence complète</h3>');
+  html=html.replace('<section class="deploy69-card"><h3>5. Checklist livraison</h3>','<section class="deploy69-card"><h3>6. Checklist livraison</h3>');
+  html=html.replace('<section class="deploy69-card"><h3>6. Pack fichiers V0</h3>','<section class="deploy69-card"><h3>7. Pack fichiers V0</h3>');
+  html=html.replace('cette V6.10A prépare et télécharge les fichiers + la cartographie Google Drive data. La création réelle de dossiers Drive ou le push GitHub automatique viendront ensuite via Apps Script / GitHub connecté.','cette V6.10A prépare toujours les fichiers, mais ajoute désormais un connecteur Apps Script pour créer réellement l’arborescence et les fichiers dans Google Drive. Le push GitHub automatique reste l’étape suivante.');
+  return html;
 }
 
 function renderAll(){
