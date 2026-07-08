@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>Cockpit Projets BI · V6.10A Connecteur Drive réel</title>
+<title>Cockpit Projets BI · V6.10A Connecteur Drive réel CORRIGÉE</title>
 <style>
 :root{
   --bg:#030711;--bg2:#06112a;--panel:rgba(7,18,41,.82);--panel2:rgba(9,28,61,.72);
@@ -1535,7 +1535,7 @@ body.show-deleted .deleted-project-card{display:block!important}
   <header class="header">
     <section class="brand">
       <div class="logo">BI</div>
-      <div><h1>Cockpit Projets BI</h1><p class="subtitle">V6.10A · Déploiement Drive réel</p></div>
+      <div><h1>Cockpit Projets BI</h1><p class="subtitle">V6.10A corrigée · Déploiement Drive réel</p></div>
     </section>
     <nav class="quick">
       <a class="toplink" id="projectGptLink" target="_blank" rel="noopener">
@@ -5628,7 +5628,7 @@ function renderDeploymentModule(){
 }
 
 
-/* V6.10A - Connecteur Drive réel : override non destructif de l'onglet Déploiement */
+/* V6.10A corrigée - Connecteur Drive réel : override non destructif de l'onglet Déploiement */
 function deploy610EnsureConfig(p){
   if(!p)return {};
   deploy69EnsureConfig(p);
@@ -5887,7 +5887,7 @@ function deploy610RenderPanel(){
 </section>`;
 }
 const renderDeploymentModuleV610Base=renderDeploymentModule;
-function renderDeploymentModule(){
+renderDeploymentModule=function(){
   let html=renderDeploymentModuleV610Base();
   html=html.replace('<div class="deploy69-grid">',deploy610RenderPanel()+'\n\n  <div class="deploy69-grid">');
   html=html.replace('<section class="deploy69-card"><h3>4. Arborescence complète</h3>','<section class="deploy69-card"><h3>5. Arborescence complète</h3>');
@@ -5895,7 +5895,7 @@ function renderDeploymentModule(){
   html=html.replace('<section class="deploy69-card"><h3>6. Pack fichiers V0</h3>','<section class="deploy69-card"><h3>7. Pack fichiers V0</h3>');
   html=html.replace('cette V6.10A prépare et télécharge les fichiers + la cartographie Google Drive data. La création réelle de dossiers Drive ou le push GitHub automatique viendront ensuite via Apps Script / GitHub connecté.','cette V6.10A prépare toujours les fichiers, mais ajoute désormais un connecteur Apps Script pour créer réellement l’arborescence et les fichiers dans Google Drive. Le push GitHub automatique reste l’étape suivante.');
   return html;
-}
+};
 
 function renderAll(){
   ensureStartupSelection();
