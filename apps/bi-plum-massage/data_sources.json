@@ -1,0 +1,25 @@
+{
+  "project": "BI Plum' Massage",
+  "slug": "bi-plum-massage",
+  "generated_from": "BI Central V6.10A",
+  "drive_root": "BI_BI-PLUM-MASSAGE",
+  "data_root": "BI_BI-PLUM-MASSAGE/02_DONNEES",
+  "data_mode": "Drive + JSON local",
+  "sync_direction": "Drive → BI puis export BI → Drive",
+  "current_json": "CURRENT_data.json",
+  "schema_file": "data_schema.json",
+  "google_sheet_url": "",
+  "google_form_url": "",
+  "apps_script_endpoint": "https://script.google.com/macros/s/AKfycbz6WOuFQsHIu1q_UeJpMkvczmoT7wfEifv9HgUsalr320aqW61oou3FR_xgio34yT_A/exec",
+  "notes": "",
+  "folders": {
+    "schema": "02_DONNEES/00_SCHEMA",
+    "sources_drive": "02_DONNEES/01_SOURCES_DRIVE",
+    "imports": "02_DONNEES/02_IMPORTS",
+    "exports": "02_DONNEES/03_EXPORTS",
+    "current": "02_DONNEES/04_CURRENT",
+    "snapshots": "02_DONNEES/05_SNAPSHOTS",
+    "archives": "02_DONNEES/99_ARCHIVES"
+  },
+  "modules": []
+}
