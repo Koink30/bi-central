@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>Cockpit Projets BI · V6.10C Diagnostic GitHub réel</title>
+<title>Cockpit Projets BI · V6.10D Hotfix clics & stabilité</title>
 <style>
 :root{
   --bg:#030711;--bg2:#06112a;--panel:rgba(7,18,41,.82);--panel2:rgba(9,28,61,.72);
@@ -73,6 +73,12 @@ textarea{resize:vertical;min-height:76px} input:focus,select:focus,textarea:focu
 .kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:14px}.kpi{padding:18px;min-height:106px;display:grid;grid-template-columns:76px 1fr 120px;gap:14px;align-items:center}.kpi-ico{font-size:44px}.kpi h3{margin:0;color:var(--cyan);font-size:15px}.kpi b{font-size:30px}.kpi small{color:var(--muted);display:block}.spark{height:42px;width:100%;opacity:.95}
 .spark svg{width:100%;height:100%}
 .modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.72);z-index:20;place-items:center;padding:20px}.modal.show{display:grid}.modal-card{width:min(720px,94vw);max-height:90vh;overflow:auto;background:linear-gradient(145deg,#07152f,#030814);border:1px solid rgba(40,234,255,.45);border-radius:26px;box-shadow:0 0 50px rgba(40,234,255,.22);padding:18px}.modal-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}
+/* V6.10D HOTFIX - anti blocage clics : les modales fermées ne capturent jamais les clics */
+.modal:not(.show),
+.create-modal-backdrop:not(.open),
+.deploy-modal-backdrop:not(.open){display:none!important;pointer-events:none!important;}
+.card[data-id],.central-tab,button,[onclick],a{pointer-events:auto;}
+
 .form-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.field label{display:block;font-size:11px;letter-spacing:.055em;text-transform:uppercase;font-weight:900;color:#a8cbe4;margin:0 0 5px}
 .toast{position:fixed;right:20px;bottom:20px;z-index:30;padding:12px 14px;border-radius:16px;background:#06152e;border:1px solid rgba(40,234,255,.45);box-shadow:0 0 28px rgba(40,234,255,.18);opacity:0;transform:translateY(10px);transition:.2s}.toast.show{opacity:1;transform:translateY(0)}
 .hide{display:none!important}
@@ -1835,7 +1841,7 @@ function renderList(){
     const childChip=childCount?`<span class="parent-subcount-chip">🧩 ${childCount} sous-objet${childCount>1?'s':''}</span>`:'';
     return `<div class="card ${p.id===selectedParentId?'active':''}" data-id="${p.id}"><div class="card-ico">${esc(p.icon)}</div><div><h3>${esc(p.name)}</h3><div class="meta"><span class="pill"><span class="dot ${statusColor(p.status)}"></span>${esc(p.status)}</span><span class="pill ${zoneTagClass(p.space)}">${esc(p.space)}</span></div>${childChip}</div><div style="opacity:.65">☆</div></div>`
   }).join('')||'<p class="muted">Aucun projet parent.</p>');
-  document.querySelectorAll('.card[data-id]').forEach(c=>c.onclick=()=>{state.selectedId=c.dataset.id;persist('sélection projet parent');renderAll()})
+  document.querySelectorAll('.card[data-id]').forEach(c=>c.onclick=ev=>{ev.preventDefault();softSelectProject(c.dataset.id)})
 }
 function zoneTagClass(space){
   const s=String(space||'').replace(/\s+/g,'').toLowerCase();
@@ -2080,7 +2086,7 @@ function renderCentralTabs(){
       ['deployment','🚀 Déploiement']
   ];
   $('centralTabs').innerHTML=tabs.map(t=>`<button class="central-tab ${activeMain===t[0]?'active':''}" data-central="${t[0]}">${t[1]}</button>`).join('');
-  document.querySelectorAll('[data-central]').forEach(b=>b.onclick=()=>{activeMain=b.dataset.central;renderAll()});
+  document.querySelectorAll('[data-central]').forEach(b=>b.onclick=ev=>{ev.preventDefault();activeMain=b.dataset.central;safeRenderAllV610D()});
 }
 function renderNotesModule(){
   const p=selected(); p.notes=p.notes||[]; ensureRoadmap(p);
@@ -6848,7 +6854,48 @@ function deploy610BRenderGithubPanel(){
 </section>`;
 }
 
+
+function cleanClickBlockersV610D(){
+  try{
+    document.querySelectorAll('.modal:not(.show),.create-modal-backdrop:not(.open),.deploy-modal-backdrop:not(.open)').forEach(el=>{
+      el.style.pointerEvents='none';
+      if(!el.classList.contains('show') && !el.classList.contains('open')) el.style.display='none';
+    });
+    // Si une ancienne surcouche orpheline est restée sans carte interne, on l'enlève.
+    const ov=document.getElementById('rightOverlay');
+    if(ov && !ov.querySelector('.cahier-large-card')) ov.remove();
+  }catch(e){console.warn('cleanClickBlockersV610D ignoré',e)}
+}
+function safePersistV610D(action){
+  try{return persist(action)}
+  catch(e){
+    console.warn('Persist ignoré pour préserver les clics',e);
+    try{localStorage.setItem(KEY+'_last_runtime_warning',JSON.stringify({date:now(),action,error:String(e&&e.message?e.message:e)}));}catch(_e){}
+  }
+}
+function softSelectProject(id){
+  try{
+    if(!id)return;
+    state.selectedId=id;
+    try{localStorage.setItem(KEY+'_selectedId',id)}catch(e){}
+    cleanClickBlockersV610D();
+    safeRenderAllV610D();
+  }catch(e){
+    console.error('Sélection projet impossible',e);
+    try{toast('Erreur sélection : recharge la page')}catch(_e){}
+  }
+}
+function safeRenderAllV610D(){
+  try{renderAll()}
+  catch(e){
+    console.error('RenderAll V6.10D erreur',e);
+    try{toast('Erreur affichage évitée · voir console')}catch(_e){}
+    cleanClickBlockersV610D();
+  }
+}
+
 function renderAll(){
+  cleanClickBlockersV610D();
   ensureStartupSelection();
 renderQuickLinks();renderCentralTabs();renderList();renderDetail();renderMainView();renderSidebar();renderKpis();
   const cbm=$('createBiModalRoot'); if(cbm)cbm.innerHTML=renderCreateBiModal();
@@ -6864,7 +6911,7 @@ renderQuickLinks();renderCentralTabs();renderList();renderDetail();renderMainVie
 
   setTimeout(afterSubprojectsPilotV67I,0);
 }
-document.addEventListener('DOMContentLoaded',()=>{initSelect('phaseFilter',PHASES,true);initSelect('statusFilter',STATUSES,true);initSelect('mSpace',SPACES.filter(x=>x!=='Tous'));initSelect('mType',TYPES);initSelect('mPhase',PHASES);initSelect('mStatus',STATUSES);$('search').oninput=renderList;$('phaseFilter').onchange=renderList;$('statusFilter').onchange=renderList;$('newBtn').onclick=openModal;$('newBtn2').onclick=openModal;$('closeModal').onclick=closeModal;$('projectModal').onclick=e=>{if(e.target===$('projectModal'))closeModal()};$('createBtn').onclick=createProject;$('exportBtn').onclick=exportJson;$('snapshotBtn').onclick=exportSnapshot;$('manifestBtn').onclick=exportManifest;$('driveSyncBtn').onclick=configureDriveSync;$('importFile').onchange=e=>{if(e.target.files[0])importJson(e.target.files[0]);e.target.value=''};$('resetBtn').onclick=resetDemo;renderAll();if(!localStorage.getItem(KEY)||recoveryMeta.source!==KEY){persist('reprise automatique depuis '+recoveryMeta.source);toast('Reprise automatique active')}});
+document.addEventListener('DOMContentLoaded',()=>{initSelect('phaseFilter',PHASES,true);initSelect('statusFilter',STATUSES,true);initSelect('mSpace',SPACES.filter(x=>x!=='Tous'));initSelect('mType',TYPES);initSelect('mPhase',PHASES);initSelect('mStatus',STATUSES);$('search').oninput=renderList;$('phaseFilter').onchange=renderList;$('statusFilter').onchange=renderList;$('newBtn').onclick=openModal;$('newBtn2').onclick=openModal;$('closeModal').onclick=closeModal;$('projectModal').onclick=e=>{if(e.target===$('projectModal'))closeModal()};$('createBtn').onclick=createProject;$('exportBtn').onclick=exportJson;$('snapshotBtn').onclick=exportSnapshot;$('manifestBtn').onclick=exportManifest;$('driveSyncBtn').onclick=configureDriveSync;$('importFile').onchange=e=>{if(e.target.files[0])importJson(e.target.files[0]);e.target.value=''};$('resetBtn').onclick=resetDemo;safeRenderAllV610D();if(!localStorage.getItem(KEY)||recoveryMeta.source!==KEY){persist('reprise automatique depuis '+recoveryMeta.source);toast('Reprise automatique active')}});
 
 document.addEventListener('input',function(ev){
   if(isFormLike(ev.target) && ev.target.id){
@@ -6879,7 +6926,19 @@ document.addEventListener('click',function(ev){
 },true);
 
 
-window.addEventListener('load',()=>setTimeout(()=>{try{renderAll();afterStableRenderV67H()}catch(e){console.error(e)}},50));
+
+// V6.10D - fallback de clics : si un handler inline saute, le cockpit reste pilotable.
+document.addEventListener('click',function(ev){
+  const card=ev.target && ev.target.closest ? ev.target.closest('.card[data-id]') : null;
+  if(card && card.dataset && card.dataset.id){
+    if(state && state.selectedId!==card.dataset.id){
+      ev.preventDefault();
+      softSelectProject(card.dataset.id);
+    }
+  }
+},true);
+
+window.addEventListener('load',()=>setTimeout(()=>{try{safeRenderAllV610D();afterStableRenderV67H()}catch(e){console.error(e)}},50));
 
 window.addEventListener('load',()=>setTimeout(afterSubprojectsPilotV67I,80));
 </script>
