@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>Cockpit Projets BI · V6.10E Rebase stable saisie</title>
+<title>Cockpit Projets BI · V6.10F Versions filtrées BI cible</title>
 <style>
 :root{
   --bg:#030711;--bg2:#06112a;--panel:rgba(7,18,41,.82);--panel2:rgba(9,28,61,.72);
@@ -1541,7 +1541,7 @@ body.show-deleted .deleted-project-card{display:block!important}
   <header class="header">
     <section class="brand">
       <div class="logo">BI</div>
-      <div><h1>Cockpit Projets BI</h1><p class="subtitle">V6.10B · Drive réel + GitHub réel</p></div>
+      <div><h1>Cockpit Projets BI</h1><p class="subtitle">V6.10F · versions filtrées par BI cible</p></div>
     </section>
     <nav class="quick">
       <a class="toplink" id="projectGptLink" target="_blank" rel="noopener">
@@ -1614,7 +1614,7 @@ body.show-deleted .deleted-project-card{display:block!important}
 
 <script>
 'use strict';
-const VERSION='V6.10E-rebase-stable-saisie';
+const VERSION='V6.10F-versions-filtrees-bi-cible';
 const STABLE_KEY='central_bi_project_manager_current';
 const VERSION_KEY='central_bi_project_manager_v68c';
 const KEY=STABLE_KEY;
@@ -3550,6 +3550,67 @@ function githubRepoSlugFromProject(p){
   return '';
 }
 
+/* V6.10F - Périmètre GitHub par BI cible : évite de mélanger les versions de tous les BI */
+function cleanGithubScopePath(path){
+  let s=String(path||'').trim();
+  if(!s)return '';
+  s=s.split('#')[0].split('?')[0];
+  let m=s.match(/github\.com\/[^\/\s]+\/[^\/\s]+\/tree\/[^\/\s]+\/(.+)$/i);
+  if(m)s=m[1];
+  m=s.match(/github\.io\/bi-central\/(.+)$/i);
+  if(m)s=m[1];
+  m=s.match(/\b(apps\/[^\s]+)$/i);
+  if(m)s=m[1];
+  s=s.replace(/\\/g,'/').replace(/^\/+|\/+$/g,'').replace(/\/index\.html$/i,'');
+  if(s && !/\.[a-z0-9]{2,8}$/i.test(s) && !s.endsWith('/'))s+='/';
+  return s;
+}
+function projectGithubPathScope(p){
+  p=p||selected();
+  if(!p)return '';
+  const links=ensureProjectLinks(p);
+  const candidates=[];
+  const src=p.sources||{};
+  ['githubPath','githubAppPath','githubFolder','appPath','pagesUrl'].forEach(k=>{if(src[k])candidates.push(src[k])});
+  ['githubPath','githubAppPath','githubFolder','appPath','pagesUrl','publishedUrl','biUrl','url'].forEach(k=>{if(p[k])candidates.push(p[k])});
+  links.forEach(l=>{
+    const t=String(l.type||'').toLowerCase();
+    if(l.url && (t.includes('github')||t.includes('publié')||t.includes('pages')||t.includes('bi')))candidates.push(l.url);
+  });
+  for(const c of candidates){
+    const path=cleanGithubScopePath(c);
+    if(path && path!=='apps/' && /^apps\//i.test(path))return path;
+  }
+  if(String(p.id||'')==='central' || /cockpit|gestion projets bi|projets bi/i.test(p.name||''))return 'apps/gestion-projets-bi/';
+  return 'apps/'+slugifyProjectName(p.name||p.client||'bi-cible')+'/';
+}
+function githubVersionScopeKey(){
+  const p=selected();
+  const slug=githubRepoSlugFromProject(p)||'no-repo';
+  const path=projectGithubPathScope(p)||'no-path';
+  return slug+'|'+path;
+}
+function githubScopeLabel(){
+  const p=selected();
+  return projectGithubPathScope(p)||'repo complet';
+}
+function githubHistoryMatchesScope(item,path){
+  path=cleanGithubScopePath(path);
+  if(!path)return true;
+  const files=item.files||[];
+  if(files.some(f=>String(f.filename||'').replace(/^\/+/, '').startsWith(path)))return true;
+  const txt=[item.title,item.description,item.text,item.url,item.sha].filter(Boolean).join(' ').toLowerCase();
+  return txt.includes(path.toLowerCase()) || txt.includes(path.replace(/\/$/,'').toLowerCase());
+}
+function githubRunMatchesProjectScope(run,p,path){
+  path=cleanGithubScopePath(path);
+  if(!path)return true;
+  const pname=String(p?.name||'').toLowerCase();
+  const pslug=slugifyProjectName(p?.name||'');
+  const txt=[run.display_title,run.name,run.head_commit?.message,run.head_branch,run.path,run.event,run.html_url].filter(Boolean).join(' ').toLowerCase();
+  return txt.includes(path.toLowerCase()) || txt.includes(path.replace(/\/$/,'').toLowerCase()) || (pslug&&txt.includes(pslug)) || (pname&&txt.includes(pname));
+}
+
 function detectVersionFromText(txt){
   const s=String(txt||'');
   const m=s.match(/\bV?\d+(?:\.\d+)*[A-Z]?\b/i) || s.match(/\bV\d+[_\.\-]\d+[A-Z]?\b/i);
@@ -3567,6 +3628,30 @@ function versionFromFilename(name){
   const s=String(name||'');
   const m=s.match(/V\d+(?:[_\.\-]\d+)*[A-Z]?/i);
   return m ? m[0].replace(/_/g,'.').replace(/-/g,'.').toUpperCase() : '';
+}
+
+function detectTargetVersionFromPatch(patch){
+  let s=String(patch||'');
+  // Ne pas confondre la version du cockpit déployeur avec la version du BI cible.
+  s=s.replace(/BI\s*Central\s+V\d+(?:\.\d+)*[A-Z]?/gi,'');
+  s=s.replace(/DEPLOIEMENT\s+V\d+(?:\.\d+)*[A-Z]?/gi,'');
+  s=s.replace(/generated_from[^\n]+V\d+(?:\.\d+)*[A-Z]?/gi,'');
+  let m=s.match(/"version"\s*:\s*"(V?\d+(?:\.\d+)*[A-Z]?)"/i) || s.match(/\bV?\d+(?:\.\d+)*[A-Z]?\b/i);
+  if(!m)return '';
+  let v=(m[1]||m[0]).replace(/_/g,'.').replace(/-/g,'.');
+  if(!/^V/i.test(v))v='V'+v;
+  return v.toUpperCase();
+}
+function detectCommitTargetVersion(msg,files){
+  let version=detectVersionFromText(msg);
+  if(/depuis\s+BI\s+Central\s+V/i.test(String(msg||'')) || /BI\s+Central\s+V/i.test(String(msg||'')))version='';
+  if(!version){
+    version=(files||[]).map(f=>detectTargetVersionFromPatch(f.patch)).find(Boolean)||'';
+  }
+  if(!version){
+    version=(files||[]).map(f=>versionFromFilename(f.filename)).find(Boolean)||'';
+  }
+  return version;
 }
 
 async function fetchGitHubJson(url){
@@ -3646,12 +3731,13 @@ function renderLatestWorkflowRuns(){
 }
 
 const GH_CACHE_KEY='bi_central_github_history_cache_v65g3';
+function ghCacheKey(){return GH_CACHE_KEY+'_'+slugifyProjectName(githubVersionScopeKey());}
 const GH_REFRESH_MINUTES=15;
 function ghCacheRead(){
-  try{return JSON.parse(localStorage.getItem(GH_CACHE_KEY)||'null')}catch(e){return null}
+  try{return JSON.parse(localStorage.getItem(ghCacheKey())||'null')}catch(e){return null}
 }
 function ghCacheWrite(payload){
-  try{localStorage.setItem(GH_CACHE_KEY,JSON.stringify(Object.assign({savedAt:new Date().toISOString()},payload||{})))}catch(e){}
+  try{localStorage.setItem(ghCacheKey(),JSON.stringify(Object.assign({savedAt:new Date().toISOString()},payload||{})))}catch(e){}
 }
 function ghCacheAgeMinutes(){
   const c=ghCacheRead();
@@ -3683,7 +3769,7 @@ function ghCacheStatusHtml(){
   return `<div class="github-cache-panel"><b>Cache GitHub protégé :</b> dernière synchro ${age===null?'inconnue':'il y a '+age+' min'} · refresh bloqué si moins de ${GH_REFRESH_MINUTES} min. En cas d’erreur GitHub, les anciennes données sont conservées.</div>`;
 }
 function clearGithubCache(){
-  localStorage.removeItem(GH_CACHE_KEY);
+  localStorage.removeItem(ghCacheKey());
   externalVersionHistory.github=[];
   externalVersionHistory.githubRuns=[];
   externalVersionHistory.status='Cache GitHub vidé';
@@ -3708,12 +3794,13 @@ async function fetchGitHubVersionHistory(force=false){
   externalVersionHistory.scan={commits:0,runs:0,pages:0,warnings:[]};
   renderAll();
   try{
-    const path=p.sources?.githubPath||'';
+    const path=projectGithubPathScope(p);
     const list=await fetchGitHubCommitsPaged(slug,path,6);
-    const runs=await fetchGitHubWorkflowRuns(slug,3).catch(e=>{
+    const runsRaw=await fetchGitHubWorkflowRuns(slug,3).catch(e=>{
       externalVersionHistory.scan.warnings.push('Workflows non lisibles : '+e.message);
       return [];
     });
+    const runs=(runsRaw||[]).filter(r=>githubRunMatchesProjectScope(r,p,path));
     const details=[];
     for(const c of list.slice(0,120)){
       try{
@@ -3727,11 +3814,7 @@ async function fetchGitHubVersionHistory(force=false){
           patch:(f.patch||'').slice(0,600)
         }));
         const msg=d.commit?.message||c.commit?.message||'';
-        let version=detectVersionFromText(msg);
-        if(!version){
-          const fileVersion=files.map(f=>versionFromFilename(f.filename)).find(Boolean);
-          if(fileVersion)version=fileVersion;
-        }
+        let version=detectCommitTargetVersion(msg,files);
         details.push({
           sha:String(d.sha||c.sha||'').slice(0,7),
           fullSha:d.sha||c.sha||'',
@@ -3750,7 +3833,7 @@ async function fetchGitHubVersionHistory(force=false){
         details.push({
           sha:String(c.sha||'').slice(0,7),
           fullSha:c.sha||'',
-          version:detectVersionFromText(msg),
+          version:detectCommitTargetVersion(msg,[]),
           title:msg.split('\n')[0]||'Commit',
           description:cleanCommitDescription(msg),
           text:msg,
@@ -3762,13 +3845,13 @@ async function fetchGitHubVersionHistory(force=false){
         });
       }
     }
-    externalVersionHistory.github=details;
+    externalVersionHistory.github=details.filter(c=>githubHistoryMatchesScope(c,path));
     externalVersionHistory.githubRuns=buildRunVersionItems(runs);
     externalVersionHistory.scan.commits=list.length;
     externalVersionHistory.scan.runs=runs.length;
     externalVersionHistory.scan.pages=Math.ceil(list.length/100);
     const unique=uniqueGithubVersions().length;
-    externalVersionHistory.status=`GitHub étendu OK · workflows visibles · ${unique} version(s) · ${details.length} commit(s) · ${runs.length} workflow(s)`;
+    externalVersionHistory.status=`GitHub filtré OK · ${path||'repo complet'} · ${unique} version(s) · ${externalVersionHistory.github.length} commit(s) · ${runs.length} workflow(s)`;
     externalVersionHistory.updated=nowFr();
     ghCacheWrite({
       github:externalVersionHistory.github,
@@ -3902,9 +3985,9 @@ function renderExternalVersionHistory(){
       <button class="mini-btn" onclick="loadDriveVersionHistoryFromDiagnostic()">🟢 Reprendre Drive diagnostic</button>
       <button class="mini-btn" onclick="activeMain='data';renderAll()">Ouvrir Données / sync</button>
     </div>
-    <p class="muted">GitHub est lu comme un historique de versions publiées : le BI détecte les numéros V6.x dans les messages de commit, noms de fichiers et workflow runs.</p>
+    <p class="muted">GitHub est lu comme un historique de versions publiées, mais filtré sur le BI sélectionné. Périmètre actif : <b>${esc(githubScopeLabel())}</b>. Le BI détecte les numéros Vx dans les messages de commit, noms de fichiers et workflow runs.</p>
     ${ghCacheStatusHtml()}
-    <div class="version-count-correction"><b>Comptage corrigé :</b> ${uniqueGithubVersions().length} version(s) unique(s) détectée(s), à partir de ${(externalVersionHistory.github||[]).length} commits détaillés et ${(externalVersionHistory.githubRuns||[]).length} workflow runs. Le chiffre est donc basé sur les versions uniques, pas sur le nombre de commits.</div>
+    <div class="version-count-correction"><b>Comptage corrigé V6.10F :</b> ${uniqueGithubVersions().length} version(s) unique(s) du BI cible détectée(s), à partir de ${(externalVersionHistory.github||[]).length} commits filtrés et ${(externalVersionHistory.githubRuns||[]).length} workflow runs filtrés. Le chiffre est donc basé sur les versions uniques, pas sur le nombre de commits.</div>
     <div class="github-scan-note">Scan étendu : jusqu’à 600 commits et 300 workflow runs publics. L’historique Actions GitHub peut rester incomplet ou approximatif selon les suppressions de runs, limites API ou changements de workflow.</div>
     ${renderLatestWorkflowRuns()}
     <h3>Versions publiées détectées sur GitHub</h3>
