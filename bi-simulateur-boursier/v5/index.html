@@ -1,1 +1,87 @@
-<!doctype html><html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>BI Bourse V5</title><script src="https://unpkg.com/lightweight-charts/dist/lightweight-charts.standalone.production.js"></script><style>:root{--b:#050711;--p:#0c1428;--t:#eef7ff;--m:#91a5c7;--c:#2bf8ff;--v:#9d5cff}*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 10% 0,#12304
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>BI Bourse V5 Explorateur</title>
+<script src="https://unpkg.com/lightweight-charts/dist/lightweight-charts.standalone.production.js"></script>
+<style>
+:root{--bg:#050711;--p:#0c1428;--t:#eef7ff;--m:#91a5c7;--c:#2bf8ff;--v:#9d5cff;--g:#26a69a;--r:#ef5350;--o:#ffb454}*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 8% 0,rgba(43,248,255,.13),transparent 28%),radial-gradient(circle at 90% 0,rgba(157,92,255,.15),transparent 28%),var(--bg);color:var(--t);font-family:Segoe UI,Arial,sans-serif}header{padding:18px 22px;border-bottom:1px solid rgba(43,248,255,.2);background:rgba(5,7,17,.9)}h1{margin:0;font-size:34px}.muted{color:var(--m);font-size:13px}.wrap{display:grid;grid-template-columns:290px 1fr 350px;gap:14px;padding:14px}.card{background:linear-gradient(180deg,rgba(12,20,40,.97),rgba(7,16,29,.95));border:1px solid rgba(43,248,255,.17);border-radius:20px;padding:14px}.toolbar,.tabs{display:flex;gap:6px;flex-wrap:wrap}button,input{font:inherit;color:var(--t);background:#060a15;border:1px solid rgba(145,165,199,.25);border-radius:12px;padding:9px 10px}button{cursor:pointer;font-weight:800;background:linear-gradient(135deg,rgba(43,248,255,.12),rgba(157,92,255,.15))}button.on{border-color:var(--c);box-shadow:0 0 16px rgba(43,248,255,.18)}#chart{height:480px;border-radius:16px;overflow:hidden;background:#050914}.list{max-height:680px;overflow:auto}.item,.product{padding:10px;border:1px solid rgba(145,165,199,.14);border-radius:13px;margin:6px 0;cursor:pointer}.item:hover,.item.on,.product:hover,.product.on{border-color:rgba(43,248,255,.42);background:rgba(43,248,255,.05)}.tag{border:1px solid rgba(145,165,199,.22);border-radius:999px;padding:3px 7px;font-size:11px;color:#bdf7ff}.kv{display:grid;grid-template-columns:110px 1fr;gap:7px;padding:6px 0;border-bottom:1px solid rgba(145,165,199,.1)}.risk{padding:9px;border-radius:12px;background:rgba(255,180,84,.08);border:1px solid rgba(255,180,84,.25)}.section{display:none}.section.on{display:block}.nav{margin-top:12px}.metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}.metric{background:#071020;border:1px solid rgba(145,165,199,.14);border-radius:14px;padding:9px}.metric small{display:block;color:var(--m)}.metric b{font-size:20px}@media(max-width:1100px){.wrap{grid-template-columns:1fr}.metrics{grid-template-columns:1fr 1fr}}
+</style>
+</head>
+<body>
+<header><h1>BI Bourse V5 · Explorateur Financier</h1><div class="muted">Graphique, produits liés et fiches pédagogiques.</div><div class="toolbar nav"><button data-page="market" class="on">Marchés</button><button data-page="explorer">Explorateur</button><button data-page="compare">Comparer</button></div></header>
+<div class="wrap">
+<aside class="card"><h3>Valeurs</h3><input id="search" placeholder="Rechercher…" style="width:100%"><div id="assetTabs" class="tabs" style="margin:8px 0"></div><div id="assetList" class="list"></div></aside>
+<main class="card">
+<section id="market" class="section on"><div class="metrics"><div class="metric"><small>Valeur</small><b id="mSym">BTCUSDT</b></div><div class="metric"><small>Dernier</small><b id="mPx">—</b></div><div class="metric"><small>Type</small><b id="mType">Crypto</b></div><div class="metric"><small>Risque</small><b id="mRisk">Élevé</b></div></div><div class="toolbar" style="margin:10px 0"><button data-int="1m" class="on">1m</button><button data-int="5m">5m</button><button data-int="15m">15m</button><button data-int="1h">1h</button><button data-int="1d">1j</button><button id="candles" class="on">Bougies</button><button id="line">Ligne</button></div><div id="chart"></div></section>
+<section id="explorer" class="section"><h2 id="eTitle">Bitcoin</h2><div class="tabs"><button data-prod="all" class="on">Tous</button><button data-prod="ETF">ETF/ETP</button><button data-prod="Levier">Levier</button><button data-prod="Dérivé">Dérivés</button><button data-prod="Corrélé">Corrélés</button></div><div id="products"></div></section>
+<section id="compare" class="section"><h2>Comparer</h2><div id="compareList"></div><button id="clearCompare">Vider</button></section>
+</main>
+<aside class="card"><h3>Fiche sélectionnée</h3><div id="detail"></div></aside>
+</div>
+<script>
+const $ = id => document.getElementById(id);
+const DATA = [
+ {cat:'Crypto',sym:'BTCUSDT',name:'Bitcoin',type:'Crypto-actif',risk:'Très élevé',desc:'Actif numérique décentralisé utilisé comme réserve de valeur spéculative et moyen de transfert.',products:[
+  {name:'ETF/ETP Bitcoin spot',kind:'ETF',ticker:'Selon marché',desc:'Produit coté cherchant à suivre le prix du Bitcoin.',risk:'Volatilité élevée, frais, écart de suivi et risque de conservation.'},
+  {name:'Futures Bitcoin',kind:'Dérivé',ticker:'Contrats à échéance',desc:'Contrats standardisés pour exposition haussière ou baissière.',risk:'Levier, appels de marge et rollover.'},
+  {name:'Options Bitcoin',kind:'Dérivé',ticker:'Calls / Puts',desc:'Options donnant un droit d’achat ou de vente.',risk:'Perte possible de la prime et forte sensibilité à la volatilité.'},
+  {name:'Ethereum',kind:'Corrélé',ticker:'ETHUSDT',desc:'Crypto-actif souvent corrélé au cycle général du marché.',risk:'Corrélation instable.'}
+ ]},
+ {cat:'Crypto',sym:'ETHUSDT',name:'Ethereum',type:'Crypto-actif',risk:'Très élevé',desc:'Blockchain programmable pour applications décentralisées.',products:[
+  {name:'ETP Ethereum spot',kind:'ETF',ticker:'Selon marché',desc:'Produit coté suivant le prix de l’Ether.',risk:'Volatilité et frais.'},
+  {name:'Futures Ether',kind:'Dérivé',ticker:'Contrats à échéance',desc:'Exposition dérivée à l’Ether.',risk:'Levier et appels de marge.'}
+ ]},
+ {cat:'US Tech',sym:'NVDA',name:'Nvidia',type:'Action',risk:'Élevé',desc:'Entreprise de semi-conducteurs spécialisée dans les GPU et le calcul accéléré.',products:[
+  {name:'ETF semi-conducteurs',kind:'ETF',ticker:'SMH / SOXX',desc:'Panier d’entreprises du secteur pouvant inclure Nvidia.',risk:'Risque sectoriel et concentration.'},
+  {name:'ETF technologie large',kind:'ETF',ticker:'QQQ / VGT / XLK',desc:'Exposition diversifiée à la technologie américaine.',risk:'Sensibilité aux taux et aux grandes capitalisations.'},
+  {name:'ETP mono-action à levier',kind:'Levier',ticker:'Selon émetteur',desc:'Produit amplifiant la performance quotidienne.',risk:'Très élevé; effet de composition quotidien.'},
+  {name:'Options NVDA',kind:'Dérivé',ticker:'Calls / Puts',desc:'Options pour spéculation ou couverture.',risk:'Expiration et volatilité implicite.'}
+ ]},
+ {cat:'US Tech',sym:'AAPL',name:'Apple',type:'Action',risk:'Moyen/élevé',desc:'Groupe technologique actif dans les appareils et services numériques.',products:[
+  {name:'ETF Nasdaq 100',kind:'ETF',ticker:'QQQ',desc:'ETF exposé aux grandes valeurs du Nasdaq.',risk:'Concentration technologique.'},
+  {name:'Options AAPL',kind:'Dérivé',ticker:'Calls / Puts',desc:'Contrats d’options sur Apple.',risk:'Expiration et perte potentielle de la prime.'}
+ ]},
+ {cat:'CAC 40',sym:'MC.PA',name:'LVMH',type:'Action',risk:'Moyen/élevé',desc:'Groupe mondial du luxe.',products:[
+  {name:'ETF CAC 40',kind:'ETF',ticker:'Selon émetteur',desc:'ETF suivant le CAC 40.',risk:'Risque actions France.'},
+  {name:'ETF luxe',kind:'ETF',ticker:'Selon émetteur',desc:'ETF thématique luxe mondial.',risk:'Concentration thématique.'},
+  {name:'Turbos / warrants LVMH',kind:'Levier',ticker:'Selon échéance',desc:'Produits à levier parfois dotés d’une barrière.',risk:'Perte rapide voire totale.'}
+ ]},
+ {cat:'ETF',sym:'QQQ',name:'Nasdaq 100 ETF',type:'ETF',risk:'Élevé',desc:'ETF donnant une exposition au Nasdaq 100.',products:[
+  {name:'QQQ standard',kind:'ETF',ticker:'QQQ',desc:'Exposition indicielle au Nasdaq 100.',risk:'Concentration technologique.'},
+  {name:'Nasdaq levier quotidien',kind:'Levier',ticker:'x2 / x3',desc:'Amplifie la performance quotidienne.',risk:'Très élevé sur plusieurs séances.'},
+  {name:'Futures Nasdaq 100',kind:'Dérivé',ticker:'Contrats indiciels',desc:'Contrats à terme sur indice.',risk:'Levier, marge et échéance.'}
+ ]}
+];
+let current = DATA[0], category = 'Crypto', productFilter = 'all', selectedProduct = null, compare = [], chart, candle, line, mode = 'candles', interval = '1m', ws = null, bars = [];
+function fmt(n){return Number.isFinite(n)?new Intl.NumberFormat('fr-FR',{maximumFractionDigits:4}).format(n):'—';}
+function initChart(){
+ const el=$('chart');
+ if(!window.LightweightCharts){el.innerHTML='<div class="risk">Le moteur graphique externe n’a pas chargé. Recharge la page avec Ctrl+F5.</div>';return;}
+ chart=LightweightCharts.createChart(el,{width:el.clientWidth,height:el.clientHeight,layout:{background:{type:'solid',color:'#050914'},textColor:'#c9d4e7'},grid:{vertLines:{color:'rgba(145,165,199,.08)'},horzLines:{color:'rgba(145,165,199,.08)'}},timeScale:{timeVisible:true,secondsVisible:false}});
+ if(chart.addSeries){candle=chart.addSeries(LightweightCharts.CandlestickSeries,{upColor:'#26a69a',downColor:'#ef5350',wickUpColor:'#26a69a',wickDownColor:'#ef5350',borderVisible:false});line=chart.addSeries(LightweightCharts.LineSeries,{color:'#2bf8ff',lineWidth:2});}
+ else{candle=chart.addCandlestickSeries({upColor:'#26a69a',downColor:'#ef5350',wickUpColor:'#26a69a',wickDownColor:'#ef5350',borderVisible:false});line=chart.addLineSeries({color:'#2bf8ff',lineWidth:2});}
+ line.applyOptions({visible:false});
+ new ResizeObserver(()=>chart.applyOptions({width:el.clientWidth,height:el.clientHeight})).observe(el);
+}
+function demo(){if(!chart)return;let sec={'1m':60,'5m':300,'15m':900,'1h':3600,'1d':86400}[interval]||60,p=current.sym.includes('BTC')?65000:current.sym.includes('ETH')?3500:current.sym==='NVDA'?170:current.sym==='AAPL'?220:current.sym==='MC.PA'?600:500,t=Math.floor(Date.now()/1000/sec)*sec-250*sec;bars=[];for(let i=0;i<250;i++){let o=p,c=o*(1+(Math.random()-.49)*.018),h=Math.max(o,c)*(1+Math.random()*.006),l=Math.min(o,c)*(1-Math.random()*.006);bars.push({time:t+i*sec,open:o,high:h,low:l,close:c});p=c;}apply();}
+function apply(){if(!chart)return;candle.setData(bars);line.setData(bars.map(b=>({time:b.time,value:b.close})));candle.applyOptions({visible:mode==='candles'});line.applyOptions({visible:mode==='line'});chart.timeScale().fitContent();$('mPx').textContent=fmt(bars.at(-1)?.close);}
+async function connectCrypto(){if(ws)ws.close();if(!current.sym.endsWith('USDT')){demo();return;}try{const d=await fetch(`https://api.binance.com/api/v3/klines?symbol=${current.sym}&interval=${interval}&limit=250`).then(r=>r.json());bars=d.map(k=>({time:Math.floor(k[0]/1000),open:+k[1],high:+k[2],low:+k[3],close:+k[4]}));apply();ws=new WebSocket(`wss://stream.binance.com:9443/ws/${current.sym.toLowerCase()}@kline_${interval}`);ws.onmessage=e=>{const k=JSON.parse(e.data).k,b={time:Math.floor(k.t/1000),open:+k.o,high:+k.h,low:+k.l,close:+k.c};if(bars.at(-1)?.time===b.time)bars[bars.length-1]=b;else bars.push(b);if(mode==='candles')candle.update(b);else line.update({time:b.time,value:b.close});$('mPx').textContent=fmt(b.close);};}catch(e){demo();}}
+function renderAssets(){const cats=[...new Set(DATA.map(x=>x.cat))],q=$('search').value.toLowerCase();$('assetTabs').innerHTML=cats.map(c=>`<button class="${c===category?'on':''}" onclick="category='${c}';renderAssets()">${c}</button>`).join('');$('assetList').innerHTML=DATA.filter(x=>x.cat===category&&(!q||x.sym.toLowerCase().includes(q)||x.name.toLowerCase().includes(q))).map(x=>`<div class="item ${x.sym===current.sym?'on':''}" onclick="selectAsset('${x.sym}')"><b>${x.sym}</b><div class="muted">${x.name} · ${x.type}</div></div>`).join('');}
+function selectAsset(sym){current=DATA.find(x=>x.sym===sym)||current;selectedProduct=null;$('mSym').textContent=current.sym;$('mType').textContent=current.type;$('mRisk').textContent=current.risk;$('eTitle').textContent=current.name;renderAssets();renderProducts();renderDetail();current.sym.endsWith('USDT')?connectCrypto():demo();}
+function renderProducts(){const arr=current.products.filter(p=>productFilter==='all'||p.kind===productFilter);$('products').innerHTML=arr.map(p=>`<div class="product ${selectedProduct===p?'on':''}" onclick="selectProduct(${current.products.indexOf(p)})"><b>${p.name}</b> <span class="tag">${p.kind}</span><div class="muted">${p.ticker}</div><p>${p.desc}</p></div>`).join('');}
+function selectProduct(i){selectedProduct=current.products[i];renderProducts();renderDetail();}
+function renderDetail(){if(selectedProduct){$('detail').innerHTML=`<h3>${selectedProduct.name}</h3><div class="kv"><span>Type</span><b>${selectedProduct.kind}</b></div><div class="kv"><span>Référence</span><b>${selectedProduct.ticker}</b></div><p>${selectedProduct.desc}</p><div class="risk"><b>Points d’attention</b><br>${selectedProduct.risk}</div>`;}else{$('detail').innerHTML=`<h3>${current.name}</h3><div class="kv"><span>Symbole</span><b>${current.sym}</b></div><div class="kv"><span>Type</span><b>${current.type}</b></div><div class="kv"><span>Risque</span><b>${current.risk}</b></div><p>${current.desc}</p><button onclick="addCompare()">Ajouter à la comparaison</button><div class="risk" style="margin-top:10px">Base pédagogique non exhaustive. Vérifier émetteur, ISIN, frais, liquidité et documentation officielle.</div>`;}}
+function addCompare(){if(!compare.includes(current.sym)&&compare.length<4)compare.push(current.sym);renderCompare();}
+function renderCompare(){$('compareList').innerHTML=compare.map(s=>{const a=DATA.find(x=>x.sym===s);return `<div class="card" style="margin:8px 0"><h3>${a.name}</h3><div class="kv"><span>Type</span><b>${a.type}</b></div><div class="kv"><span>Risque</span><b>${a.risk}</b></div><p>${a.desc}</p></div>`;}).join('')||'<div class="muted">Aucun actif sélectionné.</div>';}
+document.querySelectorAll('[data-page]').forEach(b=>b.onclick=()=>{document.querySelectorAll('[data-page],.section').forEach(x=>x.classList.remove('on'));b.classList.add('on');$(b.dataset.page).classList.add('on');});
+document.querySelectorAll('[data-int]').forEach(b=>b.onclick=()=>{document.querySelectorAll('[data-int]').forEach(x=>x.classList.remove('on'));b.classList.add('on');interval=b.dataset.int;current.sym.endsWith('USDT')?connectCrypto():demo();});
+document.querySelectorAll('[data-prod]').forEach(b=>b.onclick=()=>{document.querySelectorAll('[data-prod]').forEach(x=>x.classList.remove('on'));b.classList.add('on');productFilter=b.dataset.prod;renderProducts();});
+$('candles').onclick=()=>{mode='candles';$('candles').classList.add('on');$('line').classList.remove('on');apply();};
+$('line').onclick=()=>{mode='line';$('line').classList.add('on');$('candles').classList.remove('on');apply();};
+$('search').oninput=renderAssets;$('clearCompare').onclick=()=>{compare=[];renderCompare();};
+window.addEventListener('error',e=>{console.error(e.error||e.message);});
+initChart();renderAssets();selectAsset('BTCUSDT');renderCompare();
+</script>
+</body></html>
