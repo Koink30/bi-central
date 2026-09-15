@@ -2,6 +2,7 @@
 (() => {
   const DB = 'caves-saint-jean-photos', STORE = 'photos';
   let photos = new Map(), activeId = null, scheduled = false;
+  let createRequested = new URLSearchParams(location.search).has('newProduct');
   const urls = new Map();
   function url(record) {
     if (!urls.has(record.id)) urls.set(record.id, URL.createObjectURL(record.blob));
@@ -20,6 +21,29 @@
         tx.oncomplete = () => db.close();
       };
     });
+  }
+  function savePhoto(record) {
+    return new Promise((resolve, reject) => {
+      const request = indexedDB.open(DB, 1);
+      request.onupgradeneeded = () => request.result.createObjectStore(STORE, { keyPath: 'id' });
+      request.onerror = () => reject(request.error);
+      request.onsuccess = () => {
+        const db = request.result, tx = db.transaction(STORE, 'readwrite');
+        tx.objectStore(STORE).put(record);
+        tx.oncomplete = () => { db.close(); resolve(); };
+        tx.onerror = () => { db.close(); reject(tx.error); };
+      };
+    });
+  }
+  async function compress(file) {
+    const bitmap = await createImageBitmap(file);
+    const scale = Math.min(1, 1400 / Math.max(bitmap.width, bitmap.height));
+    const canvas = document.createElement('canvas');
+    canvas.width = Math.max(1, Math.round(bitmap.width * scale));
+    canvas.height = Math.max(1, Math.round(bitmap.height * scale));
+    canvas.getContext('2d').drawImage(bitmap, 0, 0, canvas.width, canvas.height);
+    bitmap.close();
+    return new Promise((resolve, reject) => canvas.toBlob(blob => blob ? resolve(blob) : reject(new Error('Image illisible')), 'image/jpeg', .78));
   }
   async function reload() {
     try {
@@ -42,6 +66,12 @@
     return metadata.split('·')[0].trim();
   }
   function render() {
+    if (createRequested) {
+      const buttons = [...document.querySelectorAll('#root button')];
+      const add = buttons.find(button => button.textContent?.trim() === 'Nouveau produit');
+      if (add) { createRequested = false; add.click(); history.replaceState(null, '', location.pathname); }
+      else buttons.find(button => button.textContent?.includes('Produits & stock'))?.click();
+    }
     for (const title of document.querySelectorAll('.product-title')) {
       const id = productId(title), records = photos.get(id);
       if (!records?.length || title.querySelector('.catalog-photo')) continue;
@@ -54,13 +84,30 @@
     }
     const form = document.querySelector('.cave-dialog form');
     if (!form || form.querySelector('.catalog-photo-gallery')) return;
-    const dialogTitle = document.querySelector('.cave-dialog [role="heading"], .cave-dialog h2');
+    const dialogTitle = document.querySelector('.cave-dialog [data-slot="dialog-title"]');
     if (!dialogTitle?.textContent?.includes('Fiche produit')) return;
-    const records = photos.get(activeId);
-    if (!records?.length) return;
+    const records = photos.get(activeId) || [];
     const section = document.createElement('section');
     section.className = 'catalog-photo-gallery';
-    const heading = document.createElement('h3'); heading.textContent = `Photos du produit (${records.length})`;
+    const heading = document.createElement('h3'); heading.textContent = `Photo du produit${records.length ? ` (${records.length})` : ''}`;
+    const status = document.createElement('p'); status.className = 'catalog-photo-status';
+    if (activeId) {
+      const label = document.createElement('label'); label.className = 'catalog-photo-upload';
+      label.textContent = '📷 Ajouter une photo à cette fiche';
+      const input = document.createElement('input'); input.type = 'file';
+      input.accept = 'image/*'; input.setAttribute('capture', 'environment');
+      input.onchange = async () => {
+        const file = input.files?.[0]; if (!file) return;
+        try {
+          status.textContent = 'Enregistrement de la photo…';
+          const blob = await compress(file);
+          await savePhoto({ id: crypto.randomUUID(), productId: activeId, title: '', notes: '', blob, created: Date.now() });
+          status.textContent = 'Photo enregistrée et liée à cette fiche sur cet appareil.';
+          await reload();
+        } catch (error) { status.textContent = `Photo non enregistrée : ${error.message}`; }
+      };
+      label.append(input); section.append(label);
+    } else status.textContent = 'Enregistre d’abord le nouveau produit, puis rouvre sa fiche pour ajouter une photo.';
     const grid = document.createElement('div'); grid.className = 'catalog-photo-grid';
     for (const record of records) {
       const image = document.createElement('img'); image.src = url(record);
@@ -69,11 +116,12 @@
       link.title = `Voir ou modifier ${record.title || 'cette photo'}`;
       link.append(image); grid.append(link);
     }
-    section.append(heading, grid); form.prepend(section);
+    section.prepend(heading); section.append(status, grid); form.prepend(section);
   }
   document.addEventListener('click', event => {
     const link = event.target.closest?.('.product-link');
     if (link) { activeId = productId(link.closest('.product-title')); schedule(); }
+    else if (event.target.closest?.('button')?.textContent?.includes('Nouveau produit')) activeId = null;
   }, true);
   function schedule() {
     if (scheduled) return;
