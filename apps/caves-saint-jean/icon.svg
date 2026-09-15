@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <rect width="512" height="512" rx="112" fill="#441522"/>
+  <circle cx="195" cy="196" r="58" fill="#c69b55"/><circle cx="277" cy="196" r="58" fill="#b37a3d"/>
+  <circle cx="154" cy="270" r="58" fill="#b37a3d"/><circle cx="236" cy="270" r="58" fill="#c69b55"/><circle cx="318" cy="270" r="58" fill="#b37a3d"/>
+  <circle cx="195" cy="344" r="58" fill="#c69b55"/><circle cx="277" cy="344" r="58" fill="#b37a3d"/>
+  <path d="M236 132c0-45 24-75 71-91-2 49-25 78-71 91Z" fill="#78915e"/>
+  <text x="256" y="460" text-anchor="middle" fill="#fff" font-family="Georgia,serif" font-size="50" font-weight="700">CSJ</text>
+</svg>
