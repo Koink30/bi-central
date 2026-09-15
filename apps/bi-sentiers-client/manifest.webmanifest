@@ -1,0 +1,12 @@
+{
+  "name": "BI SENTIERS",
+  "short_name": "Sentiers",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#091017",
+  "theme_color": "#0b1017",
+  "icons": [
+    {"src":"./icon.svg","sizes":"any","type":"image/svg+xml","purpose":"any maskable"}
+  ]
+}
