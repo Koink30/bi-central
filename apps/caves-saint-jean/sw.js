@@ -1,5 +1,5 @@
-const CACHE = "caves-saint-jean-v8";
-const APP_SHELL = ["./", "./index.html", "./catalog-photos.js", "./photos.html", "./photos.js", "./manifest.webmanifest", "./offline.html", "./icon-192.png", "./icon-512.png", "./apple-touch-icon.png"];
+const CACHE = "caves-saint-jean-v9";
+const APP_SHELL = ["./", "./index.html", "./catalog-photos.js", "./catalog-default.json", "./photos.html", "./photos.js", "./manifest.webmanifest", "./offline.html", "./icon-192.png", "./icon-512.png", "./apple-touch-icon.png"];
 
 self.addEventListener("install", event => {
   event.waitUntil(caches.open(CACHE).then(cache => cache.addAll(APP_SHELL)).then(() => self.skipWaiting()));

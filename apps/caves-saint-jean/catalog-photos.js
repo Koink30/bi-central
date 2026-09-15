@@ -128,7 +128,8 @@
     scheduled = true;
     requestAnimationFrame(() => { scheduled = false; render(); });
   }
-  new MutationObserver(schedule).observe(document.getElementById('root'), { childList: true, subtree: true });
+  // Radix renders product dialogs in a portal under body, outside #root.
+  new MutationObserver(schedule).observe(document.body, { childList: true, subtree: true });
   window.addEventListener('pageshow', reload);
   document.addEventListener('visibilitychange', () => { if (!document.hidden) reload(); });
   reload();
