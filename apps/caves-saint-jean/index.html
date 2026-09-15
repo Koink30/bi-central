@@ -16,6 +16,10 @@
   #pwa-status{position:fixed;left:50%;bottom:max(12px,env(safe-area-inset-bottom));translate:-50% 0;z-index:10000;border-radius:999px;background:#25151a;color:#fff;padding:7px 12px;font:700 12px/1 system-ui;box-shadow:0 8px 24px #0003;display:none}
   #photo-module-link{position:fixed;right:max(14px,env(safe-area-inset-right));bottom:max(14px,calc(env(safe-area-inset-bottom) + 14px));z-index:500;border-radius:999px;background:#702b43;color:white;text-decoration:none;padding:11px 15px;font:700 14px system-ui;box-shadow:0 6px 25px #44152255}
   @media(max-width:767px){#photo-module-link{right:10px;bottom:max(10px,env(safe-area-inset-bottom));padding:10px 12px;font-size:13px}}
+  .catalog-photo{width:44px;height:54px;flex:none;object-fit:cover;border-radius:8px;border:1px solid #e8dce0;background:#f5f1ed}
+  .catalog-photo-gallery{padding:12px;margin-bottom:14px;border:1px solid #e8dce0;border-radius:12px;background:#faf7f8}
+  .catalog-photo-gallery h3{margin:0 0 8px;font-size:16px}.catalog-photo-grid{display:flex;gap:8px;overflow-x:auto}
+  .catalog-photo-grid img{width:84px;height:100px;object-fit:cover;border-radius:8px}
   @media(max-width:767px){
     body{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
     input,textarea,select,[contenteditable="true"]{-webkit-user-select:text;user-select:text;font-size:16px!important}
@@ -214,4 +218,4 @@ lucide-react/dist/esm/lucide-react.mjs:
   };
   window.addEventListener("load",openShortcut);
 })();
-</script></body></html>
+</script><script src="./catalog-photos.js" defer></script></body></html>
