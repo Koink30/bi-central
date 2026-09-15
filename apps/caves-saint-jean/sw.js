@@ -1,4 +1,4 @@
-const CACHE = "caves-saint-jean-v1";
+const CACHE = "caves-saint-jean-v2";
 const APP_SHELL = ["./", "./index.html", "./manifest.webmanifest", "./offline.html", "./icon-192.png", "./icon-512.png", "./apple-touch-icon.png"];
 
 self.addEventListener("install", event => {
