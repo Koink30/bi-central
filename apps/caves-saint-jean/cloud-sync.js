@@ -180,7 +180,16 @@
     applyingCloud = false;
     dirty = false;
     setCloudState('Données cloud chargées', 'ok');
-    if (reload) location.reload();
+    if (reload) {
+      const guard = `cave-cloud-reload-${remote.revision || 0}`;
+      let alreadyReloaded = false;
+      try {
+        alreadyReloaded = sessionStorage.getItem(guard) === '1';
+        sessionStorage.setItem(guard, '1');
+      } catch {}
+      if (!alreadyReloaded) location.reload();
+      else setCloudState('Synchronisé', 'ok');
+    }
   }
 
   function hasUsefulLocalData(snapshot) {
@@ -199,13 +208,15 @@
       await pushSnapshot();
       return;
     }
-    if (!local || !hasUsefulLocalData(local)) {
-      await applyRemote(remote);
+    const remoteRevision = Number(remote.revision || 0);
+    const sameSnapshot = local && JSON.stringify(local) === JSON.stringify(remote.state);
+    if (sameSnapshot || (local && remoteRevision > 0 && remoteRevision === cloudRevision())) {
+      writeSmallValue(CLOUD_REV_KEY, remoteRevision);
+      setCloudState('Synchronisé', 'ok');
       return;
     }
-    if (JSON.stringify(local) === JSON.stringify(remote.state)) {
-      writeSmallValue(CLOUD_REV_KEY, remote.revision || 0);
-      setCloudState('Synchronisé', 'ok');
+    if (!local || !hasUsefulLocalData(local)) {
+      await applyRemote(remote);
       return;
     }
     showConflict(remote);
