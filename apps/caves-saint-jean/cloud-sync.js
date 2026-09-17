@@ -11,6 +11,8 @@
   const PHOTO_DB = 'caves-saint-jean-photos';
   const PHOTO_STORE = 'photos';
   const PHOTO_BUCKET = 'cave-product-photos';
+  const META_DB = 'caves-saint-jean-cloud-meta';
+  const META_STORE = 'meta';
 
   let session = readJson(SESSION_KEY);
   let pushTimer = null;
@@ -19,14 +21,56 @@
   let panel = null;
 
   function readJson(key) {
-    try { return JSON.parse(localStorage.getItem(key) || 'null'); }
-    catch { return null; }
+    try {
+      const value = localStorage.getItem(key) || sessionStorage.getItem(key);
+      return JSON.parse(value || 'null');
+    } catch { return null; }
+  }
+
+  function openMetaDB() {
+    return new Promise((resolve, reject) => {
+      const request = indexedDB.open(META_DB, 1);
+      request.onupgradeneeded = () => request.result.createObjectStore(META_STORE);
+      request.onsuccess = () => resolve(request.result);
+      request.onerror = () => reject(request.error);
+    });
+  }
+
+  async function metaStore(mode, action) {
+    const db = await openMetaDB();
+    return new Promise((resolve, reject) => {
+      const tx = db.transaction(META_STORE, mode);
+      const request = action(tx.objectStore(META_STORE));
+      request.onsuccess = () => resolve(request.result);
+      request.onerror = () => reject(request.error);
+      tx.oncomplete = () => db.close();
+    });
+  }
+
+  async function restoreStoredSession() {
+    if (session) return session;
+    try {
+      session = await metaStore('readonly', store => store.get(SESSION_KEY));
+      if (session) renderStatus();
+    } catch (error) { console.warn('Session cloud locale indisponible', error); }
+    return session;
   }
 
   function saveSession(value) {
     session = value;
-    if (value) localStorage.setItem(SESSION_KEY, JSON.stringify(value));
-    else localStorage.removeItem(SESSION_KEY);
+    const serialized = value ? JSON.stringify(value) : '';
+    try {
+      if (value) localStorage.setItem(SESSION_KEY, serialized);
+      else localStorage.removeItem(SESSION_KEY);
+    } catch {
+      // Tous les BI GitHub Pages du domaine partagent le même petit quota localStorage.
+      try {
+        if (value) sessionStorage.setItem(SESSION_KEY, serialized);
+        else sessionStorage.removeItem(SESSION_KEY);
+      } catch {}
+    }
+    if (value) metaStore('readwrite', store => store.put(value, SESSION_KEY)).catch(error => console.warn('Session cloud non persistée', error));
+    else metaStore('readwrite', store => store.delete(SESSION_KEY)).catch(() => {});
     renderStatus();
   }
 
@@ -349,8 +393,9 @@
   window.addEventListener('online', () => { if (session) initialSync().catch(showCloudError); });
   document.addEventListener('visibilitychange', () => { if (!document.hidden) pullIfNewer(); });
   window.addEventListener('storage', event => { if (event.key === DATA_KEY) pullIfNewer(); });
-  window.addEventListener('DOMContentLoaded', () => {
+  window.addEventListener('DOMContentLoaded', async () => {
     addInterface();
+    await restoreStoredSession();
     if (session) initialSync().catch(showCloudError);
     setInterval(pullIfNewer, 30000);
   });
