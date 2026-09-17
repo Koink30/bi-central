@@ -52,10 +52,10 @@
 +  }
   @media(display-mode:standalone){#pwa-install{display:none!important}}
   @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto!important}}
-</style></head><body><div id="root"></div><noscript>Activez JavaScript pour utiliser ce BI.</noscript><script src="./storage-bridge.js?v=17"></script><script>
+</style></head><body><div id="root"></div><noscript>Activez JavaScript pour utiliser ce BI.</noscript><script src="./storage-bridge.js?v=18"></script><script>
 window.caveAppReady=Promise.resolve(window.caveStorageReady).then(()=>new Promise((resolve,reject)=>{
   const runtime=document.createElement('script');
-  runtime.src='./app.js?v=17';
+  runtime.src='./app.js?v=18';
   runtime.onload=()=>{window.dispatchEvent(new CustomEvent('cave-app-ready'));resolve();};
   runtime.onerror=()=>reject(new Error('Chargement du moteur BI impossible'));
   document.body.append(runtime);
@@ -229,4 +229,4 @@ lucide-react/dist/esm/lucide-react.mjs:
   };
   window.addEventListener("load",openShortcut);
 })();
-</script><script src="./cloud-sync.js?v=17" defer></script><script src="./catalog-photos.js?v=17" defer></script></body></html>
+</script><script src="./cloud-sync.js?v=18" defer></script><script src="./catalog-photos.js?v=18" defer></script></body></html>
