@@ -180,10 +180,16 @@
     applyingCloud = false;
     dirty = false;
     setCloudState('Données cloud chargées', 'ok');
-    // Le moteur du BI écoute déjà cet événement et relit son état. Cela met
-    // l'interface à jour sans recharger la page, y compris dans la PWA iOS où
-    // sessionStorage peut disparaître pendant un rechargement.
-    window.dispatchEvent(new Event('cave-restored'));
+    // Le moteur conserve une copie de l'état en mémoire : un rechargement est
+    // nécessaire pour afficher l'instantané reçu. La révision est inscrite
+    // dans l'URL afin qu'une même version ne puisse jamais relancer la page en
+    // boucle, même si sessionStorage est vidé par iOS.
+    const revision = String(Number(remote.revision || 0));
+    const nextUrl = new URL(location.href);
+    if (revision !== '0' && nextUrl.searchParams.get('cloud_revision') !== revision) {
+      nextUrl.searchParams.set('cloud_revision', revision);
+      location.replace(nextUrl.toString());
+    }
   }
 
   function hasUsefulLocalData(snapshot) {
