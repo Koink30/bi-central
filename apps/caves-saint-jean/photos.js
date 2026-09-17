@@ -23,8 +23,14 @@ $('file').onchange=async event=>{const file=event.target.files?.[0];if(!file)ret
 $('search').oninput=()=>{selected=null;$('selection').hidden=true;showMatches();updateLinks();};for(const id of ['title','appellation','vintage','ean'])$(id).oninput=updateLinks;
 $('save').onclick=async()=>{if(!photoBlob){setMessage('Prends ou choisis une photo avant de l’enregistrer.',true);return;}try{const id=editing?.id||crypto.randomUUID();const record={id,productId:selected?.id||null,blob:photoBlob,created:editing?.created||Date.now()};for(const key of ['title','notes','vintage','appellation','ean'])record[key]=$(key).value.trim();await storage('readwrite',s=>s.put(record));window.dispatchEvent(new CustomEvent('cave-photo-changed',{detail:{id}}));editing=record;$('save').textContent='Enregistrer les modifications';setMessage(selected?`Photo liée à ${selected.id} et enregistrée.`:'Photo conservée sans référence.');await gallery();}catch(e){setMessage('Enregistrement impossible : '+e.message,true);} };
 $('clear').onclick=()=>{selected=null;photoBlob=null;editing=null;for(const id of ['file','search','title','notes','vintage','appellation','ean'])$(id).value='';$('preview').hidden=true;$('size').textContent='';$('selection').hidden=true;$('match').textContent='Choisis une référence pour voir ses informations actuelles.';$('save').textContent='Enregistrer la photo';setMessage('Prêt pour une nouvelle bouteille.');updateLinks();};
-window.addEventListener('pageshow',()=>{catalogue();});
+window.addEventListener('pageshow',()=>{Promise.resolve(window.caveStorageReady).then(catalogue);});
 const count=document.createElement('p');count.id='catalog-count';count.className='muted';count.textContent='Chargement du catalogue…';$('search').closest('.field').insertBefore(count,$('results'));
 const createLink=document.createElement('a');createLink.href='./?newProduct=1';createLink.className='action secondary';createLink.textContent='＋ Créer un produit dans le BI';createLink.style.marginTop='10px';$('search').closest('.field').append(createLink);
 window.addEventListener('cave-photos-synced',()=>gallery().catch(()=>{}));
-catalogue();updateLinks();gallery().catch(e=>setMessage('Stockage photo indisponible : '+e.message,true));
+async function start() {
+  if (window.caveStorageReady) await window.caveStorageReady;
+  await catalogue();
+  updateLinks();
+  await gallery();
+}
+start().catch(e=>setMessage('Stockage local indisponible : '+e.message,true));
