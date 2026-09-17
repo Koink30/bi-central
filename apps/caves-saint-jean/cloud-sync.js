@@ -171,7 +171,7 @@
     pushTimer = setTimeout(() => pushSnapshot().catch(showCloudError), 1200);
   }
 
-  async function applyRemote(remote, reload = true) {
+  async function applyRemote(remote) {
     if (!remote?.state) return;
     applyingCloud = true;
     localStorage.setItem(DATA_KEY, JSON.stringify(remote.state));
@@ -180,16 +180,10 @@
     applyingCloud = false;
     dirty = false;
     setCloudState('Données cloud chargées', 'ok');
-    if (reload) {
-      const guard = `cave-cloud-reload-${remote.revision || 0}`;
-      let alreadyReloaded = false;
-      try {
-        alreadyReloaded = sessionStorage.getItem(guard) === '1';
-        sessionStorage.setItem(guard, '1');
-      } catch {}
-      if (!alreadyReloaded) location.reload();
-      else setCloudState('Synchronisé', 'ok');
-    }
+    // Le moteur du BI écoute déjà cet événement et relit son état. Cela met
+    // l'interface à jour sans recharger la page, y compris dans la PWA iOS où
+    // sessionStorage peut disparaître pendant un rechargement.
+    window.dispatchEvent(new Event('cave-restored'));
   }
 
   function hasUsefulLocalData(snapshot) {
@@ -318,8 +312,12 @@
   function installStorageWatcher() {
     const original = Storage.prototype.setItem;
     Storage.prototype.setItem = function (key, value) {
+      const watched = this === localStorage && key === DATA_KEY;
+      const previous = watched ? this.getItem(key) : null;
       original.call(this, key, value);
-      if (this === localStorage && key === DATA_KEY) schedulePush();
+      // Le moteur peut réécrire le même instantané pendant son démarrage.
+      // Ne pas créer une nouvelle révision cloud si rien n'a changé.
+      if (watched && previous !== String(value)) schedulePush();
     };
   }
 
