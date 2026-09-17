@@ -175,6 +175,7 @@
     if (!remote?.state) return;
     applyingCloud = true;
     localStorage.setItem(DATA_KEY, JSON.stringify(remote.state));
+    if (window.caveStorageFlush) await window.caveStorageFlush();
     writeSmallValue(CLOUD_REV_KEY, remote.revision || 0);
     applyingCloud = false;
     dirty = false;
@@ -416,10 +417,14 @@
   window.addEventListener('online', () => { if (session) initialSync().catch(showCloudError); });
   document.addEventListener('visibilitychange', () => { if (!document.hidden) pullIfNewer(); });
   window.addEventListener('storage', event => { if (event.key === DATA_KEY) pullIfNewer(); });
-  window.addEventListener('DOMContentLoaded', async () => {
+  async function bootCloud() {
+    if (window.caveStorageReady) await window.caveStorageReady;
+    if (window.caveAppReady) await window.caveAppReady;
     addInterface();
     await restoreStoredSession();
     if (session) initialSync().catch(showCloudError);
     setInterval(pullIfNewer, 30000);
-  });
+  }
+  if (document.readyState === 'loading') window.addEventListener('DOMContentLoaded', bootCloud, { once: true });
+  else bootCloud().catch(error => console.error('Démarrage cloud impossible', error));
 })();
