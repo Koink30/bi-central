@@ -101,8 +101,10 @@
         try {
           status.textContent = 'Enregistrement de la photo…';
           const blob = await compress(file);
-          await savePhoto({ id: crypto.randomUUID(), productId: activeId, title: '', notes: '', blob, created: Date.now() });
-          status.textContent = 'Photo enregistrée et liée à cette fiche sur cet appareil.';
+          const id = crypto.randomUUID();
+          await savePhoto({ id, productId: activeId, title: '', notes: '', blob, created: Date.now() });
+          window.dispatchEvent(new CustomEvent('cave-photo-changed', { detail: { id } }));
+          status.textContent = 'Photo enregistrée et liée à cette fiche.';
           await reload();
         } catch (error) { status.textContent = `Photo non enregistrée : ${error.message}`; }
       };
@@ -131,6 +133,7 @@
   // Radix renders product dialogs in a portal under body, outside #root.
   new MutationObserver(schedule).observe(document.body, { childList: true, subtree: true });
   window.addEventListener('pageshow', reload);
+  window.addEventListener('cave-photos-synced', reload);
   document.addEventListener('visibilitychange', () => { if (!document.hidden) reload(); });
   reload();
 })();
