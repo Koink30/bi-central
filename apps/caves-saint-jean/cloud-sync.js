@@ -27,6 +27,11 @@
     } catch { return null; }
   }
 
+  function writeSmallValue(key, value) {
+    try { localStorage.setItem(key, String(value)); }
+    catch { try { sessionStorage.setItem(key, String(value)); } catch {} }
+  }
+
   function openMetaDB() {
     return new Promise((resolve, reject) => {
       const request = indexedDB.open(META_DB, 1);
@@ -129,7 +134,13 @@
   }
 
   function localSnapshot() { return readJson(DATA_KEY); }
-  function cloudRevision() { return Number(localStorage.getItem(CLOUD_REV_KEY) || 0); }
+  function cloudRevision() {
+    let persistent = 0;
+    let temporary = 0;
+    try { persistent = Number(localStorage.getItem(CLOUD_REV_KEY) || 0); } catch {}
+    try { temporary = Number(sessionStorage.getItem(CLOUD_REV_KEY) || 0); } catch {}
+    return Math.max(persistent, temporary);
+  }
 
   async function getRemoteSnapshot() {
     const rows = await api('/rest/v1/cave_snapshots?select=revision,state,updated_at&limit=1');
@@ -148,7 +159,7 @@
       headers: { Prefer: 'resolution=merge-duplicates,return=representation' },
       body: JSON.stringify({ user_id: session.user.id, revision, state: snapshot, updated_at: new Date().toISOString() })
     });
-    localStorage.setItem(CLOUD_REV_KEY, String(response?.[0]?.revision || revision));
+    writeSmallValue(CLOUD_REV_KEY, response?.[0]?.revision || revision);
     dirty = false;
     setCloudState('Synchronisé', 'ok');
   }
@@ -164,7 +175,7 @@
     if (!remote?.state) return;
     applyingCloud = true;
     localStorage.setItem(DATA_KEY, JSON.stringify(remote.state));
-    localStorage.setItem(CLOUD_REV_KEY, String(remote.revision || 0));
+    writeSmallValue(CLOUD_REV_KEY, remote.revision || 0);
     applyingCloud = false;
     dirty = false;
     setCloudState('Données cloud chargées', 'ok');
@@ -179,7 +190,9 @@
   async function initialSync() {
     if (!session) return;
     setCloudState('Connexion au cloud…', 'busy');
-    const [remote] = await Promise.all([getRemoteSnapshot(), syncAllPhotos()]);
+    // Les données métier ne doivent jamais attendre le téléchargement des photos.
+    const remote = await getRemoteSnapshot();
+    syncAllPhotos().catch(error => console.warn('Synchronisation des photos différée', error));
     const local = localSnapshot();
     if (!remote) {
       await pushSnapshot();
@@ -190,7 +203,7 @@
       return;
     }
     if (JSON.stringify(local) === JSON.stringify(remote.state)) {
-      localStorage.setItem(CLOUD_REV_KEY, String(remote.revision || 0));
+      writeSmallValue(CLOUD_REV_KEY, remote.revision || 0);
       setCloudState('Synchronisé', 'ok');
       return;
     }
@@ -203,6 +216,16 @@
       const remote = await getRemoteSnapshot();
       if (remote && Number(remote.revision) > cloudRevision()) await applyRemote(remote);
     } catch (error) { console.warn('Lecture cloud impossible', error); }
+  }
+
+  async function synchronizeNow() {
+    const remote = await getRemoteSnapshot();
+    if (remote && Number(remote.revision) > cloudRevision()) {
+      await applyRemote(remote);
+      return;
+    }
+    await pushSnapshot();
+    syncAllPhotos().catch(error => console.warn('Synchronisation des photos différée', error));
   }
 
   function openPhotoDB() {
@@ -344,7 +367,7 @@
         <p>Les données et les photos sont synchronisées avec les autres appareils utilisant ce même compte.</p>
         <div class="cloud-actions"><button id="cloud-sync-now">Synchroniser maintenant</button><button id="cloud-logout" class="secondary">Se déconnecter</button><button id="cloud-close" class="secondary">Fermer</button></div>
         <p id="cloud-sync-message"></p>`;
-      document.getElementById('cloud-sync-now').onclick = async () => { try { await pushSnapshot(); await syncAllPhotos(); document.getElementById('cloud-sync-message').textContent = 'Synchronisation terminée.'; } catch (e) { document.getElementById('cloud-sync-message').textContent = e.message; showCloudError(e); } };
+      document.getElementById('cloud-sync-now').onclick = async () => { try { await synchronizeNow(); document.getElementById('cloud-sync-message').textContent = 'Données synchronisées. Les photos continuent en arrière-plan.'; } catch (e) { document.getElementById('cloud-sync-message').textContent = e.message; showCloudError(e); } };
       document.getElementById('cloud-logout').onclick = () => { saveSession(null); closePanel(); };
       document.getElementById('cloud-close').onclick = closePanel;
       return;
