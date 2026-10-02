@@ -1,0 +1,19 @@
+{
+  "name": "Réservation matériel — Le Merlet",
+  "short_name": "Matériel Merlet",
+  "description": "Planning partagé de réservation du matériel, véhicules, salles et équipements du Merlet.",
+  "id": "./",
+  "start_url": "./?source=pwa",
+  "scope": "./",
+  "display": "standalone",
+  "display_override": ["standalone", "minimal-ui"],
+  "orientation": "any",
+  "background_color": "#f4f7f6",
+  "theme_color": "#0f766e",
+  "lang": "fr-FR",
+  "categories": ["business", "productivity"],
+  "shortcuts": [
+    {"name":"Frise","short_name":"Frise","url":"./?source=pwa#timeline"},
+    {"name":"Matériel","short_name":"Matériel","url":"./?source=pwa#inventory"}
+  ]
+}
