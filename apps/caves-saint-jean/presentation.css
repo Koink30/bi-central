@@ -18,3 +18,21 @@ html,body{background:var(--cave-paper);color:var(--cave-ink)}
  #cave-mobile-nav{display:flex;position:fixed;bottom:0;left:0;right:0;z-index:800;background:#fff;border-top:1px solid #e4dcd6;padding:7px 4px calc(7px + env(safe-area-inset-bottom));box-shadow:0 -3px 20px #00000008}#cave-mobile-nav button{flex:1;min-width:0;min-height:47px;font:600 11px system-ui;color:#77707a;border-radius:9px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px}#cave-mobile-nav svg{width:19px;height:19px}#cave-mobile-nav button[aria-current=page]{color:#702b43;background:#f3e9ed}.cave-show-animation .wine-hero{height:160px!important}.cave-help-card{padding:20px}.process-strip{grid-template-columns:1fr!important}.cave-dialog{max-width:100vw!important;width:100vw!important;max-height:100dvh!important;overflow-y:auto!important}#cloud-sync-panel .cloud-card{max-height:90dvh;overflow:auto}
 }
 @media print{#cave-tools,#cave-mobile-nav,#cave-help,.cave-intro,#cave-pending{display:none!important}}
+
+@media(max-width:767px){
+ #cave-tools [aria-pressed]{display:none}
+ body[data-cave-page="products"] .workspace>section.panel:first-of-type [data-slot="table-container"]{overflow:visible}
+ body[data-cave-page="products"] .workspace>section.panel:first-of-type table{display:block;min-width:0!important;width:100%}
+ body[data-cave-page="products"] .workspace>section.panel:first-of-type thead{display:none}
+ body[data-cave-page="products"] .workspace>section.panel:first-of-type tbody{display:block}
+ body[data-cave-page="products"] .workspace>section.panel:first-of-type tbody tr{display:grid;grid-template-columns:1fr 1fr;padding:14px 12px;gap:10px;border-bottom:1px solid #e7e0dc}
+ body[data-cave-page="products"] .workspace>section.panel:first-of-type tbody td{padding:0!important;border:0;white-space:normal!important;text-align:left!important;min-width:0}
+ body[data-cave-page="products"] .workspace>section.panel:first-of-type tbody td:first-child,body[data-cave-page="products"] .workspace>section.panel:first-of-type tbody td:last-child{grid-column:1/-1}
+ body[data-cave-page="products"] .workspace>section.panel:first-of-type tbody td:nth-child(2)::before{content:"Format"}
+ body[data-cave-page="products"] .workspace>section.panel:first-of-type tbody td:nth-child(3)::before{content:"Prix TTC"}
+ body[data-cave-page="products"] .workspace>section.panel:first-of-type tbody td:nth-child(4)::before{content:"Stock physique"}
+ body[data-cave-page="products"] .workspace>section.panel:first-of-type tbody td:nth-child(5)::before{content:"Disponible"}
+ body[data-cave-page="products"] .workspace>section.panel:first-of-type tbody td::before{display:block;font:600 11px system-ui;color:#82747a;margin-bottom:4px}
+ body[data-cave-page="products"] .workspace>section.panel:first-of-type .product-title{align-items:flex-start}
+ body[data-cave-page="products"] .workspace>section.panel:first-of-type .product-link{white-space:normal;line-height:1.4;text-align:left}
+}
