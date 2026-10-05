@@ -22,6 +22,7 @@
   let membership = null;
   let refreshPromise = null;
   let syncPromise = null;
+  let queuedPush = false;
   window.caveAccount = { role: 'local', email: '' };
   function ownerId() { return membership?.owner_id || session?.user?.id; }
   async function loadMembership() {
@@ -86,6 +87,7 @@
       window.caveAccount = { role: 'local', email: '' };
       window.dispatchEvent(new CustomEvent('cave-account-changed'));
     }
+    if (!value) { clearTimeout(pushTimer); queuedPush = false; try { sessionStorage.removeItem(SESSION_KEY); } catch {} }
     const serialized = value ? JSON.stringify(value) : '';
     try {
       if (value) localStorage.setItem(SESSION_KEY, serialized);
@@ -177,14 +179,14 @@
     return rows?.[0] || null;
   }
 
-  async function pushSnapshot() {
+  async function pushSnapshot(allowRevision = null) {
     if (!session || !membership || applyingCloud) return;
     const snapshot = localSnapshot();
     const serialized = JSON.stringify(snapshot);
     if (!snapshot) return;
     setCloudState('Synchronisation…', 'busy');
     const remote = await getRemoteSnapshot();
-    if (remote && Number(remote.revision) > cloudRevision()) { showConflict(remote); return; }
+    if (remote && Number(remote.revision) > cloudRevision() && Number(remote.revision) !== allowRevision) { showConflict(remote); return; }
     const revision = Math.max(cloudRevision(), Number(remote?.revision || 0)) + 1;
     const response = await api(remote ? '/rest/v1/cave_snapshots?user_id=eq.' + ownerId() + '&revision=eq.' + remote.revision : '/rest/v1/cave_snapshots?on_conflict=user_id', {
       method: remote ? 'PATCH' : 'POST',
@@ -202,7 +204,7 @@
     if (!session || !membership || applyingCloud) return;
     dirty = true;
     clearTimeout(pushTimer);
-    pushTimer = setTimeout(() => { if (!syncPromise) syncPromise = pushSnapshot().catch(showCloudError).finally(() => { syncPromise = null; }); }, 1200);
+    pushTimer = setTimeout(() => { if (syncPromise) { queuedPush = true; return; } syncPromise = pushSnapshot().catch(showCloudError).finally(() => { syncPromise = null; if (queuedPush) { queuedPush = false; schedulePush(); } }); }, 1200);
   }
 
   async function applyRemote(remote) {
@@ -450,7 +452,7 @@
     content.innerHTML = `<p><strong>Des données différentes existent déjà.</strong></p><p>Choisis la version à conserver pour éviter tout écrasement involontaire.</p>
       <div class="cloud-actions"><button id="use-cloud">Charger la version cloud</button><button id="use-device" class="danger">Envoyer cet appareil</button></div><p id="cloud-sync-message"></p>`;
     document.getElementById('use-cloud').onclick = () => applyRemote(remote);
-    document.getElementById('use-device').onclick = async () => { try { await pushSnapshot(); closePanel(); } catch (e) { document.getElementById('cloud-sync-message').textContent = e.message; } };
+    document.getElementById('use-device').onclick = async () => { try { await pushSnapshot(Number(remote.revision)); if (!dirty) closePanel(); } catch (e) { document.getElementById('cloud-sync-message').textContent = e.message; } };
   }
 
   function escapeHtml(value) {
