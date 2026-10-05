@@ -27,10 +27,16 @@ jobs:
       - name: Setup Pages
         uses: actions/configure-pages@v5
 
+      - name: Preserve existing and app-prefixed URLs
+        run: |
+          mkdir -p _pages
+          cp -a apps/. _pages/
+          cp -a apps _pages/apps
+
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: ./apps
+          path: ./_pages
           name: github-pages-${{ github.run_id }}-${{ github.run_attempt }}
 
       - name: Deploy to GitHub Pages
