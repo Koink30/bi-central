@@ -1,4 +1,4 @@
-const CACHE = "caves-saint-jean-v23.2";
+const CACHE = "caves-saint-jean-v23.3";
 const APP_SHELL = ["./", "./index.html", "./app.js?v=23", "./storage-bridge.js?v=23", "./cloud-sync.js?v=23", "./catalog-photos.js?v=23", "./presentation.css?v=23.1", "./presentation.js?v=23", "./catalog-default.json", "./photos.html", "./photos.html?v=23", "./photos.js?v=23", "./manifest.webmanifest", "./offline.html", "./icon-192.png", "./icon-512.png", "./apple-touch-icon.png"];
 
 self.addEventListener("install", event => {
