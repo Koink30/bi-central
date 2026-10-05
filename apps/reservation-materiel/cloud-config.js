@@ -1,10 +1,9 @@
-/* Configuration cloud — complétée quand le projet Supabase dédié sera créé.
-   La publishable key est conçue pour être exposée côté navigateur.
-   Ne jamais mettre une service_role dans ce fichier. */
+/* Configuration cloud — Réservation matériel.
+   La publishable key est publique par conception. Aucune service_role ici. */
 window.MERLET_CLOUD_CONFIG = {
-  enabled: false,
-  url: "",
-  publishableKey: "",
+  enabled: true,
+  url: "https://snapiecoesgrfjscwfkq.supabase.co",
+  publishableKey: "sb_publishable_Q9N9w0GrBMe0sAZjKkWkHQ_7RUCZRC1",
   stateTable: "material_reservation_state",
   stateId: "shared",
   pollMs: 12000
