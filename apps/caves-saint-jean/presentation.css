@@ -91,3 +91,5 @@ html[data-cave-theme] .cave-intro{position:relative;overflow:hidden;background:v
 html[data-cave-theme] .mouse-picker-menu .cave-option-active{background:var(--cave-soft);color:var(--cave-accent)}
 @media(max-width:767px){.cave-add-client span{display:none}.cave-add-client{width:44px;font-size:22px}.cave-loyalty{padding:14px}.cave-loyalty-head{align-items:flex-start;flex-wrap:wrap}.cave-stamps{gap:7px}.cave-stamp{width:32px;height:32px}.cave-client-fields{padding:12px}.cave-loyalty-settings .padded{padding:14px}.mouse-picker-menu{max-height:240px}}
 @media print{.cave-quick-client,.cave-client-fields,.cave-loyalty-settings{display:none!important}}
+
+@media(max-width:767px){.cave-dialog{translate:none!important;transform:none!important}}
