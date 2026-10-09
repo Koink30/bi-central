@@ -67,7 +67,7 @@ window.caveStorageReady=Promise.resolve();
 </script><div style="background:#441522;color:white;padding:6px;text-align:center;font:600 12px system-ui">SIMULATION — données fictives, aucune synchronisation</div><div id="root"></div><noscript>Activez JavaScript pour utiliser ce BI.</noscript><script src="./loyalty.js?v=24"></script><script src="./checkout-ui.js?v=24"></script><script>
 window.caveAppReady=Promise.resolve(window.caveStorageReady).then(()=>new Promise((resolve,reject)=>{
   const runtime=document.createElement('script');
-  runtime.src='./app.js?v=24';
+  runtime.src='./app.js?v=24.1';
   runtime.onload=()=>{window.dispatchEvent(new CustomEvent('cave-app-ready'));resolve();};
   runtime.onerror=()=>reject(new Error('Chargement du moteur BI impossible'));
   document.body.append(runtime);
