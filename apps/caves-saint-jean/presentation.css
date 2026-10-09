@@ -76,3 +76,18 @@ html[data-cave-theme] .cave-intro{position:relative;overflow:hidden;background:v
 @media screen{html[data-cave-theme]{background:var(--cave-paper);color:var(--cave-ink)}.cave-photo-page :is(.card,.photo,.results button){background:var(--cave-surface);color:var(--cave-ink);border-color:var(--cave-line)}.cave-photo-page :is(input,textarea,select){background:var(--cave-surface);color:var(--cave-ink);border-color:var(--cave-line)}.cave-photo-page :is(.muted,.results small){color:var(--cave-muted)}.cave-photo-page a{color:var(--cave-accent)}.cave-photo-page :is(button,.action){background:var(--cave-button);color:var(--cave-on-button)}.cave-photo-page :is(.secondary,.notice,.preview){background:var(--cave-soft);color:var(--cave-accent)}.cave-photo-page .danger{background:var(--cave-error-bg);color:var(--cave-error)}.cave-photo-page .results button{background:var(--cave-surface);color:var(--cave-ink)}.cave-photo-page .results button:hover{background:var(--cave-soft)}}
 
 @media screen{body:has(.cave-dialog[data-state="open"]) #cave-tools{visibility:hidden}}
+
+/* Checkout: creation on the spot and a quiet card matching every atmosphere. */
+.cave-client-pick{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:9px;align-items:start}
+.cave-quick-client{display:contents}.cave-add-client{min-height:42px!important;gap:6px;white-space:nowrap}
+.cave-client-fields{grid-column:1/-1;margin:4px 0 12px;padding:16px;border:1px solid var(--cave-line);border-radius:12px;background:var(--cave-soft);min-width:0}
+.cave-client-fields legend{font-weight:700;padding:0 6px}.cave-client-fields .form-grid{gap:10px}.cave-client-fields p{font-size:13px;margin:0 0 12px}
+.cave-loyalty{background:var(--cave-surface);border:1px solid var(--cave-line);border-left:4px solid var(--cave-accent);border-radius:14px;padding:18px 20px;margin:18px 0;color:var(--cave-ink)}
+.cave-loyalty.compact{padding:12px 16px}.cave-loyalty.compact p{margin:4px 0;font-size:13px;color:var(--cave-muted)}
+.cave-loyalty-head{display:flex;align-items:center;justify-content:space-between;gap:12px}.cave-loyalty-head small{font-size:10px;letter-spacing:1.6px;color:var(--cave-accent)}.cave-loyalty h3{font-size:19px;margin:3px 0 8px}
+.cave-stamps{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0}.cave-stamp{width:36px;height:36px;display:grid;place-items:center;border:1px dashed var(--cave-line);border-radius:50%;color:var(--cave-muted);background:var(--cave-paper);font-size:13px}.cave-stamp.filled{border:2px solid var(--cave-accent);background:var(--cave-soft);color:var(--cave-accent);font-size:21px;transform:rotate(-8deg)}
+.cave-card-status{font-weight:650;font-size:14px;margin:8px 0}.cave-muted{color:var(--cave-muted);font-size:13px;line-height:1.55}.cave-reward-choice{font-weight:650}.cave-reward-choice input{width:20px;height:20px;accent-color:var(--cave-button)}.cave-reward-saving{color:var(--cave-accent);font-weight:700;margin:8px 0}
+.cave-loyalty-settings .padded{padding:20px}.cave-loyalty-settings .tick input{width:18px;height:18px;accent-color:var(--cave-button)}
+html[data-cave-theme] .mouse-picker-menu .cave-option-active{background:var(--cave-soft);color:var(--cave-accent)}
+@media(max-width:767px){.cave-add-client span{display:none}.cave-add-client{width:44px;font-size:22px}.cave-loyalty{padding:14px}.cave-loyalty-head{align-items:flex-start;flex-wrap:wrap}.cave-stamps{gap:7px}.cave-stamp{width:32px;height:32px}.cave-client-fields{padding:12px}.cave-loyalty-settings .padded{padding:14px}.mouse-picker-menu{max-height:240px}}
+@media print{.cave-quick-client,.cave-client-fields,.cave-loyalty-settings{display:none!important}}
