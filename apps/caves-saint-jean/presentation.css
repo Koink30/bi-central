@@ -93,3 +93,5 @@ html[data-cave-theme] .mouse-picker-menu .cave-option-active{background:var(--ca
 @media print{.cave-quick-client,.cave-client-fields,.cave-loyalty-settings{display:none!important}}
 
 @media(max-width:767px){.cave-dialog{translate:none!important;transform:none!important}}
+
+@media(max-width:767px){body:has(.cave-dialog[data-state="open"]) #cave-mobile-nav{visibility:hidden}}

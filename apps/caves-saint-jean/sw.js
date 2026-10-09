@@ -1,5 +1,5 @@
-const CACHE = "caves-saint-jean-v24.2";
-const APP_SHELL = ["./loyalty.js?v=24", "./checkout-ui.js?v=24", "./", "./index.html", "./app.js?v=24.1", "./storage-bridge.js?v=24", "./cloud-sync.js?v=24", "./catalog-photos.js?v=24", "./presentation.css?v=24.3", "./presentation.js?v=24", "./catalog-default.json", "./photos.html", "./photos.html?v=24", "./photos.js?v=24", "./manifest.webmanifest", "./offline.html", "./icon-192.png", "./icon-512.png", "./apple-touch-icon.png"];
+const CACHE = "caves-saint-jean-v24.3";
+const APP_SHELL = ["./loyalty.js?v=24", "./checkout-ui.js?v=24", "./", "./index.html", "./app.js?v=24.1", "./storage-bridge.js?v=24", "./cloud-sync.js?v=24", "./catalog-photos.js?v=24", "./presentation.css?v=24.4", "./presentation.js?v=24", "./catalog-default.json", "./photos.html", "./photos.html?v=24", "./photos.js?v=24", "./manifest.webmanifest", "./offline.html", "./icon-192.png", "./icon-512.png", "./apple-touch-icon.png"];
 
 self.addEventListener("install", event => {
   event.waitUntil(caches.open(CACHE).then(cache => cache.addAll(APP_SHELL)).then(() => self.skipWaiting()));
