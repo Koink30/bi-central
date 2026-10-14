@@ -10,7 +10,7 @@ const LIB_FALLBACK='https://unpkg.com/@zxing/browser@0.1.5/umd/zxing-browser.min
 const PHOTO_DB='caves-saint-jean-photos', PHOTO_STORE='photos';
 const $=id=>document.getElementById(id);
 let layer=null,video=null,reader=null,controls=null,streaming=false,loading=false;
-let currentCode='',foundProduct=null,photoFile=null,photoURL='',binding=false;
+let currentCode='',foundProduct=null,photoFile=null,photoURL='',binding=false,proposal=null,qrUrl='';
 const uiCss=`
 .cave-scan-launch{display:inline-flex!important;align-items:center;justify-content:center;border:1px solid #b99a60!important;border-radius:10px!important;background:#294539!important;color:#fff!important;padding:10px 13px!important;font-weight:700!important;cursor:pointer}
 #cave-scan-layer{display:none;position:fixed;inset:0;background:#07100cce;z-index:2147483500;align-items:center;justify-content:center;padding:12px;overflow-y:auto}
@@ -46,7 +46,7 @@ const uiCss=`
 .csm-small-action{border:0!important;background:none!important;color:#e9d19c!important;padding:7px 0!important;font-size:13px!important;text-decoration:underline}
 .csm-photo-preview{display:none;width:100%;max-height:150px;object-fit:contain;border-radius:10px;background:#0c1711;margin:8px 0}
 .csm-photo-preview.visible{display:block}
-.csm-notice{font-size:12px;color:#c4d0c4;margin-top:9px}
+.csm-notice{font-size:12px;color:#c4d0c4;margin-top:9px}.csm-proposal{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin:12px 0}.csm-proposal label{display:block;color:#cbd9ce;font-size:12px}.csm-proposal input{width:100%;box-sizing:border-box;border:1px solid #acc0ab;border-radius:8px;padding:9px;background:#fffdf4;color:#1d2d22;font:15px system-ui}.csm-qr-link{color:#f1d18d;overflow-wrap:anywhere;font-size:13px;display:block;margin-top:8px}@media(max-width:500px){.csm-proposal{grid-template-columns:1fr}}
 .csm-line{border-top:1px solid #b4c0af36;margin:13px 0}
 @media(max-width:580px){#cave-scan-layer{padding:0;align-items:stretch}#cave-scan-modal{height:100dvh;max-height:100dvh;border-radius:0}.csm-content{padding:8px 15px 25px}.csm-top{padding:16px 15px 8px}.csm-main-actions{grid-template-columns:1fr}}
 `;
@@ -58,7 +58,7 @@ function makeUI(){
  <section id="cave-scan-modal" role="dialog" aria-modal="true" aria-label="Identifier une bouteille">
   <header class="csm-top"><div><span class="csm-kicker">Les Caves de Saint-Jean</span><h2>Ajouter une bouteille</h2><div class="csm-sub">Scanner, retrouver ou créer une référence.</div></div><button class="csm-close" id="csm-close" type="button" aria-label="Fermer">✕</button></header>
   <div class="csm-content">
-   <div class="csm-main-actions"><button class="csm-primary" id="csm-scan" type="button">▣ Scanner le code-barres</button><button class="csm-ghost" id="csm-photo" type="button">📷 Prendre une photo</button></div>
+   <div class="csm-main-actions"><button class="csm-primary" id="csm-scan" type="button">▣ Scanner QR / code-barres</button><button class="csm-ghost" id="csm-photo" type="button">📷 Prendre une photo</button></div>
    <input type="file" id="csm-file" accept="image/*" capture="environment" hidden>
    <div class="csm-video-wrap" id="csm-video-wrap"><video id="csm-video" autoplay muted playsinline></video><span class="csm-target"></span></div>
    <img id="csm-photo-preview" class="csm-photo-preview" alt="Photo de la bouteille choisie">
@@ -66,9 +66,9 @@ function makeUI(){
     <div class="csm-code"><input id="csm-ean" class="csm-input" inputmode="numeric" autocomplete="off" placeholder="Chiffres sous les barres"><button class="csm-ghost" id="csm-find" type="button">Rechercher</button></div>
    </label>
    <div id="csm-status" class="csm-status" role="status" aria-live="polite">Scannez le code-barres au dos de la bouteille, ou créez une fiche sans code.</div>
-   <section id="csm-result" class="csm-result"><div class="csm-kicker">FICHE PRODUIT</div><div class="csm-muted">Aucune bouteille sélectionnée.</div></section>
+   <section id="csm-result" class="csm-result"><div class="csm-kicker">FICHE PRODUIT</div><div class="csm-muted">Aucune bouteille sélectionnée.</div></section><section id="csm-proposal" hidden></section>
    <div class="csm-footer"><button class="csm-primary" id="csm-new" type="button">＋ Créer une fiche produit</button><button class="csm-ghost" id="csm-open" type="button" hidden>Ouvrir la fiche existante</button></div>
-   <div class="csm-notice">Pas de recherche Internet ni d'OCR approximatif. Les prix et les stocks restent sous votre contrôle. Enregistrer la fiche valide l'ajout.</div>
+   <div class="csm-notice">Recherche des informations publiques du vin : proposition à vérifier. Prix et stocks restent sous votre contrôle.</div>
   </div>
  </section>`;
  document.body.append(layer);
@@ -80,7 +80,7 @@ function makeUI(){
  $('csm-file').onchange=onPhoto;
  $('csm-find').onclick=()=>lookup($('csm-ean').value);
  $('csm-ean').addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();lookup(e.target.value)}});
- $('csm-ean').oninput=()=>{currentCode='';foundProduct=null;renderResult()};
+ $('csm-ean').oninput=()=>{currentCode='';foundProduct=null;proposal=null;qrUrl='';renderResult()};
  $('csm-new').onclick=()=>beginCreation();
  $('csm-open').onclick=openExisting;
  document.addEventListener('keydown',e=>{if(e.key==='Escape'&&layer.classList.contains('open'))close()});
@@ -105,7 +105,7 @@ function clearPhoto(){
  const img=$('csm-photo-preview');if(img){img.removeAttribute('src');img.classList.remove('visible')}
 }
 function reset(){
- stopCamera();clearPhoto();currentCode='';foundProduct=null;
+ stopCamera();clearPhoto();currentCode='';foundProduct=null;proposal=null;qrUrl='';
  $('csm-ean').value='';$('csm-file').value='';renderResult();
  status('Prêt. Scannez un code-barres ou créez une fiche sans code.');
 }
@@ -113,7 +113,7 @@ function stopCamera(){
  streaming=false;try{controls?.stop()}catch{}controls=null;
  if(video?.srcObject){for(const track of video.srcObject.getTracks())track.stop();video.srcObject=null}
  $('csm-video-wrap')?.classList.remove('active');
- if($('csm-scan'))$('csm-scan').textContent='▣ Scanner le code-barres';
+ if($('csm-scan'))$('csm-scan').textContent='▣ Scanner QR / code-barres';
 }
 let libraryPromise=null;
 function loadLibrary(){
@@ -151,7 +151,7 @@ async function startCamera(){
    if(!text)return;
    stopCamera();
    if(gtinValid(text)){try{navigator.vibrate?.(60)}catch{}lookup(text)}
-   else if(/^https?:\/\//i.test(text))status('QR code détecté : c’est un lien Web, pas un code-barres du catalogue. Utilisez le code EAN ou créez une fiche.','warn');
+   else if(/^https?:\/\//i.test(text))lookupQR(text);
    else status('Ce code ne correspond pas à un EAN valide. Réessayez.','warn');
   });
   if(streaming){controls=c;status('Caméra active : approchez les chiffres et évitez les reflets.')}
@@ -187,9 +187,9 @@ function renderResult(){
   const name=document.createElement('strong');name.textContent=foundProduct.name;
   info.textContent=[foundProduct.domain,foundProduct.volume,'Réf. '+foundProduct.id].filter(Boolean).join(' · ');
   target.append(kicker,name,info);
- }else if(currentCode){
-  kicker.textContent='CODE LU · NOUVELLE RÉFÉRENCE';
-  info.textContent='EAN '+currentCode+' — aucune correspondance dans votre catalogue. Vous pouvez créer sa fiche.';
+ }else if(currentCode||qrUrl){
+  kicker.textContent=qrUrl?'QR CODE RECONNU':'CODE LU · NOUVELLE RÉFÉRENCE';
+  info.textContent=qrUrl?'Page du producteur reconnue. Lecture des informations en cours…':'EAN '+currentCode+' — aucune correspondance dans votre catalogue. Recherche en ligne puis création possible.';
   target.append(kicker,info);
   const details=document.createElement('details');details.style.marginTop='10px';
   const summary=document.createElement('summary');summary.textContent='Ce vin existe déjà ? Le chercher par nom';summary.style.cursor='pointer';summary.className='csm-muted';
@@ -217,21 +217,84 @@ function renderResult(){
   kicker.textContent='FICHE PRODUIT';info.textContent='Aucune bouteille identifiée. Créez une fiche manuellement si besoin.';
   target.append(kicker,info);
  }
+ renderProposal();
  $('csm-open').hidden=!foundProduct;
  $('csm-open').textContent=foundProduct&&currentCode&&normalize(productEAN(foundProduct))!==normalize(currentCode)?'Lier ce code à la fiche':'Ouvrir la fiche existante';
  $('csm-new').hidden=!!foundProduct;
 }
+
+function cloudSession(){
+ try{
+  const values=[localStorage.getItem('cave-supabase-session-v1'),sessionStorage.getItem('cave-supabase-session-v1')];
+  return values.map(v=>{try{return JSON.parse(v||'null')}catch{return null}}).find(v=>v?.access_token)||null;
+ }catch{return null}
+}
+async function lookupRemote(type,value){
+ const session=cloudSession();
+ if(!session?.access_token)throw new Error('Connectez-vous au compte cloud pour la recherche Internet.');
+ const key='sb_publishable_LMvpanipzKoVownEbIYj8w_eZiO4toc';
+ const ctrl=new AbortController(),timer=setTimeout(()=>ctrl.abort(),25000);
+ try{
+  const response=await fetch('https://pkvrabliaorhpittelwe.supabase.co/functions/v1/cave-product-lookup',{
+   method:'POST',signal:ctrl.signal,headers:{'Content-Type':'application/json',apikey:key,Authorization:'Bearer '+session.access_token},
+   body:JSON.stringify(type==='qr'?{type,url:value}:{type,code:value})
+  });
+  const result=await response.json().catch(()=>({}));
+  if(!response.ok)throw new Error(result.error||'Recherche cloud indisponible ('+response.status+')');
+  return result;
+ }finally{clearTimeout(timer)}
+}
+function renderProposal(){
+ const area=$('csm-proposal');if(!area)return;area.replaceChildren();area.hidden=!proposal?.fields;
+ if(!proposal?.fields)return;
+ const title=document.createElement('div');title.className='csm-kicker';title.textContent='INFORMATIONS PROPOSÉES — À CONFIRMER';
+ const source=document.createElement('p');source.className='csm-muted';
+ source.textContent='Source : '+(proposal.source||'Page extérieure')+(proposal.confidence==='suggestion'?' · certaines données sont supposées':'');
+ area.append(title,source);
+ const rows=document.createElement('div');rows.className='csm-proposal';
+ for(const [id,label] of [['name','Nom / cuvée'],['domain','Producteur / domaine'],['vintage','Millésime'],['volume','Contenance'],['appellation','Appellation']]){
+  const wrap=document.createElement('label');wrap.textContent=label;
+  const input=document.createElement('input');input.id='csm-prop-'+id;input.value=String(proposal.fields[id]||'');input.placeholder='À renseigner';
+  wrap.append(input);rows.append(wrap);
+ }
+ area.append(rows);
+ if(qrUrl){const link=document.createElement('a');link.className='csm-qr-link';link.href=qrUrl;link.target='_blank';link.rel='noopener noreferrer';link.textContent='↗ Vérifier la page du QR code';area.append(link)}
+}
+function readProposal(){
+ const result={};
+ for(const k of ['name','domain','vintage','volume','appellation'])result[k]=$('csm-prop-'+k)?.value.trim()||'';
+ result.family=proposal?.fields?.family||'';
+ result.color=proposal?.fields?.color||'';
+ return result;
+}
+async function remoteSearch(type,code){
+ try{
+  status(type==='qr'?'QR lu ✓ — lecture de la page du producteur…':'EAN lu ✓ — recherche du produit en ligne…');
+  const data=await lookupRemote(type,code);
+  if((type==='qr'&&qrUrl!==code)||(type==='ean'&&currentCode!==code))return;
+  proposal=data.found&&data.fields?data:null;
+  renderResult();
+  if(proposal)status('✓ Informations trouvées. Vérifiez le nom et le producteur avant de créer la fiche.','ok');
+  else status((type==='qr'?'QR lu. ':'EAN lu. ')+(data.error||'Aucune fiche trouvée dans les sources publiques.'),'warn');
+ }catch(e){status('Code reconnu, mais recherche impossible : '+e.message,'warn')}
+}
+async function lookupQR(value){
+ let safe;
+ try{const url=new URL(value);if(!['https:','http:'].includes(url.protocol))throw Error();safe=url.href}catch{status('QR incorrect.','warn');return}
+ stopCamera();qrUrl=safe;currentCode='';foundProduct=null;proposal=null;$('csm-ean').value='';
+ renderResult();remoteSearch('qr',safe);
+}
 async function lookup(input){
  if(loading)return;
  const code=String(input||'').replace(/[\s-]/g,'');
- if(!gtinValid(code)){status('Code incorrect. Vérifiez les 8, 12, 13 ou 14 chiffres du code-barres.','warn');return}
+ if(!gtinValid(code)){status('Code incorrect. Vérifiez les chiffres du code-barres.','warn');return}
  loading=true;stopCamera();
  try{
   if(window.caveStorageReady)await window.caveStorageReady;
-  currentCode=code;$('csm-ean').value=code;
-  foundProduct=matchingProduct(code);
-  renderResult();
-  status(foundProduct?'✓ Produit retrouvé dans votre catalogue.':'✓ Code-barres lu. Pas encore enregistré dans votre catalogue.',''+(foundProduct?'ok':'warn'));
+  qrUrl='';currentCode=code;$('csm-ean').value=code;proposal=null;
+  foundProduct=matchingProduct(code);renderResult();
+  if(foundProduct)status('✓ Produit retrouvé dans votre catalogue.','ok');
+  else await remoteSearch('ean',code);
  }finally{loading=false}
 }
 function field(form,label){
@@ -277,8 +340,9 @@ async function beginCreation(){
   const button=await waitFor(()=>[...document.querySelectorAll('#root button')].find(b=>b.textContent?.trim()==='Nouveau produit'));
   button.click();
   const form=await waitFor(productForm);
-  const note=code?'EAN : '+code:'';
-  if(note)await fillFields(form,[['Notes',note]]);
+  const p=readProposal();
+  const note=[code?'EAN : '+code:'',qrUrl?'URL QR : '+qrUrl:'',p.appellation?'Appellation : '+p.appellation:'',proposal?.source?'Source de recherche : '+proposal.source:''].filter(Boolean).join('\n');
+  await fillFields(form,[['Cuvée / Nom du produit',p.name],['Domaine / Marque',p.domain],['Contenance (75 cl, 10 L…)',p.volume],['Millésime',p.vintage],['Famille',p.family],['Couleur',p.color],['Notes',note]]);
   if(photo){installAttachAfterSave(form,before,photo);}
   field(form,'Cuvée / Nom du produit')?.focus();
   if(photo)showMessage('Photo prête : elle sera liée après validation de la nouvelle fiche.');
