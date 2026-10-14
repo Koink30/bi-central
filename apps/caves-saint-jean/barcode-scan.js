@@ -197,8 +197,8 @@ function parseLabel(text,confidence){
  const quantity=(String(text).match(/\b(?:\d+(?:[.,]\d+)?)\s*(?:cl|ml|l)\b/i)||[])[0]||'';
  const lc=String(text).toLowerCase();
  return {
-  name:Number(confidence)>=55?nameLine:'',domain:Number(confidence)>=55?domain:'',
-  volume:normalizeQuantity(quantity),vintage:year,
+  name:Number(confidence)>=55?(nameLine||domain):'',domain:Number(confidence)>=55?domain:'',
+  volume:Number(confidence)>=50?normalizeQuantity(quantity):'',vintage:Number(confidence)>=50?year:'',
   family:/champagne/.test(lc)?'Champagne':/bi[eè]re|brasserie/.test(lc)?'Bière':/rhum|gin|vodka|whisky|liqueur/.test(lc)?'Spiritueux':'Vin',
   color:/\bros[eé]\b/.test(lc)?'Rosé':/\bblanc\b/.test(lc)?'Blanc':/\brouge\b/.test(lc)?'Rouge':'À préciser',
   lines:clean.slice(0,8)
