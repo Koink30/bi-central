@@ -1,4 +1,4 @@
-/* Les Caves de Saint-Jean — Scanner produit v28 (scan + OCR, sans faux résultat).
+/* Les Caves de Saint-Jean — Scanner produit v29 (QR enrichi, EAN multi-source, OCR assisté).
    Une fiche n'est jamais enregistrée sans validation dans le formulaire existant. */
 (() => {
 'use strict';
@@ -9,6 +9,8 @@ const BACKUP_CDN = 'https://unpkg.com/@zxing/browser@0.1.5/umd/zxing-browser.min
 let modal, video, controls, reader, active = false, busy = false, draft = null, lastCode = '';
 let imgUrl = '';
 let photoOCRText = '';
+let lastPhotoUrl = '';
+let qrBusy = false;
 const $ = id => document.getElementById(id);
 const escapeText = value => String(value || '');
 const buttonLabel = '✦ Scanner une bouteille';
@@ -56,6 +58,11 @@ const css = [
 '.csm-warning{font-size:11px;color:#bdcbbd;margin-top:10px;line-height:1.55}',
 '.csm-demo{border:1px dashed #bda06d;border-radius:10px;padding:11px;background:#b4953917}',
 '.csm-qr{overflow-wrap:anywhere}',
+'.csm-extras{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}',
+'.csm-link{display:inline-flex;align-items:center;text-decoration:none;padding:9px 11px;border:1px solid #ae976c;border-radius:10px;color:#f9d994;font-size:13px;overflow-wrap:anywhere}',
+'.csm-help{padding:9px 11px;border-radius:9px;background:#ffffff0c;color:#bdcdc0;font-size:12px;line-height:1.5}',
+'.csm-status[data-state="warn"]{border-color:#d4b97980;color:#f7d9a5}',
+'.csm-status[data-state="success"]{border-color:#80bda17d;color:#caedd9}',
 '.csm-camera{display:none}',
 '.csm-camera.csm-live{display:flex}',
 '.csm-camera.csm-preview{display:flex}',
@@ -90,7 +97,7 @@ function makeUI() {
  '<details class="csm-manual"><summary>J’ai un code à saisir manuellement</summary><div class="csm-inline"><label class="csm-field">Code-barres<input id="csm-ean" inputmode="numeric" autocomplete="off" placeholder="8 à 14 chiffres"></label><button class="csm-action" id="csm-lookup" type="button">Rechercher</button></div></details>',
  '<div class="csm-status" role="status" id="csm-status" aria-live="polite">Prêt. Photographiez l’étiquette même si elle n’a pas de code-barres.</div>',
  '',
- '<div class="csm-warning">Reconnaissance assistée : aucune identification n’est garantie. Seules les informations vérifiées seront proposées.</div>',
+ '<div class="csm-warning">Seuls les éléments vérifiés sont proposés. Une lecture OCR n’identifie pas à elle seule la bouteille.</div>',
  '</div><div>',
  '<div class="csm-result" id="csm-result"><div class="csm-kicker">RÉSULTAT</div><p>Le résultat apparaîtra ici. Aucun produit n’est ajouté sans validation.</p></div><button class="csm-alt" id="csm-manual-new" type="button" style="margin-top:9px">✎ Créer une fiche sans reconnaissance</button>',
  '<div id="csm-editor" hidden><div class="csm-editor-title">Vérifiez les informations avant de continuer</div>',
@@ -116,7 +123,7 @@ function makeUI() {
  $('csm-name').oninput=()=>{$('csm-use').disabled=!$('csm-name').value.trim()};
  document.addEventListener('keydown',e=>{if(e.key==='Escape'&&modal.classList.contains('cave-scan-open'))close()});
 }
-function status(text){if($('csm-status'))$('csm-status').textContent=text}
+function status(text,state=''){const el=$('csm-status');if(el){el.textContent=text;el.dataset.state=state}}
 function open(){
  makeUI();modal.classList.add('cave-scan-open');modal.setAttribute('aria-hidden','false');
  document.documentElement.style.overflow='hidden';$('csm-photo-btn').focus();
@@ -148,7 +155,7 @@ async function startCamera(){
   const lib=await getLibrary();
   reader=new lib.BrowserMultiFormatReader();
   active=true;$('csm-camera').classList.add('csm-live');$('csm-camera-btn').textContent='■ Arrêter le scan';
-  const newControls=await reader.decodeFromConstraints({audio:false,video:{facingMode:{ideal:'environment'}}},video,(result,error,c)=>{
+  const newControls=await reader.decodeFromConstraints({audio:false,video:{facingMode:{ideal:'environment'},width:{ideal:1920},height:{ideal:1080}}},video,(result,error,c)=>{
    if(!active||!result)return;
    const value=String(result.getText?.()||result.text||'').trim();
    if(!value)return;
@@ -156,7 +163,7 @@ async function startCamera(){
    stopCamera();onDecoded(value);
   });
   if(active)controls=newControls;else newControls?.stop();
-  if(active)status('Caméra active. Placez le code-barres dans le cadre, avec un bon éclairage.');
+  if(active)status('Caméra active : approchez le code, bien horizontal et net. Retournez la bouteille pour l’EAN.');
  }catch(e){
   stopCamera();status('Caméra non disponible : '+(e.message||'accès refusé')+'. Essayez la photo ou saisissez les chiffres.');
  }
@@ -179,8 +186,9 @@ function getOCRLibrary(){
  }).catch(e=>{ocrLoading=null;throw e});
  return ocrLoading;
 }
-function manualDraft(){
+function manualDraft(keepPhoto=false){
  stopCamera();
+ if(!keepPhoto){lastPhotoUrl='';if(imgUrl){URL.revokeObjectURL(imgUrl);imgUrl=''}}
  draft={code:'',name:'',domain:'',volume:'',vintage:'',family:'Vin',color:'À préciser',source:'Saisie manuelle'};
  photoOCRText='';
  $('csm-ean').value='';
@@ -204,50 +212,61 @@ function parseLabel(text,confidence){
   lines:clean.slice(0,8)
  };
 }
+
+async function nativeCode(source){
+ if(!('BarcodeDetector' in window))return '';
+ try{
+  const formats=await window.BarcodeDetector.getSupportedFormats();
+  const desired=['ean_13','ean_8','upc_a','upc_e','qr_code','code_128'].filter(f=>formats.includes(f));
+  if(!desired.length)return '';
+  const results=await new window.BarcodeDetector({formats:desired}).detect(source);
+  return results.map(v=>String(v.rawValue||'').trim()).find(v=>/^https?:\/\//i.test(v)||gtin(v.replace(/[\s-]/g,'')))||'';
+ }catch{return ''}
+}
+async function imageCode(img){
+ const native=await nativeCode(img);if(native)return native;
+ try{
+  const lib=await getLibrary();
+  const r=await new lib.BrowserMultiFormatReader().decodeFromImageElement(img);
+  const value=String(r.getText?.()||r.text||'').trim();
+  return /^https?:\/\//i.test(value)||gtin(value.replace(/[\s-]/g,''))?value:'';
+ }catch{return ''}
+}
 async function readPhoto(){
  const file=$('csm-image-file').files?.[0];if(!file)return;
  stopCamera();
  if(imgUrl){URL.revokeObjectURL(imgUrl);imgUrl=''}
- imgUrl=URL.createObjectURL(file);
- photoOCRText='';
- status('Analyse de la photo…');
+ imgUrl=URL.createObjectURL(file);lastPhotoUrl=imgUrl;photoOCRText='';
+ status('Lecture de la photo : recherche de QR code et de code-barres…');
  try{
   const img=new Image();
   await new Promise((resolve,reject)=>{img.onload=resolve;img.onerror=reject;img.src=imgUrl});
-  try{
-   const lib=await getLibrary();
-   const result=await new lib.BrowserMultiFormatReader().decodeFromImageElement(img);
-   const code=String(result.getText?.()||result.text||'').trim();
-   if(/^https?:\/\//i.test(code)||gtin(code.replace(/[\s-]/g,''))){
-    onDecoded(code);return;
-   }
-  }catch(e){/* Pas de code : on tente l'OCR au lieu d'inventer un produit. */}
-  status('Aucun code détecté. Lecture de l’étiquette en cours…');
-  try{
-   const engine=await getOCRLibrary();
-   const out=await engine.recognize(imgUrl,'fra+eng');
-   const words=String(out?.data?.text||'').trim();
-   const confidence=Number(out?.data?.confidence||0);
-   const parsed=parseLabel(words,confidence);
-   photoOCRText=words;
-   draft={code:'',name:parsed.name,domain:parsed.domain,volume:parsed.volume,vintage:parsed.vintage,
-     family:parsed.family,color:parsed.color,image:imgUrl,source:'OCR de la photo (à vérifier)',ocrLines:parsed.lines,ocrConfidence:confidence};
-   renderDraft(false);
-   if(parsed.lines.length){
-    status('Texte extrait de la vraie photo. Confirmez le nom et les autres champs.');
-   }else{
-    status('Étiquette peu lisible. Complétez le nom manuellement ou reprenez la photo de face.');
-   }
-  }catch(e){
-   draft={code:'',name:'',domain:'',volume:'',vintage:'',family:'Vin',color:'À préciser',image:imgUrl,source:'Photo non reconnue'};
-   renderDraft(false);
-   status('Lecture automatique indisponible. Votre photo reste visible et vous pouvez saisir le nom.');
-  }
- }catch(e){
-  status('Impossible de lire cette photo. Essayez une autre image.');
- }finally{$('csm-image-file').value=''}
+  const found=await imageCode(img);
+  if(found){onDecoded(found);return}
+  manualDraft(true);draft.image=imgUrl;draft.source='Photo sans code détectable';renderDraft(false);
+  const row=document.createElement('div');row.className='csm-extras';
+  const ocr=document.createElement('button');ocr.type='button';ocr.className='csm-alt';ocr.textContent='🔤 Essayer de lire le texte';
+  ocr.onclick=runPhotoOCR;row.append(ocr);$('csm-result').append(row);
+  status('Aucun code trouvé sur cette photo. Saisissez le nom ou essayez l’OCR (non garanti).','warn');
+ }catch(e){status('Photo illisible ou format non pris en charge. Réessayez.','warn')}
+ finally{$('csm-image-file').value=''}
 }
-
+async function runPhotoOCR(){
+ if(!lastPhotoUrl){status('Choisissez d’abord une photo.','warn');return}
+ status('Lecture du texte de la bouteille…');
+ try{
+  const engine=await getOCRLibrary();
+  const out=await engine.recognize(lastPhotoUrl,'fra+eng');
+  const parsed=parseLabel(String(out?.data?.text||''),Number(out?.data?.confidence||0));
+  photoOCRText=String(out?.data?.text||'');
+  if(!draft)manualDraft(true);
+  // Pas de nom supposé : les lignes OCR ne sont que des propositions à choisir.
+  draft.ocrLines=parsed.lines;draft.ocrConfidence=Number(out?.data?.confidence||0);
+  draft.source='OCR assisté — contrôle humain';draft.image=lastPhotoUrl;
+  renderDraft(false);
+  status(parsed.lines.length?'Lignes proposées : touchez uniquement celle qui correspond à la cuvée.':'Étiquette non reconnue. Saisissez le nom manuellement.','warn');
+ }catch(e){status('OCR indisponible ou lecture échouée. Saisissez le nom manuellement.','warn')}
+}
 function onDecoded(value){
  if(/^https?:\/\//i.test(value)){
   stopCamera();
@@ -373,9 +392,9 @@ function renderDraft(recognized){
  $('csm-use').disabled=!draft.name.trim();
 }
 function reset(){
- stopCamera();if(imgUrl){URL.revokeObjectURL(imgUrl);imgUrl=''}draft=null;lastCode='';photoOCRText='';$('csm-ean').value='';$('csm-editor').hidden=true;
+ stopCamera();if(imgUrl){URL.revokeObjectURL(imgUrl);imgUrl=''}lastPhotoUrl='';draft=null;lastCode='';photoOCRText='';$('csm-ean').value='';$('csm-editor').hidden=true;
  $('csm-result').innerHTML='<div class="csm-kicker">PRÉVISUALISATION</div><p>Prêt pour une nouvelle bouteille.</p>';
- status('Prêt. Scannez une autre bouteille ou saisissez son code.');
+ status('Prêt. Scannez un QR code, un EAN ou choisissez une photo.');
 }
 function fillControl(form,label,value){
  if(value==null)return false;
