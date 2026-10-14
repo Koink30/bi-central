@@ -73,6 +73,7 @@
     try { await synchronizeNow(); } catch (error) { showCloudError(error); throw error; }
     return window.caveSyncState;
   };
+  window.caveLookupToken = async () => { await restoreStoredSession(); if (!session) return null; await ensureSession(); return session?.access_token || null; };
   window.caveTeamList = () => api('/rest/v1/cave_members?select=email,role,user_id,owner_id&order=created_at');
   window.caveSetMember = (email,role) => api('/rest/v1/rpc/cave_set_member', {method:'POST',body:JSON.stringify({member_email:email,member_role:role})});
   window.caveResetMemberPassword = async email => {
