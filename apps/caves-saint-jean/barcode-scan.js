@@ -3,7 +3,6 @@
 (() => {
 'use strict';
 if (window.caveScanOpen) return;
-if (new URLSearchParams(location.search).get('scanner') !== '1') return;
 const DATA_KEY = 'bi-caviste-saint-jean-v1';
 const CDN = 'https://cdn.jsdelivr.net/npm/@zxing/browser@0.1.5/umd/zxing-browser.min.js';
 const BACKUP_CDN = 'https://unpkg.com/@zxing/browser@0.1.5/umd/zxing-browser.min.js';
