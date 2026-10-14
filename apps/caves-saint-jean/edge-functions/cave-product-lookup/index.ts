@@ -142,30 +142,53 @@ function extractMarkdown(content: string) {
   if (fields.color) fields.color = /ros[eé]/i.test(fields.color) ? "Rosé" : /blanc|white/i.test(fields.color) ? "Blanc" : /rouge|red/i.test(fields.color) ? "Rouge" : "";
   return { fields, evidence, preview: lines.slice(0, 12).join(" ").slice(0, 420) };
 }
+async function readerAttempt(url: URL, method: "GET" | "POST", milliseconds: number) {
+  const ctl = new AbortController(), timer = setTimeout(() => ctl.abort(), milliseconds);
+  try {
+    const opts: RequestInit = method === "POST"
+      ? { method: "POST", signal: ctl.signal, headers: { "Content-Type": "application/json", "Accept": "text/plain", "X-Return-Format": "markdown" },
+          body: JSON.stringify({ url: url.href, respondWith: "content", noCache: true }) }
+      : { method: "GET", signal: ctl.signal, headers: { "Accept": "text/plain", "X-Return-Format": "markdown" } };
+    const destination = method === "POST" ? "https://r.jina.ai/" : "https://r.jina.ai/" + url.href;
+    const response = await fetch(destination, opts);
+    if (!response.ok) throw new Error("HTTP " + response.status);
+    const contentType = response.headers.get("content-type") || "";
+    const body = (await response.text()).slice(0, 130000);
+    if (!body.trim() || (/json/i.test(contentType) && /"error"|rate.limit|unauthorized/i.test(body.slice(0, 1200))))
+      throw new Error("réponse vide ou refusée");
+    return body;
+  } catch (error) {
+    const msg = error instanceof Error ? error.message : "connexion impossible";
+    throw new Error(msg === "This operation was aborted" || error instanceof DOMException && error.name === "AbortError" ? "délai dépassé" : msg.slice(0, 100));
+  } finally { clearTimeout(timer); }
+}
 async function lookQR(link: string) {
   const url = publicURL(link);
-  if (!url) return { found: false, type: "qr", error: "QR lu. La lecture automatique de cette destination n’est pas disponible. Consultez le lien pour voir la fiche du producteur.", url: link, urlReadable: false };
-  // The reader's URL fetch is done externally. No direct request to user-provided host.
-  const endpoint = "https://r.jina.ai/" + url.href;
-  let body = "";
-  try {
-    const ctl = new AbortController(), timer = setTimeout(() => ctl.abort(), 14000);
-    try {
-      const r = await fetch(endpoint, { signal: ctl.signal,
-        headers: { Accept: "text/plain", "X-Return-Format": "markdown" } });
-      if (!r.ok) throw new Error("HTTP " + r.status);
-      const raw = await r.text();
-      body = raw.slice(0, 130000);
-    } finally { clearTimeout(timer); }
-  } catch {
-    return { found: false, type: "qr", url: url.href,
-      error: "La page du QR code n'a pas pu être lue automatiquement. Ouvrez la page du producteur." };
+  if (!url) {
+    return { found: false, type: "qr", url: link, reason: "format_url_non_pris_en_charge",
+      error: "Le QR a été lu, mais cette adresse n'est pas exploitable par le lecteur automatique. Vous pouvez consulter le lien affiché." };
   }
-  const { fields, evidence, preview } = extractMarkdown(body);
-  const found = Object.values(fields).some(Boolean);
-  return { found, type: "qr", url: url.href, source: "Page du producteur (lecture Web)",
-    confidence: Object.values(evidence).some(v => v.includes("à confirmer")) ? "suggestion" : "source",
-    fields, evidence, preview, error: found ? "" : "QR lu, mais cette page ne contient pas de champ produit exploitable." };
+  // Deux appels distincts au lecteur public : GET standard puis POST (meilleur pour les pages avec #/route).
+  const failures: string[] = [];
+  for (const method of ["GET", "POST"] as const) {
+    try {
+      const body = await readerAttempt(url, method, method === "GET" ? 8500 : 10500);
+      const extracted = extractMarkdown(body);
+      const found = Object.values(extracted.fields).some(Boolean);
+      return { found, type: "qr", url: url.href, source: "Page du producteur (lecture Web)",
+        method, confidence: Object.values(extracted.evidence).some(v => v.includes("à confirmer")) ? "suggestion" : "source",
+        fields: extracted.fields, evidence: extracted.evidence, preview: extracted.preview,
+        error: found ? "" : "La page a été récupérée, mais aucun nom de vin ou producteur fiable n'a été identifié.",
+        reason: found ? "ok" : "page_lue_sans_identification" };
+    } catch (error) {
+      const message = error instanceof Error ? error.message : "erreur inconnue";
+      failures.push(method + " : " + message);
+      console.warn("Cave QR — lecteur public", method, message);
+    }
+  }
+  return { found: false, type: "qr", url: url.href, reason: "lecture_externe_echouee",
+    error: "QR décodé, mais le lecteur Web ne peut pas récupérer cette page (" +
+      failures.join(" ; ") + "). Le site peut bloquer la lecture automatique : ouvrez le lien du QR pour vérifier." };
 }
 Deno.serve(async req => {
   const origin = req.headers.get("origin") || "";
