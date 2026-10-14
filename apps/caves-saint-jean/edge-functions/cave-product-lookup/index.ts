@@ -2,12 +2,12 @@
 import { createClient } from "npm:@supabase/supabase-js@2.75.0";
 
 const ORIGIN = "https://koink30.github.io";
-const URL = Deno.env.get("SUPABASE_URL") || "";
+const SUPABASE_URL = Deno.env.get("SUPABASE_URL") || "";
 let ADMIN_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") || "";
 if (!ADMIN_KEY) {
   try { ADMIN_KEY = JSON.parse(Deno.env.get("SUPABASE_SECRET_KEYS") || "{}").default || ""; } catch { /* no key */ }
 }
-const admin = URL && ADMIN_KEY ? createClient(URL, ADMIN_KEY, { auth: { autoRefreshToken: false, persistSession: false } }) : null;
+const admin = SUPABASE_URL && ADMIN_KEY ? createClient(SUPABASE_URL, ADMIN_KEY, { auth: { autoRefreshToken: false, persistSession: false } }) : null;
 const respond = (code: number, data: unknown, origin: string) => {
   const headers: Record<string, string> = {
     "Content-Type": "application/json; charset=utf-8", "Cache-Control": "no-store", "Vary": "Origin",
@@ -24,7 +24,7 @@ function publicURL(value: string): URL | null {
     const raw = String(value || "").trim();
     if (!raw || raw.length > 2400) return null;
     const normalized = /^www\./i.test(raw) ? "https://" + raw : raw;
-    const u = new URL(normalized);
+    const u = new globalThis.URL(normalized);
     // Any real HTTP(S) QR URL is recognized. We never fetch that host from Supabase,
     // only through an external public-page reader.
     if (!["https:", "http:"].includes(u.protocol) || u.username || u.password || !u.hostname) return null;
