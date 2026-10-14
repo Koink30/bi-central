@@ -218,6 +218,7 @@ function renderResult(){
   target.append(kicker,info);
  }
  renderProposal();
+ if(qrUrl&&!$('csm-result').querySelector('.csm-qr-link')){const a=document.createElement('a');a.href=qrUrl;a.target='_blank';a.rel='noopener noreferrer';a.className='csm-qr-link';a.textContent='↗ Ouvrir la page du QR code';target.append(a)}
  $('csm-open').hidden=!foundProduct;
  $('csm-open').textContent=foundProduct&&currentCode&&normalize(productEAN(foundProduct))!==normalize(currentCode)?'Lier ce code à la fiche':'Ouvrir la fiche existante';
  $('csm-new').hidden=!!foundProduct;
@@ -275,7 +276,7 @@ async function remoteSearch(type,code){
   proposal=data.found&&data.fields?data:null;
   renderResult();
   if(proposal)status('✓ Informations trouvées. Vérifiez le nom et le producteur avant de créer la fiche.','ok');
-  else status((type==='qr'?'QR lu. ':'EAN lu. ')+(data.error||'Aucune fiche trouvée dans les sources publiques.'),'warn');
+  else status(type==='qr'?'QR lu ✓ — le lien est conservé ci-dessous, mais le service de lecture de pages n’a pas réussi à en extraire une fiche. Ouvrez le lien pour vérifier la page.':('EAN lu. '+(data.error||'Référence absente des bases publiques.')),'warn');
  }catch(e){status('Code reconnu, mais recherche impossible : '+e.message,'warn')}
 }
 async function lookupQR(value){
