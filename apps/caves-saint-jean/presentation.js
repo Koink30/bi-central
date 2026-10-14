@@ -4,7 +4,7 @@
  function applyTheme(value){const theme=themes.some(([id])=>id===value)?value:'soft';document.documentElement.dataset.caveTheme=theme;try{localStorage.setItem('cave-display-theme',theme);}catch{}const meta=document.querySelector('meta[name=theme-color]');if(meta)meta.content={dark:'#1c181c',vine:'#deded0',soft:'#e8dfd2',light:'#f6f4f0'}[theme];}
  function decoration(){const n=el('div',{class:'cave-ornament','aria-hidden':'true'});n.innerHTML='<svg viewBox="0 0 220 90" fill="none" xmlns="http://www.w3.org/2000/svg"><g stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M8 68C42 62 44 29 91 23C110 20 123 25 135 15M51 51C31 48 29 31 31 23C45 24 56 33 51 51ZM74 30C65 14 73 6 85 4C88 19 87 24 74 30ZM98 23C102 10 115 8 123 11C117 25 110 29 98 23Z"/><path d="M86 30L88 38M155 11h10v22c0 8 10 10 10 21v25q0 5-5 5h-20q-5 0-5-5V54c0-11 10-13 10-21V11ZM153 8h14M145 55h30M145 71h30M192 42h21l-3 19q-1 8-8 8t-8-8l-2-19ZM202 69v14M193 84h18"/><g fill="currentColor" fill-opacity=".16"><circle cx="81" cy="45" r="7"/><circle cx="95" cy="45" r="7"/><circle cx="74" cy="57" r="7"/><circle cx="88" cy="57" r="7"/><circle cx="102" cy="57" r="7"/><circle cx="81" cy="69" r="7"/><circle cx="95" cy="69" r="7"/><circle cx="88" cy="81" r="7"/></g></g></svg>';return n;}
  const navLabels = ['Accueil','Produits & stock','Ventes & factures','Livraisons','Clients'];
- let tools, mobile, dialog, previousFocus;
+ let tools, mobile, dialog, previousFocus, userMenu;
  const account=()=>window.caveAccount||{role:'local'};
  const el=(tag,attrs={},text='')=>{const n=document.createElement(tag);Object.entries(attrs).forEach(([k,v])=>n.setAttribute(k,v));n.textContent=text;return n;};
  function menuItems(){return [...document.querySelectorAll('[data-sidebar="menu-button"]')];}
@@ -27,6 +27,72 @@
  const form=el('form');const label=el('label',{},'Adresse e-mail du compte');const email=el('input',{type:'email',required:'',autocomplete:'off',placeholder:'prenom@exemple.fr'});label.append(email);const roleLabel=el('label',{},'Accès');const role=el('select');role.append(el('option',{value:'user'},'Utilisateur — activité quotidienne'),el('option',{value:'admin'},'Administrateur — réglages et accès'));roleLabel.append(role);const submit=el('button',{type:'submit'},'Autoriser ce compte');const message=el('p',{class:'cave-message','aria-live':'polite'});form.append(label,roleLabel,submit,message);const list=el('div');body.append(form,list);show('Gestion des accès',body);
  async function refresh(){const members=await window.caveTeamList();const table=el('table');const head=el('tr');head.append(el('th',{},'Compte'),el('th',{},'Accès'),el('th',{},''));table.append(head);for(const m of members){const row=el('tr');row.append(el('td',{},m.email),el('td',{},m.role==='admin'?'Administrateur':'Utilisateur'));const cell=el('td');if(m.role==='user'&&m.user_id!==m.owner_id){const reset=el('button',{type:'button',class:'cave-member-reset'},'Réinitialiser MDP');reset.style.marginRight='8px';reset.onclick=async()=>{if(!confirm('Remplacer le mot de passe de '+m.email+' ? L’ancien ne fonctionnera plus. Aucun e-mail ne sera envoyé.'))return;reset.disabled=true;message.textContent='Génération du nouveau mot de passe…';try{const result=await window.caveResetMemberPassword(m.email);message.textContent='';showTemporaryPassword(result);}catch(e){message.textContent=e.message;}finally{reset.disabled=false;}};cell.append(reset);}if(m.user_id!==m.owner_id){const remove=el('button',{type:'button',class:'cave-member-remove'},'Retirer');remove.onclick=async()=>{if(!confirm('Retirer l’accès à la cave pour '+m.email+' ?'))return;try{await window.caveSetMember(m.email,'remove');await refresh();}catch(e){message.textContent=e.message;}};cell.append(remove);}row.append(cell);table.append(row);}list.replaceChildren(table);}
  form.onsubmit=async event=>{event.preventDefault();submit.disabled=true;try{await window.caveSetMember(email.value.trim(),role.value);message.textContent='Accès enregistré. Le compte peut se reconnecter à la cave.';email.value='';await refresh();}catch(e){message.textContent=e.message;}finally{submit.disabled=false;}};try{await refresh();}catch(e){message.textContent=e.message;}}
+
+ function syncView(){
+  const a=account(),status=window.caveSyncState||{kind:a.role==='local'?'local':'busy',label:a.role==='local'?'Mode local':'Vérification cloud…',lastSuccess:0};
+  const roles={admin:'Administrateur',user:'Utilisateur',pending:'Accès en attente',local:'Mode local'};
+  const kind=['ok','busy','offline','error','conflict','pending','local'].includes(status.kind)?status.kind:'busy';
+  const summary={ok:'Synchronisé',busy:'En cours',offline:'Hors ligne',error:'Erreur',conflict:'Conflit',pending:'En attente',local:'Local'};
+  return {a,kind,role:roles[a.role]||'Utilisateur',email:a.email||'Aucun compte connecté',
+    compact:a.email?a.email.split('@')[0]:'Invité',label:status.label||summary[kind],
+    summary:summary[kind],last:status.lastSuccess?new Date(status.lastSuccess).toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'}):''};
+ }
+ function updateUserMenu(){
+  if(!userMenu)return;
+  const v=syncView();
+  const setText=(selector,value)=>{const node=userMenu.querySelector(selector);if(node&&node.textContent!==value)node.textContent=value;};
+  setText('.cave-user-name',v.compact);
+  setText('.cave-user-sync-label',v.summary);
+  setText('#cave-user-full-email',v.email);
+  setText('#cave-user-role',v.role);
+  setText('#cave-user-state-label',v.label);
+  setText('#cave-user-last-sync',v.last?'Dernière synchronisation confirmée : '+v.last:'Aucune synchronisation confirmée sur cet appareil');
+  const title='Compte : '+v.email+' · '+v.label;
+  const summary=userMenu.querySelector('summary');
+  if(summary&&summary.title!==title)summary.title=title;
+  if(userMenu.dataset.sync!==v.kind)userMenu.dataset.sync=v.kind;
+  const access=userMenu.querySelector('[data-admin-only]');
+  if(access&&access.hidden!==(v.a.role!=='admin'))access.hidden=v.a.role!=='admin';
+  const sync=userMenu.querySelector('#cave-user-sync-now');
+  const cannotSync=v.a.role!=='admin'&&v.a.role!=='user';
+  if(sync&&sync.hidden!==cannotSync)sync.hidden=cannotSync;
+  setText('#cave-user-open-account',v.a.role==='local'?'Se connecter / Créer un compte':'Mon compte / Se déconnecter');
+ }
+ function makeUserMenu(access){
+  const box=el('details',{id:'cave-user-menu'});
+  const summary=el('summary',{'aria-label':'Compte utilisateur et état de la synchronisation'});
+  const avatar=el('span',{class:'cave-user-avatar','aria-hidden':'true'},'👤');
+  const name=el('span',{class:'cave-user-name'},'Invité');
+  const sync=el('span',{class:'cave-user-sync'});
+  sync.append(el('span',{class:'cave-sync-dot','aria-hidden':'true'}),el('span',{class:'cave-user-sync-label'},'Local'));
+  summary.append(avatar,name,sync,el('span',{class:'cave-user-caret','aria-hidden':'true'},'⌄'));
+  const panel=el('div',{class:'cave-user-panel'});
+  const heading=el('div',{class:'cave-user-heading'});
+  heading.append(el('strong',{},'Utilisateur connecté'),el('span',{id:'cave-user-full-email'},'Aucun compte connecté'),el('small',{id:'cave-user-role'},'Mode local'));
+  const state=el('div',{class:'cave-user-state'});
+  state.append(el('span',{class:'cave-sync-dot','aria-hidden':'true'}),el('span',{id:'cave-user-state-label','aria-live':'polite'},'Mode local'));
+  const last=el('small',{id:'cave-user-last-sync'},'Aucune synchronisation confirmée');
+  const actions=el('div',{class:'cave-user-actions'});
+  const open=el('button',{type:'button',id:'cave-user-open-account'},'Mon compte');
+  open.onclick=()=>{box.open=false;window.caveOpenAccount?.();};
+  const force=el('button',{type:'button',id:'cave-user-sync-now'},'↻ Synchroniser maintenant');
+  const message=el('small',{id:'cave-user-feedback','aria-live':'polite'});
+  force.onclick=async()=>{
+   force.disabled=true;message.textContent='Vérification du cloud…';
+   try {
+    if(typeof window.caveSynchronizeNow!=='function')throw new Error('La synchronisation n’est pas encore chargée.');
+    await window.caveSynchronizeNow();
+    message.textContent=window.caveSyncState?.kind==='ok'?'Synchronisation confirmée.':'Vérifiez l’état affiché ci-dessus.';
+   }catch(error){message.textContent=error?.message||'Synchronisation impossible.';}
+   finally{force.disabled=false;}
+  };
+  access.textContent='Gestion des utilisateurs';
+  access.onclick=()=>{box.open=false;team();};
+  actions.append(open,force,access);
+  panel.append(heading,state,last,actions,message);
+  box.append(summary,panel);
+  return box;
+ }
  function refresh(){const top=document.querySelector('.topbar');if(!top)return;if(!tools){tools=el('div',{id:'cave-tools'});const badge=el('span',{class:'cave-role'});const animation=el('button',{type:'button','aria-pressed':'false'},'Animation');animation.onclick=()=>{const on=document.body.classList.toggle('cave-show-animation');animation.setAttribute('aria-pressed',String(on));};const guide=el('button',{type:'button'},'Aide');guide.onclick=help;const access=el('button',{type:'button','data-admin-only':''},'Gestion des accès');access.onclick=team;const themeLabel=el('label',{class:'cave-theme-label'},'Ambiance');const themeSelect=el('select',{id:'cave-theme-select','aria-label':'Ambiance visuelle'});for(const [id,name] of themes)themeSelect.append(el('option',{value:id},name));themeSelect.value=document.documentElement.dataset.caveTheme||'soft';themeSelect.onchange=()=>applyTheme(themeSelect.value);themeLabel.append(themeSelect);const menu=el('details',{id:'cave-main-menu'});const summary=el('summary',{},'☰ Menu');summary.setAttribute('aria-label','Ouvrir le menu de la cave');const panel=el('div',{class:'cave-menu-panel'});const heading=el('div',{class:'cave-menu-heading'},'Votre cave');heading.append(badge);panel.append(heading);
  const group=(title,id)=>{const section=el('section',{id});section.append(el('h3',{},title));panel.append(section);return section;};
  const action=(parent,label,run)=>{const b=el('button',{type:'button'},label);b.onclick=()=>{menu.open=false;summary.focus();run();};parent.append(b);return b;};
@@ -35,14 +101,16 @@
  const display=group('Apparence','cave-menu-display');display.append(themeLabel,animation);
  const data=group('Données & sauvegardes','cave-menu-data');action(data,'Actualiser les données',()=>top.querySelector(':scope > .row button[title="Actualiser"]')?.click());const backup=action(data,'Télécharger une sauvegarde JSON',()=>top.querySelector(':scope > .row button.primary')?.click());backup.dataset.backupAction='';
  const settings=action(data,'Réglages de la cave',()=>window.caveNavigate?.('settings'));settings.dataset.settingsAction='';
- const accountGroup=group('Compte & synchronisation','cave-menu-account');accountGroup.append(access);
- const support=group('Aide','cave-menu-help');support.append(guide);
- menu.append(summary,panel);tools.append(menu);top.append(tools);
+  const support=group('Aide','cave-menu-help');support.append(guide);
+ menu.append(summary,panel);userMenu=makeUserMenu(access);
+ menu.addEventListener('toggle',()=>{if(menu.open&&userMenu?.open)userMenu.open=false;});
+ userMenu.addEventListener('toggle',()=>{if(userMenu.open)menu.open=false;});
+ tools.append(menu,userMenu);top.append(tools);
  panel.addEventListener('click',e=>{if(e.target.closest('button,a')&&!e.target.closest('#cave-menu-display')){menu.open=false;}});
- document.addEventListener('pointerdown',e=>{if(menu.open&&!menu.contains(e.target))menu.open=false;});
- document.addEventListener('keydown',e=>{if(e.key==='Escape'&&menu.open){menu.open=false;summary.focus();}});
+ document.addEventListener('pointerdown',e=>{if(menu.open&&!menu.contains(e.target))menu.open=false;if(userMenu?.open&&!userMenu.contains(e.target))userMenu.open=false;});
+ document.addEventListener('keydown',e=>{if(e.key==='Escape'&&menu.open){menu.open=false;summary.focus();}if(e.key==='Escape'&&userMenu?.open){userMenu.open=false;userMenu.querySelector('summary')?.focus();}});
  const style=el('style');style.textContent=`
- .topbar{flex-wrap:nowrap!important;min-height:62px!important}.topbar>.row:nth-child(2){display:none!important}#cave-tools{width:auto!important;flex:0 0 auto!important;margin-left:auto!important;display:block!important}
+ .topbar{flex-wrap:nowrap!important;min-height:62px!important}.topbar>.row:nth-child(2){display:none!important}#cave-tools{width:auto!important;flex:0 0 auto!important;margin-left:auto!important;display:flex!important;align-items:center;gap:9px;min-width:0}
  #cave-main-menu{position:relative}#cave-main-menu>summary{list-style:none;cursor:pointer;padding:10px 17px;border-radius:10px;background:var(--cave-button);color:var(--cave-on-button);font:650 14px system-ui;min-height:44px;display:flex;align-items:center;gap:8px}#cave-main-menu>summary::-webkit-details-marker{display:none}
  .cave-menu-panel{position:absolute;right:0;top:calc(100% + 10px);width:min(620px,calc(100vw - 28px));max-height:calc(100dvh - 100px);overflow:auto;overscroll-behavior:contain;background:var(--cave-surface);color:var(--cave-ink);border:1px solid var(--cave-line);border-radius:16px;padding:18px;box-shadow:0 18px 60px #0003;z-index:1000;display:grid;grid-template-columns:1fr 1fr;gap:16px}
  #cave-main-menu:not([open])>.cave-menu-panel{display:none}.cave-menu-heading{grid-column:1/-1;display:flex;align-items:center;justify-content:space-between;gap:12px;font-size:19px;font-weight:700;border-bottom:1px solid var(--cave-line);padding-bottom:12px}
@@ -54,8 +122,9 @@
  @media(max-width:767px){.topbar>.row:first-child{min-width:0;gap:6px}.topbar>.row:first-child>span{display:none}.topbar>.row:first-child>b{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:45vw}.cave-menu-panel{position:fixed;top:calc(68px + env(safe-area-inset-top));right:10px;left:10px;width:auto;max-height:calc(100dvh - 150px);padding:14px;gap:14px;grid-template-columns:1fr}.cave-menu-panel section{border-bottom:1px solid var(--cave-line);padding-bottom:10px}}
  @media print{#cave-tools{display:none!important}}
  `;document.head.append(style);}
- const cloud=document.getElementById('cloud-sync-button');if(cloud&&cloud.parentElement!==tools.querySelector('#cave-menu-account'))tools.querySelector('#cave-menu-account').prepend(cloud);const photos=document.getElementById('photo-module-link');if(photos&&photos.parentElement!==tools.querySelector('#cave-menu-products'))tools.querySelector('#cave-menu-products').append(photos);
- document.body.dataset.cavePage=window.caveCurrentPage||'home';const a=account();document.body.classList.toggle('cave-operator',a.role==='user');document.body.classList.toggle('cave-pending',a.role==='pending');const badgeText={admin:'Administrateur',user:'Utilisateur',pending:'Accès en attente',local:'Mode local'}[a.role]||'Mode local';if(tools.querySelector('.cave-role').textContent!==badgeText)tools.querySelector('.cave-role').textContent=badgeText;tools.querySelector('[data-admin-only]').hidden=a.role!=='admin';for(const b of tools.querySelectorAll('[data-backup-action],[data-settings-action]'))b.hidden=a.role==='user'||a.role==='pending';
+ if(tools.parentElement!==top)top.append(tools);
+ const cloud=document.getElementById('cloud-sync-button');if(cloud&&!cloud.hidden)cloud.hidden=true;const photos=document.getElementById('photo-module-link');if(photos&&photos.parentElement!==tools.querySelector('#cave-menu-products'))tools.querySelector('#cave-menu-products').append(photos);
+ document.body.dataset.cavePage=window.caveCurrentPage||'home';const a=account();document.body.classList.toggle('cave-operator',a.role==='user');document.body.classList.toggle('cave-pending',a.role==='pending');const badgeText={admin:'Administrateur',user:'Utilisateur',pending:'Accès en attente',local:'Mode local'}[a.role]||'Mode local';if(tools.querySelector('.cave-role').textContent!==badgeText)tools.querySelector('.cave-role').textContent=badgeText;updateUserMenu();for(const b of tools.querySelectorAll('[data-backup-action],[data-settings-action]'))b.hidden=a.role==='user'||a.role==='pending';
  menuItems().forEach(n=>{if(/Réglages|sauvegarde/.test(n.textContent))n.toggleAttribute('data-admin-only',true);});
  const workspace=document.querySelector('.workspace');const home=document.querySelector('.quick-grid');let intro=document.querySelector('.cave-intro');if(home&&!intro){intro=el('div',{class:'cave-intro'});intro.append(el('strong',{},'Que souhaitez-vous faire ?'),el('span',{},'Commencez par une vente, une facture ou une livraison. Le catalogue et les clients restent accessibles dans le menu.'));intro.append(decoration());workspace.querySelector('.page-heading')?.after(intro);}if(!home&&intro)intro.remove();
  if(!mobile){mobile=el('nav',{id:'cave-mobile-nav','aria-label':'Navigation principale'});for(const label of navLabels){const b=el('button',{type:'button'},label==='Produits & stock'?'Stock':label==='Ventes & factures'?'Ventes':label);b.dataset.target=label;b.onclick=()=>navigate(label);mobile.append(b);}document.body.append(mobile);}
@@ -63,6 +132,6 @@
  let pending=document.getElementById('cave-pending');if(!pending){pending=el('div',{id:'cave-pending',hidden:''});pending.append(el('h2',{},'Votre accès attend une autorisation'),el('p',{},'Un administrateur doit ajouter votre adresse dans Gestion des accès. Vous pouvez ouvrir Mon compte pour vous déconnecter.'));document.body.append(pending);}pending.hidden=a.role!=='pending';
  }
  function boot(){applyTheme(document.documentElement.dataset.caveTheme);window.addEventListener('storage',e=>{if(e.key==='cave-display-theme'){applyTheme(e.newValue);const select=document.getElementById('cave-theme-select');if(select)select.value=document.documentElement.dataset.caveTheme;}});dialog=el('div',{id:'cave-help',hidden:''});const card=el('section',{class:'cave-help-card',role:'dialog','aria-modal':'true','aria-labelledby':'cave-help-title'});const c=el('button',{type:'button',class:'cave-close','aria-label':'Fermer'},'Fermer');c.onclick=close;card.append(c,el('h2',{id:'cave-help-title'}),el('div',{class:'cave-help-content'}));dialog.append(card);dialog.onclick=e=>{if(e.target===dialog)close();};document.body.append(dialog);document.addEventListener('keydown',e=>{if(dialog.hidden)return;if(e.key==='Escape')close();if(e.key==='Tab'){const items=[...dialog.querySelectorAll('button,input,select,a')].filter(n=>!n.disabled&&!n.hidden);const first=items[0],last=items.at(-1);if(e.shiftKey&&document.activeElement===first){e.preventDefault();last?.focus();}else if(!e.shiftKey&&document.activeElement===last){e.preventDefault();first?.focus();}}});
- let timer;new MutationObserver(()=>{clearTimeout(timer);timer=setTimeout(refresh,50);}).observe(document.getElementById('root'),{childList:true,subtree:true});window.addEventListener('cave-account-changed',refresh);refresh();}
+ let timer;new MutationObserver(()=>{clearTimeout(timer);timer=setTimeout(refresh,50);}).observe(document.getElementById('root'),{childList:true,subtree:true});window.addEventListener('cave-account-changed',refresh);window.addEventListener('cave-sync-state-changed',updateUserMenu);refresh();}
  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot);else boot();
 })();
