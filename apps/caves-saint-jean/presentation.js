@@ -20,7 +20,7 @@
  const group=(title,id)=>{const section=el('section',{id});section.append(el('h3',{},title));panel.append(section);return section;};
  const action=(parent,label,run)=>{const b=el('button',{type:'button'},label);b.onclick=()=>{menu.open=false;summary.focus();run();};parent.append(b);return b;};
  const activity=group('Activité','cave-menu-activity');for(const [label,page] of [['Accueil','home'],['Produits & stock','products'],['Ventes & factures','sales'],['Livraisons','orders'],['Clients','clients'],['Analyse','analysis']])action(activity,label,()=>window.caveNavigate?.(page));
- const products=group('Photos & produits','cave-menu-products');action(products,'Scanner une bouteille',()=>window.caveScanOpen?.());
+ const products=group('Photos & produits','cave-menu-products');action(products,'Scanner une bouteille',()=>{if(typeof window.caveScanOpen==='function'){window.caveScanOpen();}else{const message=el('p',{},'Le module scanner n’a pas pu être chargé. Actualisez l’application puis réessayez.');show('Scanner indisponible',message);}});
  const display=group('Apparence','cave-menu-display');display.append(themeLabel,animation);
  const data=group('Données & sauvegardes','cave-menu-data');action(data,'Actualiser les données',()=>top.querySelector(':scope > .row button[title="Actualiser"]')?.click());const backup=action(data,'Télécharger une sauvegarde JSON',()=>top.querySelector(':scope > .row button.primary')?.click());backup.dataset.backupAction='';
  const settings=action(data,'Réglages de la cave',()=>window.caveNavigate?.('settings'));settings.dataset.settingsAction='';
