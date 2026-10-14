@@ -286,12 +286,25 @@ async function onPhoto(){
  status('Photo sélectionnée. Elle sera associée à la fiche produit après enregistrement.','ok');
 }
 async function jpegBlob(file){
- const bitmap=await createImageBitmap(file);
- const ratio=Math.min(1,1400/Math.max(bitmap.width,bitmap.height));
- const canvas=document.createElement('canvas');
- canvas.width=Math.max(1,Math.round(bitmap.width*ratio));canvas.height=Math.max(1,Math.round(bitmap.height*ratio));
- canvas.getContext('2d').drawImage(bitmap,0,0,canvas.width,canvas.height);bitmap.close();
- return new Promise((resolve,reject)=>canvas.toBlob(b=>b?resolve(b):reject(new Error('Compression impossible')),'image/jpeg',.78));
+ let bitmap=null,source=null,sourceURL='';
+ try{
+  if(typeof createImageBitmap==='function'){
+   bitmap=await createImageBitmap(file);
+   source=bitmap;
+  }else{
+   sourceURL=URL.createObjectURL(file);
+   const img=new Image();
+   await new Promise((resolve,reject)=>{img.onload=resolve;img.onerror=reject;img.src=sourceURL});
+   source=img;
+  }
+  const width=source.width,height=source.height;
+  const ratio=Math.min(1,1400/Math.max(width,height));
+  const canvas=document.createElement('canvas');
+  canvas.width=Math.max(1,Math.round(width*ratio));
+  canvas.height=Math.max(1,Math.round(height*ratio));
+  canvas.getContext('2d').drawImage(source,0,0,canvas.width,canvas.height);
+  return await new Promise((resolve,reject)=>canvas.toBlob(b=>b?resolve(b):reject(new Error('Compression impossible')),'image/jpeg',.78));
+ }finally{bitmap?.close?.();if(sourceURL)URL.revokeObjectURL(sourceURL)}
 }
 async function saveLinkedPhoto(productId,file,title,ean){
  const blob=await jpegBlob(file);
@@ -332,7 +345,7 @@ function installAttachAfterSave(form,before,file){
     return;
    }
    const newly=getProducts().filter(p=>!before.has(p.id));
-   const result=newly.length===1?newly[0]:newly.find(p=>p.name?.trim().toLowerCase()===expectedName.toLowerCase());
+   const result=expectedName?newly.find(p=>p.name?.trim().toLowerCase()===expectedName.toLowerCase()):null;
    if(!result)return;
    clearInterval(poll);
    try{await saveLinkedPhoto(result.id,file,result.name,productEAN(result));showMessage('✓ Produit enregistré, photo rattachée à sa fiche.')}
@@ -354,11 +367,6 @@ function launcher(){
  if(add&&!add.parentElement.querySelector('.cave-scan-launch')){
   const btn=document.createElement('button');btn.type='button';btn.className='cave-scan-launch';btn.textContent='▣ Scanner une bouteille';btn.onclick=()=>{reset();open()};
   add.parentElement.insertBefore(btn,add);
- }
- const form=productForm();
- if(form&&!form.querySelector('.cave-scan-launch')){
-  const btn=document.createElement('button');btn.type='button';btn.className='cave-scan-launch';btn.textContent='▣ Scanner un code-barres';
-  btn.style.marginBottom='10px';btn.onclick=()=>{reset();open()};form.prepend(btn);
  }
 }
 function schedule(){
