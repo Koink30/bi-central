@@ -1,4 +1,4 @@
-/* Les Caves de Saint-Jean — Scanner produit v25 (phase pilote).
+/* Les Caves de Saint-Jean — Scanner produit v28 (scan + OCR, sans faux résultat).
    Une fiche n'est jamais enregistrée sans validation dans le formulaire existant. */
 (() => {
 'use strict';
@@ -8,6 +8,7 @@ const CDN = 'https://cdn.jsdelivr.net/npm/@zxing/browser@0.1.5/umd/zxing-browser
 const BACKUP_CDN = 'https://unpkg.com/@zxing/browser@0.1.5/umd/zxing-browser.min.js';
 let modal, video, controls, reader, active = false, busy = false, draft = null, lastCode = '';
 let imgUrl = '';
+let photoOCRText = '';
 const $ = id => document.getElementById(id);
 const escapeText = value => String(value || '');
 const buttonLabel = '✦ Scanner une bouteille';
@@ -55,6 +56,24 @@ const css = [
 '.csm-warning{font-size:11px;color:#bdcbbd;margin-top:10px;line-height:1.55}',
 '.csm-demo{border:1px dashed #bda06d;border-radius:10px;padding:11px;background:#b4953917}',
 '.csm-qr{overflow-wrap:anywhere}',
+'.csm-camera{display:none}',
+'.csm-camera.csm-live{display:flex}',
+'.csm-camera.csm-preview{display:flex}',
+'.csm-grid{grid-template-columns:1fr!important;gap:12px}',
+'#cave-scan-modal{width:min(690px,100%);background:#172920}',
+'.csm-head h2{font:600 27px/1.1 system-ui,sans-serif}',
+'.csm-kicker{letter-spacing:.1em}',
+'.csm-result{min-height:70px}',
+'.csm-controls{display:grid;grid-template-columns:1fr 1fr;gap:10px}',
+'.csm-controls button{min-height:62px}',
+'.csm-status{margin:6px 0 10px}',
+'.csm-manual{margin:8px 0}',
+'.csm-manual summary{cursor:pointer;padding:9px 2px;font-size:13px;color:#e7d5ae}',
+'.csm-editor-title{font-weight:700;color:#edddbf;margin-top:10px}',
+'.csm-ocr-lines{display:flex;gap:6px;flex-wrap:wrap;margin:9px 0}',
+'.csm-ocr-lines button{padding:6px 9px;border-radius:7px;border:1px solid #80968277;background:#fff1;color:#fff;font-size:12px}',
+'.csm-ocr-note{font-size:12px;color:#d0d9cb;margin:8px 0}',
+'@media(max-width:430px){.csm-controls{grid-template-columns:1fr}.csm-controls button{min-height:54px}}',
 '@media(max-width:650px){#cave-scan-backdrop{padding:0;align-items:stretch}#cave-scan-modal{max-height:100dvh;height:100dvh;border-radius:0}.csm-head{padding:17px 16px 8px}.csm-body{padding:8px 16px 24px}.csm-grid{grid-template-columns:1fr}.csm-camera{aspect-ratio:16/9}.csm-row{gap:7px}}'
 ].join('\n');
 function makeUI() {
@@ -64,21 +83,21 @@ function makeUI() {
  modal=document.createElement('div');modal.id='cave-scan-backdrop';modal.setAttribute('aria-hidden','true');
  modal.innerHTML=[
  '<section id="cave-scan-modal" role="dialog" aria-modal="true" aria-label="Scanner une bouteille">',
- '<div class="csm-head"><div><div class="csm-kicker">Les Caves de Saint-Jean · Atelier intelligent</div><h2>De la bouteille à la fiche.</h2><div class="csm-sub">Scannez. Identifiez. Vérifiez. Ajoutez au catalogue.</div></div><button class="csm-close" type="button" id="csm-close" aria-label="Fermer">✕</button></div>',
+ '<div class="csm-head"><div><div class="csm-kicker">Les Caves de Saint-Jean</div><h2>Ajouter une bouteille</h2><div class="csm-sub">Une photo ou un scan. Vérifiez, puis enregistrez.</div></div><button class="csm-close" type="button" id="csm-close" aria-label="Fermer">✕</button></div>',
  '<div class="csm-body"><div class="csm-grid"><div>',
- '<div class="csm-camera" id="csm-camera"><div class="csm-camera-placeholder"><div class="csm-bottle">🍾</div><div>Votre bouteille devient<br>une fiche produit.</div></div><video id="csm-video" playsinline muted autoplay></video><div class="csm-frame"><div class="csm-sweep"></div></div></div>',
- '<div class="csm-controls"><button class="csm-action" id="csm-camera-btn" type="button">◉ Démarrer la caméra</button><button class="csm-alt" id="csm-photo-btn" type="button">▧ Lire une photo</button><input id="csm-image-file" type="file" accept="image/*" hidden></div>',
- '<div class="csm-inline"><label class="csm-field">Code-barres / EAN<input id="csm-ean" inputmode="numeric" autocomplete="off" placeholder="13 chiffres du code-barres"></label><button class="csm-action" id="csm-lookup" type="button">Rechercher</button></div>',
- '<div class="csm-status" role="status" id="csm-status" aria-live="polite">Prêt pour une bouteille réelle. La recherche ne modifie pas le catalogue.</div>',
- '<button class="csm-alt" id="csm-live-test" type="button">↗ Tester la recherche en ligne</button>',
- '<div class="csm-warning">Test technique : EAN d’une boisson courante, sans ajout automatique au catalogue. La base publique ne référence pas toutes les cuvées.</div>',
+ '<div class="csm-camera" id="csm-camera"><div class="csm-camera-placeholder"><div class="csm-bottle">🍾</div><div>Placez le code dans le cadre</div></div><video id="csm-video" playsinline muted autoplay></video><div class="csm-frame"><div class="csm-sweep"></div></div></div>',
+ '<div class="csm-controls"><button class="csm-action" id="csm-photo-btn" type="button">📷 Prendre / choisir une photo</button><button class="csm-alt" id="csm-camera-btn" type="button">▣ Scanner un code</button><input id="csm-image-file" type="file" accept="image/*" hidden></div>',
+ '<details class="csm-manual"><summary>J’ai un code à saisir manuellement</summary><div class="csm-inline"><label class="csm-field">Code-barres<input id="csm-ean" inputmode="numeric" autocomplete="off" placeholder="8 à 14 chiffres"></label><button class="csm-action" id="csm-lookup" type="button">Rechercher</button></div></details>',
+ '<div class="csm-status" role="status" id="csm-status" aria-live="polite">Prêt. Photographiez l’étiquette même si elle n’a pas de code-barres.</div>',
+ '',
+ '<div class="csm-warning">Reconnaissance assistée : aucune identification n’est garantie. Seules les informations vérifiées seront proposées.</div>',
  '</div><div>',
- '<div class="csm-result" id="csm-result"><div class="csm-kicker">PRÉVISUALISATION</div><p>La fiche reconnue s’affichera ici avec sa provenance.</p></div>',
- '<div id="csm-editor" hidden>',
+ '<div class="csm-result" id="csm-result"><div class="csm-kicker">RÉSULTAT</div><p>Le résultat apparaîtra ici. Aucun produit n’est ajouté sans validation.</p></div><button class="csm-alt" id="csm-manual-new" type="button" style="margin-top:9px">✎ Créer une fiche sans reconnaissance</button>',
+ '<div id="csm-editor" hidden><div class="csm-editor-title">Vérifiez les informations avant de continuer</div>',
  '<div class="csm-row"><label class="csm-field">Cuvée / Nom<input id="csm-name" maxlength="180"></label><label class="csm-field">Domaine / Marque<input id="csm-domain" maxlength="180"></label></div>',
  '<div class="csm-row"><label class="csm-field">Contenance<input id="csm-volume" placeholder="75 cl"></label><label class="csm-field">Millésime<input id="csm-vintage" placeholder="2024"></label></div>',
  '<div class="csm-row"><label class="csm-field">Famille<select id="csm-family"><option>Vin</option><option>Bière</option><option>Champagne</option><option>Spiritueux</option><option>Autre</option></select></label><label class="csm-field">Couleur<select id="csm-color"><option>À préciser</option><option>Rouge</option><option>Blanc</option><option>Rosé</option><option>Autre</option></select></label></div>',
- '<div class="csm-footer"><button class="csm-action" id="csm-use" type="button">✦ Préremplir la fiche produit →</button><button class="csm-alt" id="csm-rescan" type="button">Scanner une autre</button></div>',
+ '<div class="csm-footer"><button class="csm-action" id="csm-use" type="button">✓ Continuer dans la fiche produit →</button><button class="csm-alt" id="csm-rescan" type="button">↻ Autre bouteille</button></div>',
  '<div class="csm-warning">Données externes à vérifier : cuvée, millésime et format. Le prix et le stock restent à saisir par le caviste. Enregistrement uniquement depuis le formulaire habituel.</div>',
  '</div></div></div></div></section>'
  ].join('');
@@ -91,7 +110,7 @@ function makeUI() {
  $('csm-image-file').onchange=readPhoto;
  $('csm-lookup').onclick=()=>lookup($('csm-ean').value);
  $('csm-ean').addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();lookup(e.target.value)}});
- $('csm-live-test').onclick=()=>lookup('5449000000996');
+ $('csm-manual-new').onclick=manualDraft;
  $('csm-rescan').onclick=reset;
  $('csm-use').onclick=applyToForm;
  $('csm-name').oninput=()=>{$('csm-use').disabled=!$('csm-name').value.trim()};
@@ -100,7 +119,7 @@ function makeUI() {
 function status(text){if($('csm-status'))$('csm-status').textContent=text}
 function open(){
  makeUI();modal.classList.add('cave-scan-open');modal.setAttribute('aria-hidden','false');
- document.documentElement.style.overflow='hidden';$('csm-ean').focus();
+ document.documentElement.style.overflow='hidden';$('csm-photo-btn').focus();
 }
 function close(){stopCamera();if(modal){modal.classList.remove('cave-scan-open');modal.setAttribute('aria-hidden','true')}document.documentElement.style.overflow=''}
 function stopCamera(){
@@ -109,7 +128,7 @@ function stopCamera(){
  controls=null;
  if(video?.srcObject){for(const t of video.srcObject.getTracks())t.stop();video.srcObject=null}
  $('csm-camera')?.classList.remove('csm-live');
- if($('csm-camera-btn'))$('csm-camera-btn').textContent='◉ Démarrer la caméra';
+ if($('csm-camera-btn'))$('csm-camera-btn').textContent='▣ Scanner un code';
 }
 function getLibrary(){
  if(window.ZXingBrowser?.BrowserMultiFormatReader)return Promise.resolve(window.ZXingBrowser);
@@ -128,7 +147,7 @@ async function startCamera(){
  try{
   const lib=await getLibrary();
   reader=new lib.BrowserMultiFormatReader();
-  active=true;$('csm-camera').classList.add('csm-live');$('csm-camera-btn').textContent='■ Arrêter la caméra';
+  active=true;$('csm-camera').classList.add('csm-live');$('csm-camera-btn').textContent='■ Arrêter le scan';
   const newControls=await reader.decodeFromConstraints({audio:false,video:{facingMode:{ideal:'environment'}}},video,(result,error,c)=>{
    if(!active||!result)return;
    const value=String(result.getText?.()||result.text||'').trim();
@@ -142,33 +161,108 @@ async function startCamera(){
   stopCamera();status('Caméra non disponible : '+(e.message||'accès refusé')+'. Essayez la photo ou saisissez les chiffres.');
  }
 }
+
+const OCR_CDN='https://cdn.jsdelivr.net/npm/tesseract.js@5.1.1/dist/tesseract.min.js';
+const OCR_BACKUP='https://cdnjs.cloudflare.com/ajax/libs/tesseract.js/5.1.1/tesseract.min.js';
+let ocrLoading=null;
+function getOCRLibrary(){
+ if(window.Tesseract?.recognize)return Promise.resolve(window.Tesseract);
+ if(ocrLoading)return ocrLoading;
+ ocrLoading=new Promise((resolve,reject)=>{
+  function load(url,fallback){
+   const script=document.createElement('script');script.src=url;script.async=true;
+   script.onload=()=>window.Tesseract?.recognize?resolve(window.Tesseract):fallback?load(OCR_BACKUP,false):reject(new Error('OCR indisponible'));
+   script.onerror=()=>fallback?load(OCR_BACKUP,false):reject(new Error('OCR inaccessible : connexion nécessaire'));
+   document.head.appendChild(script);
+  }
+  load(OCR_CDN,true);
+ }).catch(e=>{ocrLoading=null;throw e});
+ return ocrLoading;
+}
+function manualDraft(){
+ stopCamera();
+ draft={code:'',name:'',domain:'',volume:'',vintage:'',family:'Vin',color:'À préciser',source:'Saisie manuelle'};
+ photoOCRText='';
+ $('csm-ean').value='';
+ renderDraft(false);
+ status('Fiche vierge. Indiquez le nom de la bouteille pour continuer.');
+ $('csm-name').focus();
+}
+function parseLabel(text,confidence){
+ const lines=String(text||'').split(/\r?\n/).map(s=>s.replace(/\s+/g,' ').trim()).filter(s=>s.length>=3).slice(0,30);
+ const clean=lines.filter(s=>/[A-Za-zÀ-ÿ]{3}/.test(s)&&!/(contient|sulfites?|ingr[eé]dients?|mis en bouteille|embouteill|produit de|alcool|volume|www\.|https?:|tel\s*:|^\s*(?:vin de france|appellation|indication g[eé]ographique)|\b(?:75\s*c[l1]|75O\s*m[l1])\b)/i.test(s));
+ const domain=clean.find(s=>/\b(ch[aâ]teau|domaine|clos|maison|brasserie)\b/i.test(s))||'';
+ const nameLine=clean.find(s=>s!==domain&&s.length<=65&&!/\d{5,}/.test(s))||'';
+ const year=(String(text).match(/\b(?:19[89]\d|20[0-3]\d)\b/)||[])[0]||'';
+ const quantity=(String(text).match(/\b(?:\d+(?:[.,]\d+)?)\s*(?:cl|ml|l)\b/i)||[])[0]||'';
+ const lc=String(text).toLowerCase();
+ return {
+  name:Number(confidence)>=55?nameLine:'',domain:Number(confidence)>=55?domain:'',
+  volume:normalizeQuantity(quantity),vintage:year,
+  family:/champagne/.test(lc)?'Champagne':/bi[eè]re|brasserie/.test(lc)?'Bière':/rhum|gin|vodka|whisky|liqueur/.test(lc)?'Spiritueux':'Vin',
+  color:/\bros[eé]\b/.test(lc)?'Rosé':/\bblanc\b/.test(lc)?'Blanc':/\brouge\b/.test(lc)?'Rouge':'À préciser',
+  lines:clean.slice(0,8)
+ };
+}
 async function readPhoto(){
  const file=$('csm-image-file').files?.[0];if(!file)return;
- stopCamera();status('Analyse de la photo…');
- let url='';
+ stopCamera();
+ if(imgUrl){URL.revokeObjectURL(imgUrl);imgUrl=''}
+ imgUrl=URL.createObjectURL(file);
+ photoOCRText='';
+ status('Analyse de la photo…');
  try{
-  const lib=await getLibrary();const img=new Image();url=URL.createObjectURL(file);
-  await new Promise((resolve,reject)=>{img.onload=resolve;img.onerror=reject;img.src=url});
-  const codeReader=new lib.BrowserMultiFormatReader();
-  const result=await codeReader.decodeFromImageElement(img);
-  const code=String(result.getText?.()||result.text||'').trim();
-  if(!code)throw new Error('Aucun code trouvé');
-  onDecoded(code);
- }catch(e){status('Code non détecté sur cette photo. Reprenez-la de près, sans reflet, ou saisissez l’EAN.')}
- finally{if(url)URL.revokeObjectURL(url);$('csm-image-file').value=''}
+  const img=new Image();
+  await new Promise((resolve,reject)=>{img.onload=resolve;img.onerror=reject;img.src=imgUrl});
+  try{
+   const lib=await getLibrary();
+   const result=await new lib.BrowserMultiFormatReader().decodeFromImageElement(img);
+   const code=String(result.getText?.()||result.text||'').trim();
+   if(/^https?:\/\//i.test(code)||gtin(code.replace(/[\s-]/g,''))){
+    onDecoded(code);return;
+   }
+  }catch(e){/* Pas de code : on tente l'OCR au lieu d'inventer un produit. */}
+  status('Aucun code détecté. Lecture de l’étiquette en cours…');
+  try{
+   const engine=await getOCRLibrary();
+   const out=await engine.recognize(imgUrl,'fra+eng');
+   const words=String(out?.data?.text||'').trim();
+   const confidence=Number(out?.data?.confidence||0);
+   const parsed=parseLabel(words,confidence);
+   photoOCRText=words;
+   draft={code:'',name:parsed.name,domain:parsed.domain,volume:parsed.volume,vintage:parsed.vintage,
+     family:parsed.family,color:parsed.color,image:imgUrl,source:'OCR de la photo (à vérifier)',ocrLines:parsed.lines,ocrConfidence:confidence};
+   renderDraft(false);
+   if(parsed.lines.length){
+    status('Texte extrait de la vraie photo. Confirmez le nom et les autres champs.');
+   }else{
+    status('Étiquette peu lisible. Complétez le nom manuellement ou reprenez la photo de face.');
+   }
+  }catch(e){
+   draft={code:'',name:'',domain:'',volume:'',vintage:'',family:'Vin',color:'À préciser',image:imgUrl,source:'Photo non reconnue'};
+   renderDraft(false);
+   status('Lecture automatique indisponible. Votre photo reste visible et vous pouvez saisir le nom.');
+  }
+ }catch(e){
+  status('Impossible de lire cette photo. Essayez une autre image.');
+ }finally{$('csm-image-file').value=''}
 }
+
 function onDecoded(value){
  if(/^https?:\/\//i.test(value)){
-  draft=null; $('csm-editor').hidden=true;
-  const dest=$('csm-result');dest.replaceChildren();
-  const h=document.createElement('div');h.className='csm-kicker';h.textContent='QR CODE DÉTECTÉ';
-  const p=document.createElement('p');p.className='csm-qr';p.textContent=value;
-  const a=document.createElement('a');a.href=value;a.target='_blank';a.rel='noopener noreferrer';a.textContent='Consulter la fiche du producteur ↗';
-  a.style.color='#edcd8d';a.style.display='inline-block';a.style.marginTop='8px';
-  dest.append(h,p,a);status('QR code reconnu. Il ouvre une fiche externe, sans import automatique.');
+  stopCamera();
+  draft={code:'',name:'',domain:'',volume:'',vintage:'',family:'Vin',color:'À préciser',source:'Lien QR du producteur',url:value};
+  renderDraft(false);
+  const dest=$('csm-result');
+  const link=document.createElement('a');link.href=value;link.target='_blank';link.rel='noopener noreferrer';
+  link.textContent='↗ Voir les informations du producteur';link.style.color='#edcd8d';
+  const p=document.createElement('p');p.className='csm-ocr-note';p.textContent='QR code lu. Ce site externe ne permet pas forcément un import automatique : complétez la fiche avec les informations affichées.';
+  dest.append(p,link);
+  status('QR code détecté. Ouvrez la fiche du producteur et confirmez les informations.');
   return;
  }
- const code=value.replace(/[\s-]/g,'');
+ const code=String(value||'').replace(/[\s-]/g,'');
+ if(!gtin(code)){status('Ce code ne correspond pas à un EAN valide. Essayez de photographier l’étiquette.');return}
  $('csm-ean').value=code;
  lookup(code);
 }
@@ -234,14 +328,14 @@ async function lookup(input){
    result=await response.json();
   }finally{clearTimeout(timeout)}
   const p=result?.status===1?result.product:null;
-  if(!p){draft={code,name:'',domain:'',volume:'75 cl',vintage:'',family:'Vin',color:'À préciser',source:'Aucune fiche dans Open Food Facts'};renderDraft(false);status('Code valide, mais aucune fiche publique trouvée. Complétez le nom pour continuer.');return}
+  if(!p){draft={code,name:'',domain:'',volume:'',vintage:'',family:'Vin',color:'À préciser',source:'Code valide, produit absent de la base publique'};renderDraft(false);status('Code valide, mais aucune fiche publique trouvée. Complétez le nom pour continuer.');return}
   const name=escapeText(p.product_name_fr||p.product_name||p.generic_name).trim();
-  const volume=normalizeQuantity(p.quantity)||'75 cl';
+  const volume=normalizeQuantity(p.quantity)||'';
   const year=(name.match(/\b(19|20)\d{2}\b/)||[])[0]||'';
   draft={code,name,domain:escapeText(p.brands).trim(),volume,vintage:year,family:inferFamily(p),color:inferColor(p),image:p.image_front_url||p.image_url||'',source:'Open Food Facts'};
   renderDraft(true);status('✓ Résultat retrouvé en ligne. Contrôlez les champs avant de créer la fiche.');
  }catch(error){
-  draft={code,name:'',domain:'',volume:'75 cl',vintage:'',family:'Vin',color:'À préciser',source:'Recherche indisponible'};
+  draft={code,name:'',domain:'',volume:'',vintage:'',family:'Vin',color:'À préciser',source:'Recherche indisponible'};
   renderDraft(false);
   status('Recherche externe indisponible ('+(error.name==='AbortError'?'délai dépassé':error.message)+'). Saisie assistée disponible, sans inventer de données.');
  }finally{busy=false;$('csm-lookup').disabled=false}
@@ -257,22 +351,29 @@ function renderExisting(p,code){
 function renderDraft(recognized){
  $('csm-editor').hidden=false;
  const target=$('csm-result');target.replaceChildren();
- const kicker=document.createElement('div');kicker.className='csm-kicker';kicker.textContent=recognized?'✓ IDENTIFIÉ PAR RECHERCHE RÉELLE':'⚑ CODE RECONNU · FICHE À COMPLÉTER';
+ const kicker=document.createElement('div');kicker.className='csm-kicker';kicker.textContent=recognized?'✓ CODE-BARRES RECONNU EN LIGNE':draft.source.startsWith('OCR')?'📷 TEXTE LU SUR LA PHOTO — À VÉRIFIER':draft.url?'▣ QR CODE LU — FICHE À COMPLÉTER':'FICHE À COMPLÉTER';
  const row=document.createElement('div');row.className='csm-product';
- if(draft.image&&/^https:\/\//.test(draft.image)){
+ if(draft.image&&/^(https:\/\/|blob:)/.test(draft.image)){
   const img=document.createElement('img');img.loading='lazy';img.alt='Visuel référencé par la base publique';img.referrerPolicy='no-referrer';img.src=draft.image;img.onerror=()=>img.remove();row.append(img);
  }
  const right=document.createElement('div');
  const name=document.createElement('div');name.className='csm-product-name';name.textContent=draft.name||'Nouvelle référence';
  const domain=document.createElement('div');domain.className='csm-small';domain.textContent=draft.domain||'Domaine à renseigner';
- const chip=document.createElement('span');chip.className='csm-chip';chip.textContent='EAN '+draft.code;
  const src=document.createElement('span');src.className='csm-chip';src.textContent=draft.source;
- right.append(name,domain,chip,src);row.append(right);target.append(kicker,row);
+ right.append(name,domain);
+ if(draft.code){const chip=document.createElement('span');chip.className='csm-chip';chip.textContent='EAN '+draft.code;right.append(chip)}
+ right.append(src);row.append(right);target.append(kicker,row);
+ if(Array.isArray(draft.ocrLines)&&draft.ocrLines.length){
+  const hint=document.createElement('p');hint.className='csm-ocr-note';hint.textContent='Texte détecté : touchez la ligne correspondant au nom de la cuvée pour le choisir.';
+  const chips=document.createElement('div');chips.className='csm-ocr-lines';
+  draft.ocrLines.forEach(line=>{const b=document.createElement('button');b.type='button';b.textContent=line;b.title='Utiliser comme nom du produit';b.onclick=()=>{$('csm-name').value=line;draft.name=line;$('csm-use').disabled=false;status('Nom choisi : vérifiez et continuez.');};chips.append(b)});
+  target.append(hint,chips);
+ }
  for(const k of ['name','domain','volume','vintage','family','color'])$('csm-'+k).value=draft[k]||'';
  $('csm-use').disabled=!draft.name.trim();
 }
 function reset(){
- stopCamera();draft=null;lastCode='';$('csm-ean').value='';$('csm-editor').hidden=true;
+ stopCamera();if(imgUrl){URL.revokeObjectURL(imgUrl);imgUrl=''}draft=null;lastCode='';photoOCRText='';$('csm-ean').value='';$('csm-editor').hidden=true;
  $('csm-result').innerHTML='<div class="csm-kicker">PRÉVISUALISATION</div><p>Prêt pour une nouvelle bouteille.</p>';
  status('Prêt. Scannez une autre bouteille ou saisissez son code.');
 }
@@ -299,7 +400,7 @@ async function applyToForm(){
  const name=$('csm-name').value.trim();
  if(!name){status('Indiquez au moins le nom du produit.');return}
  const data={name,domain:$('csm-domain').value.trim(),volume:$('csm-volume').value.trim(),vintage:$('csm-vintage').value.trim(),family:$('csm-family').value,color:$('csm-color').value,code:draft.code,source:draft.source};
- if(existing(data.code)){status('Référence déjà enregistrée. Évitez un doublon.');return}
+ if(data.code&&existing(data.code)){status('Référence déjà enregistrée. Évitez un doublon.');return}
  $('csm-use').disabled=true;
  try{
   close();
@@ -315,7 +416,7 @@ async function applyToForm(){
    ['Famille',data.family],['Couleur',data.color]
   ];
   for(const [label,value]of assignments)fillControl(form,label,value);
-  const note= 'EAN : '+data.code+'\nSource : '+data.source+' — informations à vérifier avant validation.';
+  const note= (data.code?'EAN : '+data.code+'\n':'')+'Source : '+data.source+(draft.url?'\nURL QR : '+draft.url:'')+' — informations à vérifier avant validation.';
   const existingNotes=[...form.querySelectorAll('label.field')].find(x=>x.querySelector('span')?.textContent==='Notes')?.querySelector('textarea')?.value||'';
   fillControl(form,'Notes',existingNotes?[existingNotes,note].join('\n'):note);
   const first=form.querySelector('input');first?.focus();
