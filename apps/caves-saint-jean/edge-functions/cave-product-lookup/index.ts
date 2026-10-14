@@ -21,15 +21,24 @@ const respond = (code: number, data: unknown, origin: string) => {
 };
 function publicURL(value: string): URL | null {
   try {
-    if (value.length > 1500) return null;
-    const u = new URL(value), host = u.hostname.toLowerCase().replace(/\.$/, "");
-    // Les e-étiquettes de vin utilisent parfois encore HTTP ; elles doivent rester lisibles.
-    // Une passerelle publique lit la page ; ce service ne contacte jamais directement l’hôte du QR.
-    if (!["https:", "http:"].includes(u.protocol) || u.username || u.password) return null;
+    const raw = String(value || "").trim();
+    if (!raw || raw.length > 2400) return null;
+    const normalized = /^www\./i.test(raw) ? "https://" + raw : raw;
+    const u = new URL(normalized);
+    // Any real HTTP(S) QR URL is recognized. We never fetch that host from Supabase,
+    // only through an external public-page reader.
+    if (!["https:", "http:"].includes(u.protocol) || u.username || u.password || !u.hostname) return null;
+    const host = u.hostname.toLowerCase().replace(/\.$/, "");
+    const stripped = host.replace(/^\[|\]$/g, "");
+    // Block loopback, link-local, private and non-public hostnames in URL fetches.
+    if (stripped === "localhost" || stripped === "0.0.0.0" ||
+        /(?:^|\.)(?:localhost|local|internal|test|invalid)$/.test(stripped) ||
+        /^127\./.test(stripped) || /^10\./.test(stripped) ||
+        /^192\.168\./.test(stripped) || /^169\.254\./.test(stripped) ||
+        /^172\.(?:1[6-9]|2\d|3[01])\./.test(stripped) ||
+        /^(?:::1|::|fc[0-9a-f]{2}:|fd[0-9a-f]{2}:|fe80:)/i.test(stripped)) return null;
+    // Nonstandard ports are not supported by our external reader.
     if (u.port && !["80", "443"].includes(u.port)) return null;
-    if (!/^[a-z0-9.-]+$/.test(host) || !host.includes(".") || host.includes("..") ||
-        host.length > 180 || /^\d+(?:\.\d+)*$/.test(host) ||
-        /(?:^|\.)(?:localhost|local|internal|example|test|invalid)$/.test(host)) return null;
     return u;
   } catch { return null; }
 }
@@ -135,7 +144,7 @@ function extractMarkdown(content: string) {
 }
 async function lookQR(link: string) {
   const url = publicURL(link);
-  if (!url) return { found: false, type: "qr", error: "Ce QR ne contient pas une adresse web publique reconnue.", url: link };
+  if (!url) return { found: false, type: "qr", error: "QR lu. La lecture automatique de cette destination n’est pas disponible. Consultez le lien pour voir la fiche du producteur.", url: link, urlReadable: false };
   // The reader's URL fetch is done externally. No direct request to user-provided host.
   const endpoint = "https://r.jina.ai/" + url.href;
   let body = "";
