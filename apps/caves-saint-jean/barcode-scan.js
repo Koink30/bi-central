@@ -267,21 +267,118 @@ async function runPhotoOCR(){
   status(parsed.lines.length?'Lignes proposées : touchez uniquement celle qui correspond à la cuvée.':'Étiquette non reconnue. Saisissez le nom manuellement.','warn');
  }catch(e){status('OCR indisponible ou lecture échouée. Saisissez le nom manuellement.','warn')}
 }
+
+function secureQrUrl(value){
+ try{
+  const url=new URL(value);
+  if(!['https:','http:'].includes(url.protocol)||url.username||url.password||url.hostname==='localhost')return null;
+  if(/^(127\.|10\.|192\.168\.|169\.254\.|172\.(1[6-9]|2\d|3[01])\.)/.test(url.hostname)||/\.local$/i.test(url.hostname))return null;
+  return url.href;
+ }catch{return null}
+}
+function makeQrLink(url){
+ const link=document.createElement('a');
+ link.href=url;link.target='_blank';link.rel='noopener noreferrer';link.className='csm-link';
+ link.textContent='↗ Consulter la fiche du producteur';return link;
+}
+function parseQrFields(text){
+ const lines=String(text||'').slice(0,50000).split(/\r?\n/).map(x=>x.replace(/^[\s#>*|•-]+/,'').replace(/[*_]+/g,'').trim()).filter(Boolean).slice(0,350);
+ const patterns=[
+  ['name',/^(?:nom du vin|nom de la cuv[eé]e|nom du produit|cuv[eé]e|wine name|product name)\s*[:：-]\s*(.+)$/i],
+  ['domain',/^(?:domaine|producteur|ch[aâ]teau|winery|producer)\s*[:：-]\s*(.+)$/i],
+  ['vintage',/^(?:mill[eé]sime|vintage)\s*[:：-]\s*(.+)$/i],
+  ['volume',/^(?:contenance|volume net|volume)\s*[:：-]\s*(.+)$/i],
+  ['appellation',/^(?:appellation|aop|aoc|igp)\s*[:：-]\s*(.+)$/i],
+  ['color',/^(?:couleur|type de vin)\s*[:：-]\s*(.+)$/i]
+ ];
+ const data={};
+ for(let i=0;i<lines.length;i++){
+  for(const [key,re] of patterns){
+   let match=lines[i].match(re);
+   if(!match&&lines[i+1])match=(lines[i]+': '+lines[i+1]).match(re);
+   if(match&&!data[key]){
+    const value=match[1].trim().slice(0,125);
+    if(value&&/[a-zà-ÿ0-9]/i.test(value))data[key]=value;
+   }
+  }
+ }
+ if(data.vintage)data.vintage=(data.vintage.match(/\b(?:19\d{2}|20\d{2})\b/)||[])[0]||'';
+ if(data.volume)data.volume=normalizeQuantity(data.volume);
+ if(data.color)data.color=/ros[eé]/i.test(data.color)?'Rosé':/blanc|white/i.test(data.color)?'Blanc':/rouge|red/i.test(data.color)?'Rouge':'À préciser';
+ return data;
+}
+function parseQrHTML(html){
+ const doc=new DOMParser().parseFromString(html,'text/html');
+ let structured={};
+ for(const script of doc.querySelectorAll('script[type="application/ld+json"]')){
+  try{
+   const root=JSON.parse(script.textContent);
+   const items=Array.isArray(root)?root:[root];
+   const entries=items.flatMap(item=>item&&item['@graph']?item['@graph']:[item]);
+   for(const item of entries){
+    if(!item||!/(product|wine|beverage)/i.test(String(item['@type']||'')))continue;
+    if(typeof item.name==='string')structured.name=item.name.slice(0,120);
+    if(item.brand)structured.domain=String(typeof item.brand==='string'?item.brand:item.brand.name||'').slice(0,120);
+   }
+  }catch{}
+ }
+ doc.querySelectorAll('script,style,nav,footer,noscript').forEach(node=>node.remove());
+ const body=doc.body?.textContent||'';
+ return {...parseQrFields(body),...structured};
+}
+async function getQRPage(url,viaReader){
+ const timer=new AbortController();const kill=setTimeout(()=>timer.abort(),viaReader?11000:8000);
+ try{
+  const endpoint=viaReader?'https://r.jina.ai/'+url:url;
+  const res=await fetch(endpoint,{signal:timer.signal,mode:'cors',cache:'no-store'});
+  if(!res.ok)throw new Error('HTTP '+res.status);
+  const body=(await res.text()).slice(0,230000);
+  return viaReader?parseQrFields(body):parseQrHTML(body);
+ }finally{clearTimeout(kill)}
+}
+function showQRTools(url){
+ const wrap=document.createElement('div');wrap.className='csm-extras';wrap.append(makeQrLink(url));
+ const btn=document.createElement('button');btn.className='csm-alt';btn.type='button';btn.textContent='↻ Relancer l’extraction';
+ btn.onclick=()=>enrichQR(url);wrap.append(btn);$('csm-result').append(wrap);
+}
+async function enrichQR(url){
+ if(qrBusy||!draft||draft.url!==url)return;
+ qrBusy=true;
+ status('QR détecté : lecture de la page du producteur…');
+ try{
+  let fields={};
+  try{fields=await getQRPage(url,false)}catch{}
+  if(!fields.name&&!fields.domain&&!fields.vintage&&!fields.appellation){
+   try{fields=await getQRPage(url,true)}catch{}
+  }
+  if(!draft||draft.url!==url)return;
+  const count=['name','domain','vintage','volume','appellation','color'].filter(k=>fields[k]).length;
+  if(count>0){
+   draft={...draft,name:fields.name||'',domain:fields.domain||'',vintage:fields.vintage||'',
+    volume:fields.volume||'',color:fields.color||'À préciser',appellation:fields.appellation||'',
+    source:'QR du producteur — à vérifier'};
+   renderDraft(false);showQRTools(url);
+   status('QR : '+count+' champ(s) récupéré(s). Vérifiez les informations avant de valider.','success');
+  }else{
+   const notice=document.createElement('p');notice.className='csm-help';
+   notice.textContent='QR lu correctement mais la page ne livre pas de données produit accessibles. Consultez-la puis remplissez la fiche.';
+   $('csm-result').append(notice);showQRTools(url);
+   status('QR lu, mais la fiche externe ne permet pas de préremplir automatiquement.','warn');
+  }
+ }finally{qrBusy=false}
+}
 function onDecoded(value){
- if(/^https?:\/\//i.test(value)){
+ const link=secureQrUrl(value);
+ if(link){
   stopCamera();
-  draft={code:'',name:'',domain:'',volume:'',vintage:'',family:'Vin',color:'À préciser',source:'Lien QR du producteur',url:value};
+  draft={code:'',name:'',domain:'',volume:'',vintage:'',family:'Vin',color:'À préciser',source:'Lien QR du producteur',url:link};
   renderDraft(false);
-  const dest=$('csm-result');
-  const link=document.createElement('a');link.href=value;link.target='_blank';link.rel='noopener noreferrer';
-  link.textContent='↗ Voir les informations du producteur';link.style.color='#edcd8d';
-  const p=document.createElement('p');p.className='csm-ocr-note';p.textContent='QR code lu. Ce site externe ne permet pas forcément un import automatique : complétez la fiche avec les informations affichées.';
-  dest.append(p,link);
-  status('QR code détecté. Ouvrez la fiche du producteur et confirmez les informations.');
+  $('csm-result').append(makeQrLink(link));
+  enrichQR(link);
   return;
  }
  const code=String(value||'').replace(/[\s-]/g,'');
- if(!gtin(code)){status('Ce code ne correspond pas à un EAN valide. Essayez de photographier l’étiquette.');return}
+ if(!gtin(code)){status('Code non reconnu. Essayez le code horizontal au dos de la bouteille.','warn');return}
  $('csm-ean').value=code;
  lookup(code);
 }
@@ -435,7 +532,7 @@ async function applyToForm(){
    ['Famille',data.family],['Couleur',data.color]
   ];
   for(const [label,value]of assignments)fillControl(form,label,value);
-  const note= (data.code?'EAN : '+data.code+'\n':'')+'Source : '+data.source+(draft.url?'\nURL QR : '+draft.url:'')+' — informations à vérifier avant validation.';
+  const note= (data.code?'EAN : '+data.code+'\n':'')+'Source : '+data.source+(draft.url?'\nURL QR : '+draft.url:'')+(draft.appellation?'\nAppellation : '+draft.appellation:'')+' — informations à vérifier avant validation.';
   const existingNotes=[...form.querySelectorAll('label.field')].find(x=>x.querySelector('span')?.textContent==='Notes')?.querySelector('textarea')?.value||'';
   fillControl(form,'Notes',existingNotes?[existingNotes,note].join('\n'):note);
   const first=form.querySelector('input');first?.focus();
