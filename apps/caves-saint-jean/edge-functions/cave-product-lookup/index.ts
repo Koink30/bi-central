@@ -23,9 +23,10 @@ function publicURL(value: string): URL | null {
   try {
     if (value.length > 1500) return null;
     const u = new URL(value), host = u.hostname.toLowerCase().replace(/\.$/, "");
-    // Public HTTPS hostnames only. Never fetch the arbitrary QR host on this server:
-    // the external reader service fetches it, reducing SSRF exposure.
-    if (u.protocol !== "https:" || (u.port && u.port !== "443") || u.username || u.password) return null;
+    // Les e-étiquettes de vin utilisent parfois encore HTTP ; elles doivent rester lisibles.
+    // Une passerelle publique lit la page ; ce service ne contacte jamais directement l’hôte du QR.
+    if (!["https:", "http:"].includes(u.protocol) || u.username || u.password) return null;
+    if (u.port && !["80", "443"].includes(u.port)) return null;
     if (!/^[a-z0-9.-]+$/.test(host) || !host.includes(".") || host.includes("..") ||
         host.length > 180 || /^\d+(?:\.\d+)*$/.test(host) ||
         /(?:^|\.)(?:localhost|local|internal|example|test|invalid)$/.test(host)) return null;
@@ -134,7 +135,7 @@ function extractMarkdown(content: string) {
 }
 async function lookQR(link: string) {
   const url = publicURL(link);
-  if (!url) return { found: false, type: "qr", error: "QR invalide : l'adresse doit être un site public HTTPS." };
+  if (!url) return { found: false, type: "qr", error: "Ce QR ne contient pas une adresse web publique reconnue.", url: link };
   // The reader's URL fetch is done externally. No direct request to user-provided host.
   const endpoint = "https://r.jina.ai/" + url.href;
   let body = "";
