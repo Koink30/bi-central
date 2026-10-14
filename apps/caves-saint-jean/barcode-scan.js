@@ -230,13 +230,13 @@ function cloudSession(){
  }catch{return null}
 }
 async function lookupRemote(type,value){
- const session=cloudSession();
- if(!session?.access_token)throw new Error('Connectez-vous au compte cloud pour la recherche Internet.');
+ const token=typeof window.caveLookupToken==='function'?await window.caveLookupToken():cloudSession()?.access_token;
+ if(!token)throw new Error('Connectez-vous au compte cloud pour la recherche Internet.');
  const key='sb_publishable_LMvpanipzKoVownEbIYj8w_eZiO4toc';
  const ctrl=new AbortController(),timer=setTimeout(()=>ctrl.abort(),25000);
  try{
   const response=await fetch('https://pkvrabliaorhpittelwe.supabase.co/functions/v1/cave-product-lookup',{
-   method:'POST',signal:ctrl.signal,headers:{'Content-Type':'application/json',apikey:key,Authorization:'Bearer '+session.access_token},
+   method:'POST',signal:ctrl.signal,headers:{'Content-Type':'application/json',apikey:key,Authorization:'Bearer '+token},
    body:JSON.stringify(type==='qr'?{type,url:value}:{type,code:value})
   });
   const result=await response.json().catch(()=>({}));
