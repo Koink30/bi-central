@@ -323,8 +323,15 @@ function parseQrHTML(html){
   }catch{}
  }
  doc.querySelectorAll('script,style,nav,footer,noscript').forEach(node=>node.remove());
- const body=doc.body?.textContent||'';
- return {...parseQrFields(body),...structured};
+ const elems=doc.body?.querySelectorAll('h1,h2,h3,h4,p,li,dt,dd,th,td,span,strong,div')||[];
+ const lines=[];
+ for(const el of elems){
+  const t=el.textContent?.replace(/\s+/g,' ').trim()||'';
+  if(t&&t.length<=220)lines.push(t);
+  if(lines.length>400)break;
+ }
+ const body=(doc.body?.textContent||'').replace(/(?:\s{3,})/g,'\n');
+ return {...parseQrFields(lines.join('\n')+'\n'+body),...structured};
 }
 async function getQRPage(url,viaReader){
  const timer=new AbortController();const kill=setTimeout(()=>timer.abort(),viaReader?11000:8000);
@@ -514,7 +521,7 @@ function renderExisting(p,code){
 function renderDraft(recognized){
  $('csm-editor').hidden=false;
  const target=$('csm-result');target.replaceChildren();
- const kicker=document.createElement('div');kicker.className='csm-kicker';kicker.textContent=recognized?'✓ CODE-BARRES RECONNU EN LIGNE':draft.source.startsWith('OCR')?'📷 TEXTE LU SUR LA PHOTO — À VÉRIFIER':draft.url?'▣ QR CODE LU — FICHE À COMPLÉTER':'FICHE À COMPLÉTER';
+ const kicker=document.createElement('div');kicker.className='csm-kicker';kicker.textContent=recognized?'✓ EAN IDENTIFIÉ EN LIGNE':draft.url?(draft.name?'✓ QR : FICHE PRÉREMPLIE — À VÉRIFIER':'▣ QR CODE LU — FICHE À COMPLÉTER'):draft.source.startsWith('OCR')?'📷 OCR : TEXTE À CONFIRMER':'FICHE À COMPLÉTER';
  const row=document.createElement('div');row.className='csm-product';
  if(draft.image&&/^(https:\/\/|blob:)/.test(draft.image)){
   const img=document.createElement('img');img.loading='lazy';img.alt='Visuel référencé par la base publique';img.referrerPolicy='no-referrer';img.src=draft.image;img.onerror=()=>img.remove();row.append(img);
@@ -526,6 +533,7 @@ function renderDraft(recognized){
  right.append(name,domain);
  if(draft.code){const chip=document.createElement('span');chip.className='csm-chip';chip.textContent='EAN '+draft.code;right.append(chip)}
  right.append(src);row.append(right);target.append(kicker,row);
+ if(draft.appellation){const app=document.createElement('div');app.className='csm-small';app.textContent='Appellation : '+draft.appellation;target.append(app)}
  if(Array.isArray(draft.ocrLines)&&draft.ocrLines.length){
   const hint=document.createElement('p');hint.className='csm-ocr-note';hint.textContent='Texte détecté : touchez la ligne correspondant au nom de la cuvée pour le choisir.';
   const chips=document.createElement('div');chips.className='csm-ocr-lines';
