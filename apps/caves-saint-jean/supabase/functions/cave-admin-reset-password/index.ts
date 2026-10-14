@@ -31,7 +31,7 @@ function respond(status, data, origin = "") {
     headers["Access-Control-Allow-Headers"] = "authorization, apikey, content-type, x-client-info";
     headers["Access-Control-Allow-Methods"] = "POST, OPTIONS";
   }
-  return new Response(JSON.stringify(data), { status, headers });
+  return new Response(status === 204 ? null : JSON.stringify(data), { status, headers });
 }
 
 function temporaryPassword() {
