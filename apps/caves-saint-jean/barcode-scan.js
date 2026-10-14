@@ -166,14 +166,16 @@ function getProducts(){
 }
 function normalize(value){return String(value||'').replace(/^0+/,'').trim()}
 function productEAN(product){
- const values=[product?.ean,product?.barcode,product?.gtin,product?.code_barre];
- for(const v of values){if(v&&gtinValid(String(v)))return String(v)}
- const notes=String(product?.notes||'');
- const m=notes.match(/(?:^|\n)\s*(?:EAN|GTIN|Code[- ]barres?)\s*[:：]\s*(\d{8,14})/i);
- return m?m[1]:'';
+ const fieldCodes=[product?.ean,product?.barcode,product?.gtin,product?.code_barre].map(v=>String(v||''));
+ const noteCodes=[...String(product?.notes||'').matchAll(/(?:^|\n)\s*(?:EAN|GTIN|Code[- ]barres?)\s*[:：]\s*(\d{8,14})/gi)].map(x=>x[1]);
+ return [...fieldCodes,...noteCodes].find(v=>gtinValid(v))||'';
 }
 function matchingProduct(code){
- return getProducts().find(p=>normalize(productEAN(p))===normalize(code)&&productEAN(p))||null;
+ return getProducts().find(p=>{
+  const fieldCodes=[p?.ean,p?.barcode,p?.gtin,p?.code_barre].map(v=>String(v||''));
+  const noteCodes=[...String(p?.notes||'').matchAll(/(?:^|\n)\s*(?:EAN|GTIN|Code[- ]barres?)\s*[:：]\s*(\d{8,14})/gi)].map(x=>x[1]);
+  return [...fieldCodes,...noteCodes].some(v=>gtinValid(v)&&normalize(v)===normalize(code));
+ })||null;
 }
 function renderResult(){
  const target=$('csm-result');if(!target)return;
@@ -189,11 +191,34 @@ function renderResult(){
   kicker.textContent='CODE LU · NOUVELLE RÉFÉRENCE';
   info.textContent='EAN '+currentCode+' — aucune correspondance dans votre catalogue. Vous pouvez créer sa fiche.';
   target.append(kicker,info);
+  const details=document.createElement('details');details.style.marginTop='10px';
+  const summary=document.createElement('summary');summary.textContent='Ce vin existe déjà ? Le chercher par nom';summary.style.cursor='pointer';summary.className='csm-muted';
+  const input=document.createElement('input');input.className='csm-input';input.placeholder='Nom ou domaine…';input.setAttribute('aria-label','Chercher un produit existant');
+  const list=document.createElement('div');list.style.marginTop='6px';
+  input.oninput=()=>{
+   list.replaceChildren();
+   const query=input.value.trim().normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase();
+   if(query.length<2)return;
+   const matches=getProducts().filter(p=>([p.name,p.domain,p.id].join(' ').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase()).includes(query)).slice(0,7);
+   for(const p of matches){
+    const button=document.createElement('button');button.type='button';button.className='csm-ghost';
+    button.style.cssText='display:block;width:100%;margin-top:5px;text-align:left';
+    button.textContent=(p.name||'Sans nom')+' · '+(p.domain||p.id);
+    button.onclick=()=>{
+     foundProduct=p;renderResult();
+     status('Référence choisie : ouvrez sa fiche pour y enregistrer le code-barres.','ok');
+    };
+    list.append(button);
+   }
+   if(!matches.length)list.textContent='Aucun produit correspondant.';
+  };
+  details.append(summary,input,list);target.append(details);
  }else{
   kicker.textContent='FICHE PRODUIT';info.textContent='Aucune bouteille identifiée. Créez une fiche manuellement si besoin.';
   target.append(kicker,info);
  }
  $('csm-open').hidden=!foundProduct;
+ $('csm-open').textContent=foundProduct&&currentCode&&normalize(productEAN(foundProduct))!==normalize(currentCode)?'Lier ce code à la fiche':'Ouvrir la fiche existante';
  $('csm-new').hidden=!!foundProduct;
 }
 async function lookup(input){
@@ -272,8 +297,15 @@ async function openExisting(){
    const title=b.closest('.product-title');
    return title?.querySelector('.metadata')?.textContent?.split('·')[0]?.trim()===p.id;
   }),6000).catch(()=>null);
-  if(link)link.click();
-  else showMessage('Produit '+p.name+' retrouvé. Recherchez-le dans « Produits & stock ».');
+  if(link){
+   link.click();
+   const form=await waitFor(productForm,6500);
+   if(currentCode&&!matchingProduct(currentCode)){
+    const oldNotes=field(form,'Notes')?.value?.trim()||'';
+    await fillFields(form,[['Notes',(oldNotes?oldNotes+'\n':'')+'EAN : '+currentCode]]);
+    showMessage('Code-barres ajouté à la fiche. Cliquez sur Enregistrer pour confirmer.');
+   }
+  }else showMessage('Produit '+p.name+' retrouvé. Recherchez-le dans « Produits & stock ».');
  }catch(e){status('Impossible de rattacher la photo : '+e.message,'warn');return}
  finally{loading=false}
 }
