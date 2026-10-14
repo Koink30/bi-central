@@ -45,6 +45,31 @@
   window.caveOpenAccount = () => openPanel();
   window.caveTeamList = () => api('/rest/v1/cave_members?select=email,role,user_id,owner_id&order=created_at');
   window.caveSetMember = (email,role) => api('/rest/v1/rpc/cave_set_member', {method:'POST',body:JSON.stringify({member_email:email,member_role:role})});
+  window.caveResetMemberPassword = async email => {
+    if (!session || membership?.role !== 'admin' || membership?.user_id !== membership?.owner_id)
+      throw new Error('Seul le propriétaire administrateur peut réinitialiser un mot de passe.');
+    await ensureSession();
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 20000);
+    let response;
+    try {
+      response = await fetch(SUPABASE_URL + '/functions/v1/cave-admin-reset-password', {
+        method: 'POST',
+        headers: {
+          apikey: SUPABASE_KEY, Authorization: 'Bearer ' + session.access_token,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ email }),
+        signal: controller.signal,
+        cache: 'no-store'
+      });
+    } finally { clearTimeout(timeout); }
+    const result = await response.json().catch(() => ({}));
+    if (!response.ok) throw new Error(result.error || result.message || 'Réinitialisation indisponible (HTTP ' + response.status + ').');
+    if (typeof result.temporaryPassword !== 'string' || result.temporaryPassword.length < 20)
+      throw new Error('Le serveur n’a pas confirmé la réinitialisation.');
+    return result; // Mot de passe en mémoire, jamais en localStorage ou JSON.
+  };
 
   function readJson(key) {
     try {
