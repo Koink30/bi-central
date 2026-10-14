@@ -24,7 +24,30 @@
   let refreshPromise = null;
   let syncPromise = null;
   let queuedPush = false;
+  // Cet état reflète la dernière synchronisation vérifiée, pas seulement le login.
+  let syncHealth = { kind: 'busy', text: 'Vérification cloud…', lastSuccess: 0 };
   window.caveAccount = { role: 'local', email: '' };
+  window.caveSyncState = { kind: 'local', label: 'Mode local', lastSuccess: 0, dirty: false };
+  function publishSyncStatus() {
+    const offline = typeof navigator !== 'undefined' && navigator.onLine === false;
+    let kind = 'local', label = 'Mode local';
+    if (session) {
+      if (offline) { kind = 'offline'; label = 'Hors ligne'; }
+      else if (membershipError) { kind = 'error'; label = 'Accès cloud indisponible'; }
+      else if (!membership) { kind = 'pending'; label = 'Accès en attente'; }
+      else if (syncHealth.kind === 'error' || syncHealth.kind === 'conflict') {
+        kind = syncHealth.kind; label = syncHealth.text;
+      } else if (dirty) { kind = 'busy'; label = 'Modifications en attente'; }
+      else { kind = syncHealth.kind; label = syncHealth.kind === 'ok' ? 'Synchronisé' : syncHealth.text; }
+    }
+    window.caveSyncState = {
+      kind, label, lastSuccess: syncHealth.lastSuccess, dirty,
+      email: session?.user?.email || '',
+      role: membership?.role || (session ? 'pending' : 'local')
+    };
+    window.dispatchEvent(new CustomEvent('cave-sync-state-changed', { detail: window.caveSyncState }));
+    return window.caveSyncState;
+  }
   function ownerId() { return membership?.owner_id || session?.user?.id; }
   async function loadMembership() {
     membership = null;
@@ -43,6 +66,13 @@
     if (membershipError) throw membershipError;
   }
   window.caveOpenAccount = () => openPanel();
+  window.caveSynchronizeNow = async () => {
+    if (!session || !membership) throw new Error('Connecte un compte autorisé pour synchroniser.');
+    await ensureSession();
+    setCloudState('Synchronisation…', 'busy');
+    try { await synchronizeNow(); } catch (error) { showCloudError(error); throw error; }
+    return window.caveSyncState;
+  };
   window.caveTeamList = () => api('/rest/v1/cave_members?select=email,role,user_id,owner_id&order=created_at');
   window.caveSetMember = (email,role) => api('/rest/v1/rpc/cave_set_member', {method:'POST',body:JSON.stringify({member_email:email,member_role:role})});
   window.caveResetMemberPassword = async email => {
@@ -113,7 +143,10 @@
   }
 
   function saveSession(value) {
+    const previousUser = session?.user?.id || null;
     session = value;
+    if (!value || previousUser !== (value?.user?.id || null))
+      syncHealth = { kind: 'busy', text: 'Vérification cloud…', lastSuccess: 0 };
     if (!value) {
       membership = null;
       membershipError = null;
@@ -270,7 +303,7 @@
     if (!session || !membership || applyingCloud) return;
     const snapshot = localSnapshot();
     const serialized = JSON.stringify(snapshot);
-    if (!snapshot) return;
+    if (!snapshot) { setCloudState('Synchronisé', 'ok'); return; }
     setCloudState('Synchronisation…', 'busy');
     const remote = await getRemoteSnapshot();
     if (remote && Number(remote.revision) > cloudRevision() && Number(remote.revision) !== allowRevision) { showConflict(remote); return; }
@@ -290,6 +323,7 @@
   function schedulePush() {
     if (!session || !membership || applyingCloud) return;
     dirty = true;
+    setCloudState('Modifications en attente', 'busy');
     clearTimeout(pushTimer);
     pushTimer = setTimeout(() => { if (syncPromise) { queuedPush = true; return; } syncPromise = pushSnapshot().catch(showCloudError).finally(() => { syncPromise = null; if (queuedPush) { queuedPush = false; schedulePush(); } }); }, 1200);
   }
@@ -350,7 +384,8 @@
     try {
       const remote = await getRemoteSnapshot();
       if (remote && Number(remote.revision) > cloudRevision()) await applyRemote(remote);
-    } catch (error) { console.warn('Lecture cloud impossible', error); }
+      else if (!dirty) setCloudState('Synchronisé', 'ok');
+    } catch (error) { showCloudError(error); }
   }
 
   async function synchronizeNow() {
@@ -478,16 +513,18 @@
   }
 
   function renderStatus() {
+    const state = publishSyncStatus();
     const button = document.getElementById('cloud-sync-button');
     if (!button) return;
-    button.textContent = session ? (membership ? '☁ Connecté' : '☁ Accès en attente') : '☁ Se connecter';
-    button.dataset.kind = session && membership ? 'ok' : '';
+    button.textContent = '☁ ' + state.label;
+    button.dataset.kind = state.kind;
   }
 
   function setCloudState(text, kind = '') {
-    const button = document.getElementById('cloud-sync-button');
-    if (!button) return;
-    button.textContent = `☁ ${text}`; button.dataset.kind = kind;
+    syncHealth.kind = kind || 'busy';
+    syncHealth.text = text;
+    if (kind === 'ok' && !dirty) syncHealth.lastSuccess = Date.now();
+    renderStatus();
   }
 
   function showCloudError(error) {
@@ -553,6 +590,7 @@
   }
 
   function showConflict(remote) {
+    setCloudState('Conflit de données', 'conflict');
     openPanel();
     const content = document.getElementById('cloud-panel-content');
     content.innerHTML = `<p><strong>Des données différentes existent déjà.</strong></p><p>Choisis la version à conserver pour éviter tout écrasement involontaire.</p>
@@ -568,10 +606,11 @@
   installStorageWatcher();
   window.addEventListener('cave-photo-changed', event => {
     if (!session) return;
-    photoStore('readonly', store => store.get(event.detail?.id)).then(uploadPhoto).then(() => setCloudState('Synchronisé', 'ok')).catch(showCloudError);
+    photoStore('readonly', store => store.get(event.detail?.id)).then(uploadPhoto).then(() => { if (!dirty) renderStatus(); }).catch(showCloudError);
   });
   window.addEventListener('cave-photo-deleted', event => removeRemotePhoto(event.detail?.id).catch(showCloudError));
-  window.addEventListener('online', () => { if (session) initialSync().catch(showCloudError); });
+  window.addEventListener('online', () => { renderStatus(); if (session && membership) initialSync().catch(showCloudError); });
+  window.addEventListener('offline', renderStatus);
   document.addEventListener('visibilitychange', () => { if (!document.hidden) pullIfNewer(); });
   window.addEventListener('storage', event => { if (event.key === DATA_KEY) pullIfNewer(); });
   async function bootCloud() {
