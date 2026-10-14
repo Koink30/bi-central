@@ -20,6 +20,7 @@
   let dirty = false;
   let panel = null;
   let membership = null;
+  let membershipError = null;
   let refreshPromise = null;
   let syncPromise = null;
   let queuedPush = false;
@@ -27,13 +28,19 @@
   function ownerId() { return membership?.owner_id || session?.user?.id; }
   async function loadMembership() {
     membership = null;
-    if (session) {
-      const rows = await api('/rest/v1/cave_members?select=user_id,owner_id,role,email&user_id=eq.' + session.user.id);
-      membership = rows?.[0] || null;
+    membershipError = null;
+    try {
+      if (session?.user?.id) {
+        const rows = await api('/rest/v1/cave_members?select=user_id,owner_id,role,email&user_id=eq.' + encodeURIComponent(session.user.id));
+        membership = rows?.[0] || null;
+      }
+    } catch (error) {
+      membershipError = error;
     }
     window.caveAccount = {role: membership?.role || (session ? 'pending' : 'local'), email: session?.user?.email || '', ownerId: ownerId()};
     window.dispatchEvent(new CustomEvent('cave-account-changed', {detail: window.caveAccount}));
     renderStatus();
+    if (membershipError) throw membershipError;
   }
   window.caveOpenAccount = () => openPanel();
   window.caveTeamList = () => api('/rest/v1/cave_members?select=email,role,user_id,owner_id&order=created_at');
@@ -84,6 +91,7 @@
     session = value;
     if (!value) {
       membership = null;
+      membershipError = null;
       window.caveAccount = { role: 'local', email: '' };
       window.dispatchEvent(new CustomEvent('cave-account-changed'));
     }
@@ -135,8 +143,16 @@
     const response = await fetch(`${SUPABASE_URL}/auth/v1/token?grant_type=refresh_token`, {
       method: 'POST', headers: authHeaders(null), body: JSON.stringify({ refresh_token: session.refresh_token })
     });
-    if (!response.ok) { saveSession(null); throw new Error('Session expirée. Reconnecte le cloud.'); }
+    if (!response.ok) {
+      // Un incident réseau ou une limitation serveur ne doit pas effacer le compte du navigateur.
+      if (response.status === 400 || response.status === 401) {
+        saveSession(null);
+        throw new Error('Session expirée. Reconnecte le cloud.');
+      }
+      throw new Error('Vérification de session momentanément indisponible (HTTP ' + response.status + ').');
+    }
     const fresh = await response.json();
+    if (!fresh.access_token || !fresh.refresh_token) throw new Error('Réponse de session incomplète. Réessaie.');
     fresh.expires_at = Math.floor(Date.now() / 1000) + Number(fresh.expires_in || 3600);
     saveSession(fresh);
   }
@@ -147,22 +163,60 @@
     return refreshPromise;
   }
 
+  function readableError(error) {
+    const detail = String(error?.message || error || '');
+    if (/failed to fetch|load failed|networkerror|network request failed|fetch failed/i.test(detail))
+      return 'Connexion au serveur Supabase impossible. Vérifie le réseau, puis réessaie. Les données locales sont conservées.';
+    if (/aborterror|aborted|délai dépassé/i.test(detail))
+      return 'Le serveur met trop longtemps à répondre. Réessaie dans un instant.';
+    if (/invalid login credentials/i.test(detail))
+      return 'Adresse e-mail ou mot de passe incorrect.';
+    if (/email not confirmed/i.test(detail))
+      return 'Confirme ton adresse e-mail avec le message reçu, puis connecte-toi.';
+    if (/user already registered/i.test(detail))
+      return 'Ce compte existe déjà. Utilise « Se connecter ».';
+    if (/rate limit|too many requests|email rate limit/i.test(detail))
+      return 'Trop de tentatives : attends quelques minutes avant de réessayer.';
+    return detail || 'Erreur inconnue. Réessaie.';
+  }
+
   async function authenticate(mode, email, password) {
     const path = mode === 'signup' ? '/auth/v1/signup' : '/auth/v1/token?grant_type=password';
     const body = { email, password };
     if (mode === 'signup') body.options = { emailRedirectTo: location.href.split('#')[0].split('?')[0] };
-    const response = await fetch(SUPABASE_URL + path, {
-      method: 'POST', headers: authHeaders(null), body: JSON.stringify(body)
-    });
+    const abort = new AbortController();
+    const timer = setTimeout(() => abort.abort(), 15000);
+    let response;
+    try {
+      response = await fetch(SUPABASE_URL + path, {
+        method: 'POST', headers: authHeaders(null), body: JSON.stringify(body), signal: abort.signal
+      });
+    } finally { clearTimeout(timer); }
     const result = await response.json().catch(() => ({}));
-    if (!response.ok) throw new Error(result.msg || result.message || 'Connexion refusée.');
+    if (!response.ok) {
+      const error = new Error(result.error_description || result.msg || result.message || result.error || 'Connexion refusée (HTTP ' + response.status + ').');
+      error.status = response.status;
+      throw error;
+    }
     const nextSession = result.access_token ? result : result.session;
-    if (!nextSession) return { confirmation: true };
+    if (!nextSession) {
+      if (mode === 'signup' && result.user) return { confirmation: true };
+      throw new Error('Réponse du serveur incomplète. Aucun compte connecté.');
+    }
+    if (!nextSession.access_token || !nextSession.user?.id)
+      throw new Error('Session reçue incomplète. Aucun compte connecté.');
     nextSession.expires_at = Math.floor(Date.now() / 1000) + Number(nextSession.expires_in || 3600);
     saveSession(nextSession);
-    await loadMembership();
-    if (membership) await initialSync();
-    return { confirmation: false };
+    let accessWarning = '';
+    try { await loadMembership(); }
+    catch (error) {
+      accessWarning = 'Compte connecté, mais impossible de vérifier les autorisations : ' + readableError(error);
+      showCloudError(error);
+    }
+    // Le succès d'authentification est distinct de la vérification des droits et de la synchro.
+    if (membership) initialSync().catch(showCloudError);
+    if (!membership && !accessWarning) accessWarning = 'Compte connecté. En attente de validation par un administrateur.';
+    return { confirmation: false, warning: accessWarning };
   }
 
   function localSnapshot() { return readJson(DATA_KEY); }
@@ -416,10 +470,17 @@
     const content = document.getElementById('cloud-panel-content');
     if (session) {
       content.innerHTML = `<p>Connecté avec <strong>${escapeHtml(session.user?.email || 'compte Supabase')}</strong>.</p>
-        <p>${membership ? 'Accès <strong>' + (membership.role === 'admin' ? 'administrateur' : 'utilisateur') + '</strong> · Cave partagée sur PC et téléphone.' : 'Compte créé. Un administrateur doit autoriser cet e-mail dans Gestion des accès.'}</p>
-        <div class="cloud-actions"><button id="cloud-sync-now">Synchroniser maintenant</button><button id="cloud-logout" class="secondary">Se déconnecter</button><button id="cloud-close" class="secondary">Fermer</button></div>
+        <p>${membership ? 'Accès <strong>' + (membership.role === 'admin' ? 'administrateur' : 'utilisateur') + '</strong> · Cave partagée sur PC et téléphone.' : membershipError ? 'Connexion au compte réussie, mais vérification des autorisations indisponible : ' + escapeHtml(readableError(membershipError)) : 'Compte connecté. Un administrateur doit autoriser cet e-mail dans Gestion des accès.'}</p>
+        <div class="cloud-actions">${membership ? '<button id="cloud-sync-now">Synchroniser maintenant</button>' : '<button id="cloud-retry">Réessayer la vérification</button>'}<button id="cloud-logout" class="secondary">Se déconnecter</button><button id="cloud-close" class="secondary">Fermer</button></div>
         <p id="cloud-sync-message"></p>`;
-      document.getElementById('cloud-sync-now').onclick = async () => { try { await synchronizeNow(); document.getElementById('cloud-sync-message').textContent = 'Données synchronisées. Les photos continuent en arrière-plan.'; } catch (e) { document.getElementById('cloud-sync-message').textContent = e.message; showCloudError(e); } };
+      const syncNow = document.getElementById('cloud-sync-now');
+      if (syncNow) syncNow.onclick = async () => { try { await synchronizeNow(); document.getElementById('cloud-sync-message').textContent = 'Données synchronisées. Les photos continuent en arrière-plan.'; } catch (e) { document.getElementById('cloud-sync-message').textContent = readableError(e); showCloudError(e); } };
+      const retry = document.getElementById('cloud-retry');
+      if (retry) retry.onclick = async () => {
+        retry.disabled = true;
+        try { await loadMembership(); if (membership) initialSync().catch(showCloudError); openPanel(); }
+        catch (error) { openPanel(); document.getElementById('cloud-sync-message').textContent = readableError(error); }
+      };
       document.getElementById('cloud-logout').onclick = async () => { if (dirty) { document.getElementById('cloud-sync-message').textContent = 'Synchronise les modifications avant de te déconnecter.'; return; } try { await api('/auth/v1/logout', {method:'POST'}); } catch {} saveSession(null); await metaStore('readwrite', store => store.delete(SESSION_KEY)); localStorage.removeItem(DATA_KEY); if (window.caveStorageFlush) await window.caveStorageFlush(); await photoStore('readwrite', store => store.clear()); writeSmallValue(CLOUD_REV_KEY,0); await loadMembership(); location.reload(); };
       document.getElementById('cloud-close').onclick = closePanel;
       return;
@@ -434,12 +495,24 @@
       const password = document.getElementById('cloud-password').value;
       const message = document.getElementById('cloud-sync-message');
       if (!email || password.length < 6) { message.textContent = 'Renseigne un e-mail et un mot de passe d’au moins 6 caractères.'; return; }
-      message.textContent = 'Connexion…';
+      message.textContent = mode === 'signup' ? 'Création du compte…' : 'Connexion…';
+      const loginButton = document.getElementById('cloud-login');
+      const signupButton = document.getElementById('cloud-signup');
+      loginButton.disabled = signupButton.disabled = true;
       try {
         const result = await authenticate(mode, email, password);
-        if (result.confirmation) message.textContent = 'Compte créé. Confirme l’e-mail reçu, puis reviens ici pour te connecter.';
-        else { if (membership) closePanel(); else openPanel(); }
-      } catch (error) { message.textContent = error.message; }
+        if (result.confirmation) message.textContent = 'Demande enregistrée. Si un e-mail de confirmation est nécessaire, ouvre le message reçu avant de te connecter.';
+        else {
+          openPanel();
+          if (result.warning) document.getElementById('cloud-sync-message').textContent = result.warning;
+          else closePanel();
+        }
+      } catch (error) {
+        message.textContent = readableError(error);
+      } finally {
+        if (loginButton.isConnected) loginButton.disabled = false;
+        if (signupButton.isConnected) signupButton.disabled = false;
+      }
     };
     document.getElementById('cloud-login').onclick = () => submit('login');
     document.getElementById('cloud-signup').onclick = () => submit('signup');
@@ -469,12 +542,19 @@
   document.addEventListener('visibilitychange', () => { if (!document.hidden) pullIfNewer(); });
   window.addEventListener('storage', event => { if (event.key === DATA_KEY) pullIfNewer(); });
   async function bootCloud() {
-    if (window.caveStorageReady) await window.caveStorageReady;
-    if (window.caveAppReady) await window.caveAppReady;
+    // L'accès au compte reste disponible même si le moteur BI / IndexedDB ne démarre pas.
     addInterface();
     await restoreStoredSession();
-    try { await loadMembership(); } catch (error) { window.caveAccount={role:session?'pending':'local',email:session?.user?.email||''}; window.dispatchEvent(new CustomEvent('cave-account-changed')); showCloudError(error); }
-    if (session && membership) initialSync().catch(showCloudError);
+    try { await loadMembership(); } catch (error) { showCloudError(error); }
+    let appReady = true;
+    try {
+      if (window.caveStorageReady) await window.caveStorageReady;
+      if (window.caveAppReady) await window.caveAppReady;
+    } catch (error) {
+      appReady = false;
+      showCloudError(error);
+    }
+    if (appReady && session && membership) initialSync().catch(showCloudError);
     setInterval(pullIfNewer, 30000);
   }
   if (document.readyState === 'loading') window.addEventListener('DOMContentLoaded', bootCloud, { once: true });
