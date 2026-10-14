@@ -280,9 +280,9 @@ async function remoteSearch(type,code){
 }
 async function lookupQR(value){
  let safe;
- try{const url=new URL(value);if(!['https:','http:'].includes(url.protocol))throw Error();safe=url.href}catch{status('QR incorrect.','warn');return}
+ try{const raw=String(value||'').trim();const url=new URL(/^https?:\/\//i.test(raw)?raw:'https://'+raw);if(!['https:','http:'].includes(url.protocol))throw Error();safe=url.href}catch{status('QR incorrect : adresse non reconnue.','warn');return}
  stopCamera();qrUrl=safe;currentCode='';foundProduct=null;proposal=null;$('csm-ean').value='';
- renderResult();remoteSearch('qr',safe);
+ renderResult();const container=$('csm-result');const link=document.createElement('a');link.href=safe;link.target='_blank';link.rel='noopener noreferrer';link.textContent='↗ Ouvrir la page du QR code';link.className='csm-qr-link';container.append(link);remoteSearch('qr',safe);
 }
 async function lookup(input){
  if(loading)return;
