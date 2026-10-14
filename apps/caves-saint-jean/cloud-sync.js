@@ -384,7 +384,7 @@
     try {
       const remote = await getRemoteSnapshot();
       if (remote && Number(remote.revision) > cloudRevision()) await applyRemote(remote);
-      else if (!dirty) setCloudState('Synchronisé', 'ok');
+      else if (!dirty && syncHealth.kind !== 'conflict') setCloudState('Synchronisé', 'ok');
     } catch (error) { showCloudError(error); }
   }
 
