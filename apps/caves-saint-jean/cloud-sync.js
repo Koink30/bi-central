@@ -192,16 +192,24 @@
         method: 'POST', headers: authHeaders(null), body: JSON.stringify(body), signal: abort.signal
       });
     } finally { clearTimeout(timer); }
-    const result = await response.json().catch(() => ({}));
+    const parsed = await response.json().catch(() => ({}));
+    const result = parsed && typeof parsed === 'object' ? parsed : {};
     if (!response.ok) {
       const error = new Error(result.error_description || result.msg || result.message || result.error || 'Connexion refusée (HTTP ' + response.status + ').');
       error.status = response.status;
       throw error;
     }
-    const nextSession = result.access_token ? result : result.session;
+    // GoTrue /auth/v1/signup retourne directement l'objet utilisateur si une
+    // confirmation par e-mail est nécessaire (et non {user, session}).
+    // Le login, lui, retourne des jetons. Ne pas confondre les deux réponses.
+    const nextSession = result.access_token ? result : result.session?.access_token ? result.session : result.data?.session?.access_token ? result.data.session : null;
     if (!nextSession) {
-      if (mode === 'signup' && result.user) return { confirmation: true };
-      throw new Error('Réponse du serveur incomplète. Aucun compte connecté.');
+      const createdUser = result.user || result.data?.user || (result.id ? result : null);
+      if (mode === 'signup' && createdUser?.id)
+        return { confirmation: true };
+      if (mode === 'signup')
+        throw new Error('Supabase n’a pas confirmé la création du compte (HTTP ' + response.status + '). Vérifie l’état du service ou la configuration Auth.');
+      throw new Error('Supabase n’a renvoyé aucune session de connexion (HTTP ' + response.status + '). Réessaie ou confirme d’abord ton e-mail.');
     }
     if (!nextSession.access_token || !nextSession.user?.id)
       throw new Error('Session reçue incomplète. Aucun compte connecté.');
@@ -501,7 +509,7 @@
       loginButton.disabled = signupButton.disabled = true;
       try {
         const result = await authenticate(mode, email, password);
-        if (result.confirmation) message.textContent = 'Demande enregistrée. Si un e-mail de confirmation est nécessaire, ouvre le message reçu avant de te connecter.';
+        if (result.confirmation) message.textContent = 'Demande de création prise en compte par Supabase. Vérifie tes e-mails (y compris les indésirables) pour confirmer ton adresse, puis utilise « Se connecter ». Si ce compte existait déjà, utilise sa connexion habituelle.';
         else {
           openPanel();
           if (result.warning) document.getElementById('cloud-sync-message').textContent = result.warning;
