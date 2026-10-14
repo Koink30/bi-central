@@ -422,38 +422,85 @@ function inferColor(p){
  if(/rouge|red.wine/.test(t))return 'Rouge';
  return 'À préciser';
 }
+
+async function externalJSON(url,ms=10000){
+ const controller=new AbortController();const timeout=setTimeout(()=>controller.abort(),ms);
+ try{
+  const response=await fetch(url,{signal:controller.signal,mode:'cors',cache:'no-store',headers:{Accept:'application/json'}});
+  if(!response.ok)throw new Error('Service HTTP '+response.status);
+  return response.json();
+ }finally{clearTimeout(timeout)}
+}
+function normalizeProduct(p,code,source){
+ const name=String(p.product_name_fr||p.product_name||p.generic_name||p.title||'').trim().slice(0,180);
+ if(!name)return null;
+ const brand=String(p.brands||p.brand||'').trim().slice(0,180);
+ const volume=normalizeQuantity(p.quantity||p.dimension||'');
+ const year=(name.match(/\b(?:19\d{2}|20\d{2})\b/)||[])[0]||'';
+ return {code,name,domain:brand,volume,vintage:year,family:source==='Open Food Facts'?inferFamily(p):'Autre',
+   color:source==='Open Food Facts'?inferColor(p):'À préciser',image:p.image_front_url||p.image_url||p.images?.[0]||'',
+   source};
+}
+async function publicBarcode(code){
+ const fields='code,product_name,product_name_fr,generic_name,brands,quantity,categories,categories_tags,image_front_url,image_url';
+ const off='https://world.openfoodfacts.org/api/v2/product/'+encodeURIComponent(code)+'.json?fields='+fields+'&product_type=all';
+ let unavailable=false;
+ try{
+  const data=await externalJSON(off,10500);
+  if(data?.status===1&&data?.product){
+   const normalized=normalizeProduct(data.product,code,'Open Food Facts');
+   if(normalized)return {item:normalized};
+  }
+ }catch{unavailable=true}
+ // Lookup complémentaire. La version publique UPCitemdb est limitée et peut bloquer les navigateurs (CORS).
+ try{
+  const info=await externalJSON('https://api.upcitemdb.com/prod/trial/lookup?upc='+encodeURIComponent(code),6500);
+  const item=(Array.isArray(info?.items)?info.items:[]).find(p=>{
+   const candidates=[p.ean,p.upc,p.gtin].filter(Boolean).map(String);
+   return candidates.some(c=>c===code||c.replace(/^0+/,'')===code.replace(/^0+/,''));
+  });
+  if(item){
+   const normalized=normalizeProduct(item,code,'UPCitemdb');
+   if(normalized)return {item:normalized};
+  }
+ }catch{unavailable=true}
+ return {item:null,unavailable};
+}
+function appendWebSearch(code){
+ const area=$('csm-result');
+ if(!area||area.querySelector('.csm-web-link'))return;
+ const a=document.createElement('a');a.className='csm-link csm-web-link';a.target='_blank';a.rel='noopener noreferrer';
+ a.href='https://www.google.com/search?q='+encodeURIComponent('"'+code+'" vin bouteille');
+ a.textContent='↗ Rechercher cet EAN sur le Web';
+ const row=document.createElement('div');row.className='csm-extras';row.append(a);area.append(row);
+}
 async function lookup(input){
  const code=String(input||'').replace(/[\s-]/g,'');
  if(busy)return;
- if(!gtin(code)){status('Code invalide : entrez un EAN-8, UPC-12, EAN-13 ou GTIN-14 avec chiffre de contrôle valide.');return}
+ if(!gtin(code)){status('Code invalide. Vérifiez les chiffres imprimés sous les barres.','warn');return}
  stopCamera();busy=true;lastCode=code;draft=null;
  $('csm-editor').hidden=true;$('csm-lookup').disabled=true;
- status('Code '+code+' ✓ · Recherche dans le catalogue, puis dans la base publique…');
+ status('✓ EAN '+code+' lu. Recherche de la référence dans les bases produits…');
  try{
   const found=existing(code);
   if(found){
-   draft=null;renderExisting(found,code);
-   status('Référence déjà dans le catalogue : aucune fiche en double ne sera créée.');return;
+   renderExisting(found,code);
+   status('✓ Ce code existe déjà dans la cave : '+found.name,'success');
+   return;
   }
-  const ctrl=new AbortController(),timeout=setTimeout(()=>ctrl.abort(),12000);
-  let result;
-  try{
-   const url='https://world.openfoodfacts.org/api/v2/product/'+encodeURIComponent(code)+'.json?fields=code,product_name,product_name_fr,generic_name,brands,quantity,packaging,labels,categories,categories_tags,image_front_url,image_url,alcohol_value';
-   const response=await fetch(url,{signal:ctrl.signal,cache:'no-store',mode:'cors'});
-   if(!response.ok)throw new Error('HTTP '+response.status);
-   result=await response.json();
-  }finally{clearTimeout(timeout)}
-  const p=result?.status===1?result.product:null;
-  if(!p){draft={code,name:'',domain:'',volume:'',vintage:'',family:'Vin',color:'À préciser',source:'Code valide, produit absent de la base publique'};renderDraft(false);status('Code valide, mais aucune fiche publique trouvée. Complétez le nom pour continuer.');return}
-  const name=escapeText(p.product_name_fr||p.product_name||p.generic_name).trim();
-  const volume=normalizeQuantity(p.quantity)||'';
-  const year=(name.match(/\b(19|20)\d{2}\b/)||[])[0]||'';
-  draft={code,name,domain:escapeText(p.brands).trim(),volume,vintage:year,family:inferFamily(p),color:inferColor(p),image:p.image_front_url||p.image_url||'',source:'Open Food Facts'};
-  renderDraft(true);status('✓ Résultat retrouvé en ligne. Contrôlez les champs avant de créer la fiche.');
- }catch(error){
-  draft={code,name:'',domain:'',volume:'',vintage:'',family:'Vin',color:'À préciser',source:'Recherche indisponible'};
-  renderDraft(false);
-  status('Recherche externe indisponible ('+(error.name==='AbortError'?'délai dépassé':error.message)+'). Saisie assistée disponible, sans inventer de données.');
+  const result=await publicBarcode(code);
+  if(result.item){
+   draft=result.item;renderDraft(true);
+   status('✓ Produit trouvé via '+draft.source+'. Vérifiez qu’il s’agit de la bonne cuvée.','success');
+  }else{
+   draft={code,name:'',domain:'',volume:'',vintage:'',family:'Vin',color:'À préciser',source:'EAN identifié, référence absente des bases accessibles'};
+   renderDraft(false);appendWebSearch(code);
+   status(result.unavailable?'✓ EAN '+code+' valide, mais certaines bases ne répondent pas. Essayez le lien de recherche.':'✓ EAN '+code+' valide, référence non trouvée. Complétez la fiche ou cherchez sur le Web.','warn');
+  }
+ }catch(e){
+  draft={code,name:'',domain:'',volume:'',vintage:'',family:'Vin',color:'À préciser',source:'EAN lu, recherche externe indisponible'};
+  renderDraft(false);appendWebSearch(code);
+  status('✓ Code lu : '+code+'. Base indisponible. Vous pouvez remplir la fiche.','warn');
  }finally{busy=false;$('csm-lookup').disabled=false}
 }
 function renderExisting(p,code){
