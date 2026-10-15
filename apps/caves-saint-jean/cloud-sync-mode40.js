@@ -560,7 +560,40 @@
       content.innerHTML = `<p>Connecté avec <strong>${escapeHtml(session.user?.email || 'compte Supabase')}</strong>.</p>
         <p>${membership ? 'Accès <strong>' + (membership.role === 'admin' ? 'administrateur' : 'utilisateur') + '</strong> · Cave partagée sur PC et téléphone.' : membershipError ? 'Connexion au compte réussie, mais vérification des autorisations indisponible : ' + escapeHtml(readableError(membershipError)) : 'Compte connecté. Un administrateur doit autoriser cet e-mail dans Gestion des accès.'}</p>
         <div class="cloud-actions">${membership ? '<button id="cloud-sync-now">Synchroniser maintenant</button>' : '<button id="cloud-retry">Réessayer la vérification</button>'}<button id="cloud-logout" class="secondary">Se déconnecter</button><button id="cloud-close" class="secondary">Fermer</button></div>
-        <p id="cloud-sync-message"></p>`;
+        <p id="cloud-sync-message"></p>${membership?.role === 'admin' && membership?.user_id === membership?.owner_id ? '<section id="cloud-password-admin" style="border-top:1px solid #ddd;margin-top:18px;padding-top:14px"><h3 style="font-size:16px;margin:0 0 8px">Gestion des utilisateurs · Mots de passe</h3><p style="font-size:13px">Réinitialiser un compte utilisateur sans e-mail. Le mot de passe provisoire s’affichera une seule fois.</p><label for="cloud-member-select">Utilisateur</label><select id="cloud-member-select" style="width:100%;padding:11px;border:1px solid #bbb;border-radius:9px"><option value="">Chargement des comptes…</option></select><div class="cloud-actions"><button id="cloud-member-reset" type="button" disabled>Réinitialiser le mot de passe</button></div><p id="cloud-reset-result" role="status" aria-live="polite" style="font-size:13px;overflow-wrap:anywhere"></p></section>' : ''}`;
+      if (document.getElementById('cloud-member-select')) {
+        const select = document.getElementById('cloud-member-select');
+        const reset = document.getElementById('cloud-member-reset');
+        const result = document.getElementById('cloud-reset-result');
+        if (window.caveIsTest) { select.innerHTML = '<option>Indisponible en mode test</option>'; }
+        else {
+          Promise.resolve(window.caveTeamList()).then(rows => {
+            const users = (Array.isArray(rows) ? rows : []).filter(u => u.role === 'user' && u.email);
+            select.replaceChildren(new Option(users.length ? 'Choisir un utilisateur' : 'Aucun utilisateur éligible', ''));
+            users.forEach(u => select.add(new Option(u.email, u.email)));
+            select.onchange = () => { reset.disabled = !select.value; result.replaceChildren(); };
+          }).catch(err => { select.replaceChildren(new Option('Chargement impossible', '')); result.textContent = readableError(err); });
+          reset.onclick = async () => {
+            const email = select.value;
+            if (!email || !confirm('Réinitialiser le mot de passe de ' + email + ' ? Son ancien mot de passe ne fonctionnera plus.')) return;
+            reset.disabled = true;
+            result.textContent = 'Réinitialisation en cours…';
+            try {
+              const response = await window.caveResetMemberPassword(email);
+              result.replaceChildren();
+              const heading = document.createElement('strong');
+              heading.textContent = 'Mot de passe provisoire pour ' + email + ' :';
+              const secret = document.createElement('code');
+              secret.style.cssText = 'display:block;padding:10px;margin:8px 0;background:#f1f2ef;border-radius:8px;user-select:all;overflow-wrap:anywhere;font-size:14px';
+              secret.textContent = response.temporaryPassword;
+              const note = document.createElement('span');
+              note.textContent = 'Copiez-le maintenant et transmettez-le directement à l’utilisateur. Il disparaîtra à la fermeture de cette fenêtre.';
+              result.append(heading, secret, note);
+            } catch(err) { result.textContent = readableError(err); }
+            finally { reset.disabled = !select.value; }
+          };
+        }
+      }
       const syncNow = document.getElementById('cloud-sync-now');
       if (syncNow) syncNow.onclick = async () => { try { await synchronizeNow(); document.getElementById('cloud-sync-message').textContent = 'Données synchronisées. Les photos continuent en arrière-plan.'; } catch (e) { document.getElementById('cloud-sync-message').textContent = readableError(e); showCloudError(e); } };
       const retry = document.getElementById('cloud-retry');
