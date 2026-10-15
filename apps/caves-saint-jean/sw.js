@@ -1,5 +1,5 @@
-const CACHE = "caves-saint-jean-v31-2-qr-diagnostic";
-const APP_SHELL = ["./loyalty.js?v=24", "./checkout-ui.js?v=24", "./", "./index.html", "./app.js?v=24.1", "./storage-bridge.js?v=24", "./cloud-sync.js?v=32", "./catalog-photos.js?v=24", "./barcode-scan.js?v=31.2", "./presentation.css?v=24.4", "./presentation.js?v=32", "./catalog-default.json", "./photos.html", "./photos.html?v=24", "./photos.js?v=24", "./manifest.webmanifest", "./offline.html", "./icon-192.png", "./icon-512.png", "./apple-touch-icon.png"];
+const CACHE = "caves-saint-jean-v33-mobile-home";
+const APP_SHELL = ["./loyalty.js?v=24", "./checkout-ui.js?v=24", "./", "./index.html", "./app.js?v=33", "./storage-bridge.js?v=24", "./cloud-sync.js?v=32", "./catalog-photos.js?v=24", "./barcode-scan.js?v=31.2", "./presentation.css?v=33", "./presentation.js?v=33", "./catalog-default.json", "./photos.html", "./photos.html?v=24", "./photos.js?v=24", "./manifest.webmanifest", "./offline.html", "./icon-192.png", "./icon-512.png", "./apple-touch-icon.png"];
 
 self.addEventListener("install", event => {
   event.waitUntil(
