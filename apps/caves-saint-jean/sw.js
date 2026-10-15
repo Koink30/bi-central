@@ -1,5 +1,5 @@
-const CACHE = "caves-saint-jean-v39-reference-photos";
-const APP_SHELL = ["./loyalty.js?v=24", "./checkout-ui.js?v=39", "./", "./index.html", "./app.js?v=39", "./storage-bridge.js?v=24", "./cloud-sync.js?v=32", "./catalog-photos.js?v=39", "./barcode-scan.js?v=31.2", "./presentation.css?v=39", "./presentation.js?v=37", "./catalog-default.json", "./photos.html", "./photos.html?v=24", "./photos.js?v=24", "./manifest.webmanifest", "./offline.html", "./icon-192.png", "./icon-512.png", "./apple-touch-icon.png"];
+const CACHE = "caves-saint-jean-v40-test-real";
+const APP_SHELL = ["./environment.js?v=40", "./cloud-sync-mode40.js?v=24","./loyalty.js?v=24", "./checkout-ui.js?v=39", "./", "./index.html", "./app-mode40.js?v=39", "./storage-bridge-mode40.js?v=24", "./cloud-sync-mode40.js?v=32", "./catalog-photos-mode40.js?v=39", "./barcode-scan-mode40.js?v=31.2", "./presentation.css?v=39", "./presentation-mode40.js?v=37", "./catalog-default.json", "./photos.html", "./photos.html?v=24", "./photos-mode40.js?v=24", "./manifest.webmanifest", "./offline.html", "./icon-192.png", "./icon-512.png", "./apple-touch-icon.png"];
 
 self.addEventListener("install", event => {
   event.waitUntil(
