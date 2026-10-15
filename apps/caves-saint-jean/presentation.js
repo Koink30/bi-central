@@ -93,6 +93,38 @@
   box.append(summary,panel);
   return box;
  }
+ const buttonPalettes={
+  wine:['Bordeaux','#78234f','#43172f'],
+  ocean:['Océan','#1657ac','#17336f'],
+  emerald:['Émeraude','#16745d','#123d45'],
+  violet:['Améthyste','#7137bb','#36225f'],
+  copper:['Cuivre','#a34922','#632e37'],
+  midnight:['Nuit électrique','#285779','#25234f']
+ };
+ function applyButtonColor(choice,custom){
+  const valid=buttonPalettes[choice]||choice==='custom';choice=valid?choice:'wine';
+  const base=/^#[0-9a-f]{6}$/i.test(custom||'')?custom:'#7137bb';
+  const darken=(hex,f)=>'#'+[1,3,5].map(p=>Math.round(parseInt(hex.slice(p,p+2),16)*f).toString(16).padStart(2,'0')).join('');
+  const colors=buttonPalettes[choice]?.slice(1)||[darken(base,.55),darken(base,.30)];
+  const root=document.documentElement;root.style.setProperty('--cave-gradient-start',colors[0]);root.style.setProperty('--cave-gradient-end',colors[1]);root.style.setProperty('--cave-gradient-glow',colors[0]+'40');
+  root.dataset.caveButtonColor=choice;
+  try{localStorage.setItem('cave-button-palette',choice);localStorage.setItem('cave-button-custom',base);}catch{}
+ }
+ function makeColorPicker(){
+  const label=el('label',{class:'cave-color-label'},'Couleur');
+  const select=el('select',{'aria-label':'Couleur des boutons',id:'cave-button-color'});
+  Object.entries(buttonPalettes).forEach(([id,p])=>select.append(el('option',{value:id},p[0])));
+  select.append(el('option',{value:'custom'},'Sur mesure'));
+  const input=el('input',{type:'color','aria-label':'Choisir une couleur personnalisée',id:'cave-button-custom'});
+  let choice='wine',custom='#7137bb';try{choice=localStorage.getItem('cave-button-palette')||choice;custom=localStorage.getItem('cave-button-custom')||custom;}catch{}
+  select.value=buttonPalettes[choice]||choice==='custom'?choice:'wine';input.value=/^#[0-9a-f]{6}$/i.test(custom)?custom:'#7137bb';
+  input.hidden=select.value!=='custom';
+  select.onchange=()=>{input.hidden=select.value!=='custom';applyButtonColor(select.value,input.value);};
+  input.oninput=()=>applyButtonColor('custom',input.value);
+  label.append(select,input);applyButtonColor(select.value,input.value);return label;
+ }
+
+
  function refresh(){const top=document.querySelector('.topbar');if(!top)return;if(!tools){tools=el('div',{id:'cave-tools'});const badge=el('span',{class:'cave-role'});const animation=el('button',{type:'button','aria-pressed':'false'},'Animation');animation.onclick=()=>{const on=document.body.classList.toggle('cave-show-animation');animation.setAttribute('aria-pressed',String(on));};const guide=el('button',{type:'button'},'Aide');guide.onclick=help;const access=el('button',{type:'button','data-admin-only':''},'Gestion des accès');access.onclick=team;const themeLabel=el('label',{class:'cave-theme-label'},'Thème');const themeSelect=el('select',{id:'cave-theme-select','aria-label':'Ambiance visuelle'});for(const [id,name] of themes)themeSelect.append(el('option',{value:id},name));themeSelect.value=document.documentElement.dataset.caveTheme||'soft';themeSelect.onchange=()=>applyTheme(themeSelect.value);themeLabel.append(themeSelect);const menu=el('details',{id:'cave-main-menu'});const summary=el('summary',{},'☰ Menu');summary.setAttribute('aria-label','Ouvrir le menu de la cave');const panel=el('div',{class:'cave-menu-panel'});const heading=el('div',{class:'cave-menu-heading'},'Votre cave');heading.append(badge);panel.append(heading);
  const group=(title,id)=>{const section=el('section',{id});section.append(el('h3',{},title));panel.append(section);return section;};
  const action=(parent,label,run)=>{const b=el('button',{type:'button'},label);b.onclick=()=>{menu.open=false;summary.focus();run();};parent.append(b);return b;};
@@ -105,7 +137,7 @@
  menu.append(summary,panel);userMenu=makeUserMenu(access);
  menu.addEventListener('toggle',()=>{if(menu.open&&userMenu?.open)userMenu.open=false;});
  userMenu.addEventListener('toggle',()=>{if(userMenu.open)menu.open=false;});
- tools.append(menu,userMenu,themeLabel);top.append(tools);
+ const appearance=el('div',{class:'cave-appearance-controls'});appearance.append(themeLabel,makeColorPicker());tools.append(menu,userMenu,appearance);top.append(tools);
  panel.addEventListener('click',e=>{if(e.target.closest('button,a')&&!e.target.closest('#cave-menu-display')){menu.open=false;}});
  document.addEventListener('pointerdown',e=>{if(menu.open&&!menu.contains(e.target))menu.open=false;if(userMenu?.open&&!userMenu.contains(e.target))userMenu.open=false;});
  document.addEventListener('keydown',e=>{if(e.key==='Escape'&&menu.open){menu.open=false;summary.focus();}if(e.key==='Escape'&&userMenu?.open){userMenu.open=false;userMenu.querySelector('summary')?.focus();}});
