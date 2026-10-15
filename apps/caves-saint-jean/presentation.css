@@ -168,3 +168,17 @@ html[data-cave-theme] .cave-payment-first>.field input{font-size:36px!important;
  .cave-counter-form .cart .cell-input{width:100%!important;max-width:none!important}
  .cave-counter-form .cart .icon-button{min-width:50px;min-height:50px}
 }
+
+.cave-picker-heading{display:none}
+@media(max-width:767px){
+ html body .mouse-picker.cave-picker-open{position:fixed!important;inset:auto 0 0!important;top:var(--picker-top,0px)!important;width:100vw!important;max-width:100vw!important;height:var(--picker-height,100dvh)!important;max-height:100dvh!important;z-index:30000!important;display:flex!important;flex-direction:column;background:var(--cave-surface);color:var(--cave-ink);padding:calc(12px + env(safe-area-inset-top)) 12px calc(12px + env(safe-area-inset-bottom));box-sizing:border-box;border:0;border-radius:0;isolation:isolate}
+ html body .cave-picker-open>.cave-picker-heading{display:flex;align-items:center;justify-content:space-between;gap:12px;flex:none;margin-bottom:12px}
+ .cave-picker-heading strong{font-size:17px;line-height:1.3}
+ .cave-picker-heading button{flex:none;min-height:46px;padding:10px 14px;border-radius:10px;background:var(--cave-soft);color:var(--cave-ink);border:1px solid var(--cave-line);font-size:15px}
+ html body .cave-picker-open>.mouse-picker-input{flex:none;min-height:56px;background:var(--cave-paper)!important;border:2px solid var(--cave-accent)!important;border-radius:12px;padding:0 8px;margin-bottom:10px}
+ html body .cave-picker-open>.mouse-picker-input input{font-size:18px!important;min-height:54px;width:100%;background:transparent!important;border:0!important;box-shadow:none!important;padding:12px}
+ html body .cave-picker-open>.mouse-picker-menu{position:static!important;inset:auto!important;flex:1 1 auto!important;min-height:0!important;max-height:none!important;width:100%!important;overflow-y:auto!important;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;box-shadow:none!important;border:1px solid var(--cave-line);border-radius:12px;margin:0;padding:4px;background:var(--cave-surface)}
+ html body .cave-picker-open>.mouse-picker-menu button{display:block;width:100%;min-height:64px;padding:15px 12px!important;font-size:17px!important;line-height:1.45;white-space:normal;text-align:left;border-bottom:1px solid var(--cave-line);border-radius:6px}
+ html body:has(.cave-picker-open) #cave-mobile-nav{visibility:hidden}
+ .cave-dialog:has(.cave-picker-open){overflow:visible!important}
+}
