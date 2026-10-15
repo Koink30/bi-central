@@ -8,26 +8,38 @@
       const [text, setText] = React.useState(selected?.label || selected?.name || '');
       const [open, setOpen] = React.useState(false), [searching, setSearching] = React.useState(false);
       const [active, setActive] = React.useState(0);
+      const closing = React.useRef(false);
+      function dismiss() { setOpen(false); setSearching(false); setText(selected?.label || selected?.name || ''); closing.current=true; input.current?.focus({preventScroll:true}); setTimeout(()=>{closing.current=false;},0); }
+      React.useEffect(() => {
+        if (!open) return;
+        const viewport=window.visualViewport;
+        const resize=()=>{if(wrapper.current){wrapper.current.style.setProperty('--picker-height',(viewport?.height||window.innerHeight)+'px');wrapper.current.style.setProperty('--picker-top',(viewport?.offsetTop||0)+'px');}};
+        resize(); viewport?.addEventListener('resize',resize); viewport?.addEventListener('scroll',resize);
+        const old=document.body.style.overflow;
+        if(window.matchMedia('(max-width:767px)').matches)document.body.style.overflow='hidden';
+        return ()=>{document.body.style.overflow=old;viewport?.removeEventListener('resize',resize);viewport?.removeEventListener('scroll',resize);};
+      }, [open]);
       const normalize = text => String(text).normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
       const options = items.filter(item => !searching || normalize(item.label || item.name).includes(normalize(text))).slice(0, 80);
       React.useEffect(() => { setText(selected?.label || selected?.name || ''); setSearching(false); }, [value, selected?.label, selected?.name]);
       React.useEffect(() => { const outside = event => { if (!wrapper.current?.contains(event.target)) setOpen(false); };
         document.addEventListener('pointerdown', outside); return () => document.removeEventListener('pointerdown', outside); }, []);
       function choose(item) { if (!item) return; onChange(item.id); setText(value === '' ? '' : item.label || item.name);
-        setOpen(false); setSearching(false); setActive(0); }
+        setOpen(false); setSearching(false); setActive(0); input.current?.blur(); }
       function keys(event) {
-        if (event.key === 'Escape' && open) { event.preventDefault(); event.stopPropagation(); setOpen(false); }
+        if (event.key === 'Escape' && open) { event.preventDefault(); event.stopPropagation(); dismiss(); }
         if (event.key === 'ArrowDown' || event.key === 'ArrowUp') { event.preventDefault();
           if (!open) { setOpen(true); setSearching(false); setActive(0); }
           else setActive(Math.max(0, Math.min(options.length - 1, active + (event.key === 'ArrowDown' ? 1 : -1)))); }
         if (event.key === 'Enter') { event.preventDefault(); if (open) choose(options[active]); else { setOpen(true); setSearching(false); } }
         if (event.key === 'Tab') setOpen(false);
       }
-      return h('div', { className: 'mouse-picker', ref: wrapper },
+      return h('div', { className: 'mouse-picker' + (open ? ' cave-picker-open' : ''), ref: wrapper },
+        h('div', { className: 'cave-picker-heading' }, h('strong', null, label || 'Sélectionner'), h('button', {type:'button', onClick:dismiss, 'aria-label':'Fermer la liste'}, 'Fermer ✕')),
         h('div', { className: 'mouse-picker-input' }, h('input', { ref: input, role: 'combobox', 'aria-label': label,
           placeholder: label, value: text, autoComplete: 'off', 'aria-expanded': open, 'aria-controls': id,
           'aria-autocomplete': 'list', 'aria-activedescendant': open && options[active] ? id + '-' + active : undefined,
-          onFocus: () => { setOpen(true); setSearching(false); setActive(0); },
+          onFocus: () => { if(closing.current)return; setOpen(true); setSearching(false); setActive(0); },
           onClick: () => { if (!open) { setSearching(false); setActive(0); } setOpen(true); },
           onChange: event => { setText(event.target.value); setSearching(true); setOpen(true); setActive(0); }, onKeyDown: keys }),
           h('button', { type: 'button', 'aria-label': 'Afficher la liste', 'aria-expanded': open,
