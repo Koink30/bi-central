@@ -124,3 +124,47 @@ html #cave-tools>.cave-theme-label select{width:155px!important;min-height:44px}
  body[data-cave-page=home] .quick-grid{grid-template-columns:1fr!important}
 }
 @media print{.cave-home-actions{display:none!important}}
+
+/* Comptoir : saisie tactile, champs contrastés et règlement en premier. */
+.cave-counter-form{--counter-input:#fff;--counter-border:#8d7e87}
+html[data-cave-theme=dark] .cave-counter-form{--counter-input:#19161c;--counter-border:#a38d9c}
+.cave-payment-first{padding:22px;border:1px solid var(--cave-line);border-radius:16px;background:var(--cave-soft);margin-bottom:18px}
+.cave-payment-first>.field>span{font-size:17px;font-weight:750}
+html[data-cave-theme] .cave-counter-form :is(.field input,.field textarea,.native-select,.mouse-picker-input,.cell-input){background:var(--counter-input)!important;border:2px solid var(--counter-border)!important;border-radius:10px;color:var(--cave-ink)!important;min-height:50px;padding:12px;font-size:17px;box-shadow:0 2px 4px #00000009}
+html[data-cave-theme] .cave-counter-form .mouse-picker-input input{border:0!important;box-shadow:none!important;background:transparent!important}
+html[data-cave-theme] .cave-payment-first>.field input{font-size:36px!important;min-height:78px;font-weight:750;padding:14px 18px;border-color:var(--cave-accent)!important}
+.cave-counter-form :is(input,textarea,select):focus-visible{outline:3px solid var(--cave-accent);outline-offset:2px}
+.cave-payment-hint{font-size:13px;color:var(--cave-muted);margin:8px 0 18px}
+.cave-payment-methods{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;border:0;padding:0}
+.cave-payment-methods legend{font-size:17px;font-weight:750;margin-bottom:10px}
+.cave-payment-methods button{min-height:58px;padding:12px 8px;border:2px solid var(--counter-border);border-radius:12px;background:var(--counter-input);color:var(--cave-ink);font-size:16px;font-weight:650;cursor:pointer}
+.cave-payment-methods button[aria-pressed=true]{background:var(--cave-button);color:var(--cave-on-button);border-color:var(--cave-button);box-shadow:0 0 0 2px var(--cave-surface)}
+.cave-payment-methods button[aria-pressed=true]::before{content:"✓ ";font-weight:800}
+.cave-payment-first .form-actions{position:static;background:transparent!important;padding:18px 0 0;margin:0;border:0}
+.cave-payment-first .form-actions button{width:100%;min-height:58px;font-size:19px;justify-content:center;border-radius:12px}
+.cave-sale-details{border:1px solid var(--cave-line);border-radius:13px;padding:0 16px}
+.cave-sale-details>summary{cursor:pointer;font-size:16px;font-weight:700;padding:18px 0;min-height:58px;color:var(--cave-accent)}
+.cave-sale-details[open]{padding-bottom:16px}
+.cave-quick-info{background:var(--cave-soft);padding:12px;border-radius:10px;margin:0 0 18px;font-size:13px}
+.cave-quick-info .field{max-width:230px;margin-top:10px}
+.cave-counter-form .field>span{font-size:15px;font-weight:650;margin-bottom:6px}
+@media(max-width:767px){
+ .cave-payment-first{padding:16px 12px}
+ .cave-payment-methods{grid-template-columns:1fr 1fr;gap:9px}
+ .cave-payment-methods button{min-height:60px;font-size:16px}
+ .cave-sale-details{padding:0 10px}
+ .cave-counter-form .cart table{display:block;min-width:0!important}
+ .cave-counter-form .cart thead{display:none}
+ .cave-counter-form .cart tbody{display:block}
+ .cave-counter-form .cart tr{display:grid;grid-template-columns:1fr 1fr;gap:12px;padding:14px 4px;border-bottom:1px solid var(--cave-line)}
+ .cave-counter-form .cart td{padding:0!important;border:0;white-space:normal}
+ .cave-counter-form .cart td:first-child{grid-column:1/-1}
+ .cave-counter-form .cart td:nth-child(2)::before{content:"Quantité"}
+ .cave-counter-form .cart td:nth-child(3)::before{content:"Prix unitaire €"}
+ .cave-counter-form .cart td:nth-child(4)::before{content:"Base"}
+ .cave-counter-form .cart td:nth-child(5)::before{content:"Remise %"}
+ .cave-counter-form .cart td:nth-child(6)::before{content:"Total TTC"}
+ .cave-counter-form .cart td::before{display:block;font-size:13px;font-weight:650;margin-bottom:5px;color:var(--cave-muted)}
+ .cave-counter-form .cart .cell-input{width:100%!important;max-width:none!important}
+ .cave-counter-form .cart .icon-button{min-width:50px;min-height:50px}
+}
