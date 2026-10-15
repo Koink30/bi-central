@@ -52,10 +52,10 @@
   }
   @media(display-mode:standalone){#pwa-install{display:none!important}}
   @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto!important}}
-</style><link rel="stylesheet" href="./presentation.css?v=38"></head><body><div id="root"></div><noscript>Activez JavaScript pour utiliser ce BI.</noscript><script src="./loyalty.js?v=24"></script><script src="./checkout-ui.js?v=35"></script><script src="./storage-bridge.js?v=24"></script><script>
+</style><link rel="stylesheet" href="./presentation.css?v=39"></head><body><div id="root"></div><noscript>Activez JavaScript pour utiliser ce BI.</noscript><script src="./loyalty.js?v=24"></script><script src="./checkout-ui.js?v=39"></script><script src="./storage-bridge.js?v=24"></script><script>
 window.caveAppReady=Promise.resolve(window.caveStorageReady).then(()=>new Promise((resolve,reject)=>{
   const runtime=document.createElement('script');
-  runtime.src='./app.js?v=38';
+  runtime.src='./app.js?v=39';
   runtime.onload=()=>{window.dispatchEvent(new CustomEvent('cave-app-ready'));resolve();};
   runtime.onerror=()=>reject(new Error('Chargement du moteur BI impossible'));
   document.body.append(runtime);
@@ -81,4 +81,4 @@ window.caveAppReady=Promise.resolve(window.caveStorageReady).then(()=>new Promis
   };
   window.addEventListener("load",openShortcut);
 })();
-</script><script src="./cloud-sync.js?v=32" defer></script><script src="./catalog-photos.js?v=24" defer></script><script src="./presentation.js?v=37" defer></script><script src="./barcode-scan.js?v=31.2" defer></script></body></html>
+</script><script src="./cloud-sync.js?v=32" defer></script><script src="./catalog-photos.js?v=39" defer></script><script src="./presentation.js?v=37" defer></script><script src="./barcode-scan.js?v=31.2" defer></script></body></html>
