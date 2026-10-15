@@ -55,7 +55,7 @@
 </style><link rel="stylesheet" href="./presentation.css?v=39"></head><body><div id="root"></div><noscript>Activez JavaScript pour utiliser ce BI.</noscript><script src="./loyalty.js?v=24"></script><script src="./checkout-ui.js?v=39"></script><script src="./environment.js?v=40"></script><script src="./storage-bridge-mode40.js?v=24"></script><script>
 window.caveAppReady=Promise.all([window.caveStorageReady,window.caveEnvironmentReady]).then(()=>new Promise((resolve,reject)=>{
   const runtime=document.createElement('script');
-  runtime.src='./app-mode40.js?v=39';
+  runtime.src='./app-v41.js?v=41';
   runtime.onload=()=>{window.dispatchEvent(new CustomEvent('cave-app-ready'));resolve();};
   runtime.onerror=()=>reject(new Error('Chargement du moteur BI impossible'));
   document.body.append(runtime);
@@ -81,4 +81,5 @@ window.caveAppReady=Promise.all([window.caveStorageReady,window.caveEnvironmentR
   };
   window.addEventListener("load",openShortcut);
 })();
-</script><script src="./cloud-sync-mode40.js?v=32" defer></script><script src="./catalog-photos-mode40.js?v=39" defer></script><script src="./presentation-mode40.js?v=37" defer></script><script src="./barcode-scan-mode40.js?v=31.2" defer></script></body></html>
+</script><script src="./cloud-sync-mode40.js?v=32" defer></script><script src="./catalog-photos-mode40.js?v=39" defer></script><script src="./presentation-v41.js?v=41" defer></script><script src="./barcode-scan-mode40.js?v=31.2" defer></script></body></html>
+
