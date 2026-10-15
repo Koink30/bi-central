@@ -1,7 +1,7 @@
 (() => {
  'use strict';
- const themes=[['soft','Lumière douce'],['dark','Cave sombre'],['vine','Vignoble'],['light','Clair classique']];
- function applyTheme(value){const theme=themes.some(([id])=>id===value)?value:'soft';document.documentElement.dataset.caveTheme=theme;try{localStorage.setItem('cave-display-theme',theme);}catch{}const meta=document.querySelector('meta[name=theme-color]');if(meta)meta.content={dark:'#1c181c',vine:'#deded0',soft:'#e8dfd2',light:'#f6f4f0'}[theme];}
+ const themes=[['soft','Lumière douce'],['dark','Cave sombre'],['vine','Vignoble'],['light','Clair classique'],['aurora','✨ Aurore violet & rose'],['lagoon','🌊 Lagon bleu & turquoise'],['sunset','🌅 Sunset pêche & rose']];
+ function applyTheme(value){const theme=themes.some(([id])=>id===value)?value:'soft';document.documentElement.dataset.caveTheme=theme;try{localStorage.setItem('cave-display-theme',theme);}catch{}const meta=document.querySelector('meta[name=theme-color]');if(meta)meta.content={dark:'#1c181c',vine:'#deded0',soft:'#e8dfd2',light:'#f6f4f0',aurora:'#ddd2ff',lagoon:'#bcece9',sunset:'#ffd8bd'}[theme];}
  function decoration(){const n=el('div',{class:'cave-ornament','aria-hidden':'true'});n.innerHTML='<svg viewBox="0 0 220 90" fill="none" xmlns="http://www.w3.org/2000/svg"><g stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M8 68C42 62 44 29 91 23C110 20 123 25 135 15M51 51C31 48 29 31 31 23C45 24 56 33 51 51ZM74 30C65 14 73 6 85 4C88 19 87 24 74 30ZM98 23C102 10 115 8 123 11C117 25 110 29 98 23Z"/><path d="M86 30L88 38M155 11h10v22c0 8 10 10 10 21v25q0 5-5 5h-20q-5 0-5-5V54c0-11 10-13 10-21V11ZM153 8h14M145 55h30M145 71h30M192 42h21l-3 19q-1 8-8 8t-8-8l-2-19ZM202 69v14M193 84h18"/><g fill="currentColor" fill-opacity=".16"><circle cx="81" cy="45" r="7"/><circle cx="95" cy="45" r="7"/><circle cx="74" cy="57" r="7"/><circle cx="88" cy="57" r="7"/><circle cx="102" cy="57" r="7"/><circle cx="81" cy="69" r="7"/><circle cx="95" cy="69" r="7"/><circle cx="88" cy="81" r="7"/></g></g></svg>';return n;}
  const navLabels = ['Accueil','Produits & stock','Ventes & factures','Livraisons','Clients'];
  let tools, mobile, dialog, previousFocus, userMenu;
@@ -94,12 +94,12 @@
   return box;
  }
  const buttonPalettes={
-  wine:['Bordeaux','#78234f','#43172f'],
-  ocean:['Océan','#1657ac','#17336f'],
-  emerald:['Émeraude','#16745d','#123d45'],
-  violet:['Améthyste','#7137bb','#36225f'],
-  copper:['Cuivre','#a34922','#632e37'],
-  midnight:['Nuit électrique','#285779','#25234f']
+  wine:['Framboise pop','#c01575','#6429d6'],
+  ocean:['Bleu électrique','#006bc7','#6832dc'],
+  emerald:['Turquoise intense','#007b70','#1760ce'],
+  violet:['Violet néon','#7832da','#bf176d'],
+  copper:['Orange fusion','#ba4312','#c01865'],
+  midnight:['Indigo vibrant','#224fca','#962cbd']
  };
  function applyButtonColor(choice,custom){
   const valid=buttonPalettes[choice]||choice==='custom';choice=valid?choice:'wine';
