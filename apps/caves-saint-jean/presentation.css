@@ -250,3 +250,18 @@ html[data-cave-theme] .cave-home-icon{background:linear-gradient(135deg,var(--ca
 .cave-counter-form .cave-price-update{display:block;color:var(--cave-accent);font-size:12px;font-weight:700;line-height:1.4;white-space:normal;max-width:210px;padding-top:7px}
 .cave-counter-form .cave-quick-info{margin-top:22px;margin-bottom:0;border-top:1px solid var(--cave-line)}
 @media(max-width:767px){.cave-counter-form :is(.cave-sale-client-zone,.cave-sale-product-zone){padding:14px 10px}.cave-counter-form .cave-zone-title{font-size:20px}}
+
+/* Photo de référence des produits et des étiquettes. */
+html body .catalog-photo{width:62px;height:78px;object-fit:contain;background:var(--cave-surface);border:1px solid var(--cave-line);border-radius:10px;cursor:pointer}
+.catalog-reference-type{display:flex;align-items:center;flex-wrap:wrap;gap:10px;font-size:14px;font-weight:650;margin:12px 0}
+.catalog-reference-type select{min-height:46px;padding:9px;border:1px solid var(--cave-line);background:var(--cave-surface);color:var(--cave-ink);border-radius:9px}
+html body .catalog-photo-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(145px,1fr));gap:12px;overflow:visible}
+.catalog-photo-choice{border:2px solid var(--cave-line);border-radius:12px;padding:8px;background:var(--cave-surface);display:flex;flex-direction:column;gap:8px}
+.catalog-photo-choice.is-reference{border-color:var(--cave-accent);box-shadow:0 0 0 2px var(--cave-soft)}
+html body .catalog-photo-choice img{width:100%;height:160px;object-fit:contain;border-radius:8px}
+.catalog-photo-choice button{min-height:46px;padding:8px;font-size:13px;font-weight:650;border-radius:8px;background:var(--cave-soft);color:var(--cave-ink);white-space:normal}
+.catalog-photo-choice.is-reference button{background:var(--cave-button);color:var(--cave-on-button)}
+html body .mouse-picker-menu button:has(.cave-picker-photo){display:flex!important;align-items:center;gap:12px}
+.cave-picker-photo{width:46px;height:60px;flex:none;object-fit:contain;background:var(--cave-surface);border-radius:7px;border:1px solid var(--cave-line)}
+.cave-picker-option-text{min-width:0;line-height:1.4}
+@media(max-width:767px){html body .catalog-photo{width:68px;height:86px}.catalog-photo-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important}}
