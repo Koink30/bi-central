@@ -221,3 +221,22 @@ html #cave-tools .cave-appearance-controls select{width:145px!important;max-widt
 }
 @media(prefers-reduced-motion:reduce){html[data-cave-theme] :is(.primary,.cave-home-action,.quick-card){transition:none;transform:none!important}}
 @media print{.cave-appearance-controls{display:none!important}}
+
+/* V37 — fonds dégradés et accents plus vifs. */
+@media screen{
+:root[data-cave-theme=aurora]{--cave-paper:#ddd2ff;--cave-surface:#faf7ff;--cave-soft:#ebdffc;--cave-line:#c9b6e4;--cave-ink:#332343;--cave-muted:#6a527d;--cave-accent:#7036a8;--cave-button:#7036a8;--cave-on-button:#fff;--cave-ornament:#9651b7;--cave-page-gradient:radial-gradient(ellipse at 4% 5%,#bda4ff 0%,transparent 60%),radial-gradient(ellipse at 95% 18%,#ffb5e0 0%,transparent 55%),linear-gradient(150deg,#e8dcff 5%,#d2dcff 55%,#f7c8eb 100%)}
+:root[data-cave-theme=lagoon]{--cave-paper:#bcece9;--cave-surface:#f3fcff;--cave-soft:#d5eff2;--cave-line:#9dcbd3;--cave-ink:#153846;--cave-muted:#416c79;--cave-accent:#126c8c;--cave-button:#126c8c;--cave-on-button:#fff;--cave-ornament:#258c9d;--cave-page-gradient:radial-gradient(ellipse at 0% 0%,#79cfff 0%,transparent 60%),radial-gradient(ellipse at 100% 30%,#70e2cc 0%,transparent 55%),linear-gradient(145deg,#c3e5ff,#9de9df 55%,#cddcff)}
+:root[data-cave-theme=sunset]{--cave-paper:#ffd8bd;--cave-surface:#fff8f3;--cave-soft:#ffe4d9;--cave-line:#e6b8a7;--cave-ink:#492b32;--cave-muted:#82545a;--cave-accent:#a23561;--cave-button:#a23561;--cave-on-button:#fff;--cave-ornament:#b15c4d;--cave-page-gradient:radial-gradient(ellipse at 0% 5%,#ffbd83 0%,transparent 60%),radial-gradient(ellipse at 95% 30%,#ffa9c7 0%,transparent 55%),linear-gradient(150deg,#ffe1ac,#ffcfce 55%,#dfc4fa)}
+html:is([data-cave-theme=aurora],[data-cave-theme=lagoon],[data-cave-theme=sunset]){background:var(--cave-paper)!important}
+html:is([data-cave-theme=aurora],[data-cave-theme=lagoon],[data-cave-theme=sunset]) body{background:var(--cave-page-gradient)!important;background-attachment:fixed!important;min-height:100svh}
+html:is([data-cave-theme=aurora],[data-cave-theme=lagoon],[data-cave-theme=sunset]) :is(#root,#application,.workspace,[data-slot=sidebar-inset]){background:transparent!important}
+html:is([data-cave-theme=aurora],[data-cave-theme=lagoon],[data-cave-theme=sunset]) :is(.panel,.metric,.cave-home-action:not(.cave-home-sale)){box-shadow:0 7px 25px #30204c12;border-color:var(--cave-line)}
+html[data-cave-theme] :is(.primary,.cave-home-sale,.quick-card.wine,.catalog-photo-upload),
+html[data-cave-theme] #cave-main-menu>summary,
+html[data-cave-theme] .cave-payment-methods button[aria-pressed=true]{
+ background:linear-gradient(115deg,var(--cave-gradient-start) 0%,var(--cave-gradient-start) 8%,var(--cave-gradient-end) 90%)!important;
+ box-shadow:inset 0 1px 0 #ffffff65,inset 0 -2px 0 #00000014,0 7px 20px var(--cave-gradient-glow)!important;
+}
+html[data-cave-theme] .cave-home-sale{background:radial-gradient(ellipse at 80% -20%,#ffffff38,transparent 55%),linear-gradient(115deg,var(--cave-gradient-start) 10%,var(--cave-gradient-end) 90%)!important}
+html[data-cave-theme] .cave-home-icon{background:linear-gradient(135deg,var(--cave-gradient-start),var(--cave-gradient-end))!important}
+}
