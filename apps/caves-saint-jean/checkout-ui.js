@@ -8,6 +8,8 @@
       const [text, setText] = React.useState(selected?.label || selected?.name || '');
       const [open, setOpen] = React.useState(false), [searching, setSearching] = React.useState(false);
       const [active, setActive] = React.useState(0);
+      const [, refreshPhotos]=React.useState(0);
+      React.useEffect(()=>{const refresh=()=>refreshPhotos(n=>n+1);window.addEventListener('cave-product-photos-ready',refresh);return()=>window.removeEventListener('cave-product-photos-ready',refresh);},[]);
       const closing = React.useRef(false);
       function dismiss() { setOpen(false); setSearching(false); setText(selected?.label || selected?.name || ''); closing.current=true; input.current?.focus({preventScroll:true}); setTimeout(()=>{closing.current=false;},0); }
       React.useEffect(() => {
@@ -48,7 +50,7 @@
         open && h('div', { className: 'mouse-picker-menu', id, role: 'listbox', 'aria-label': label }, options.length
           ? options.map((item, index) => h('button', { type: 'button', role: 'option', id: id + '-' + index, key: item.id,
             'aria-selected': active === index, tabIndex: -1, onPointerDown: event => event.preventDefault(),
-            onClick: () => choose(item), className: active === index ? 'cave-option-active' : '' }, item.label || item.name))
+            onClick: () => choose(item), className: active === index ? 'cave-option-active' : '' }, root.caveProductPhoto?.(item.id) && h('img',{className:'cave-picker-photo',src:root.caveProductPhoto(item.id),alt:'',loading:'lazy'}),h('span',{className:'cave-picker-option-text'},item.label || item.name)))
           : h('span', { role: 'status' }, 'Aucun résultat')));
     }
     function QuickClient({ act, busy, onCreated }) {
